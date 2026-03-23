@@ -1,0 +1,212 @@
+---
+// Footer.astro
+import { Image } from 'astro:assets';
+import Nelren from '../../assets/NelrenLogo.png';
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <ul class="footer-links">
+      <li>
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 548.46 508.1">
+            <path fill="#0c4491" d="M548.46,1.85v25.48c-11.69-.3-22.61,3.59-30.24,12.55-7.99,9.37-11.41,24.59-11.99,36.69-3.14,65.57,10.57,137.25-22.74,197.1-18.04,32.42-48.14,53.62-84.19,61.86-27.15,6.21-55.17,3.46-82.85,4.06v100.62c.83,9.28,2.54,18.83,8.05,26.54,12.12,16.95,40.34,18.14,59.27,18.13v23.2h-213v-23.2c18.84-.02,45.74-1.18,56.6-19.28,4.52-7.53,5.76-16.38,6.56-25.01v-101s-50.81.02-50.81.02c-46.14-.5-89.12-19.83-114.28-59.15-36.94-57.72-24.43-131.77-26.6-197.04-.55-16.67-3.24-37.87-17.54-48.64-7.09-5.34-15.83-7.66-24.69-7.45V1.85c13.38-.19,26.23-.42,39.09,3.7,45.09,14.44,59.1,71.1,62.84,112.88s-2.34,84.98,8.02,123.96c12.49,47,53.54,52.11,96.01,54.23,9.3.46,18.66.1,27.95.77V84.56c-.9-12.65-2.19-25.67-8.97-36.66-12.27-19.88-36.91-22.59-58.35-22.85V1.85h213v23.2c-18.74.19-40.93,2.62-52.8,18.9-9.45,12.97-9.99,30.89-10.64,46.33l.3,207.1c1.23.2,2.4-.35,3.6-.4,35.85-1.3,89.56.51,110.19-35.1,18.71-32.29,13.53-91.32,14.75-128.26,1.35-40.6,11.84-100.33,49.34-123.33,16.31-10,35.48-12.49,54.13-8.44Z"></path>
+          </svg>
+        </span>
+        <span class="text">CRP: 04 / 78343​</span>
+      </li>
+
+      <li>
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+            <rect x="1.18145" y="1.19805" width="15.6899" height="16.6035" rx="7.84494" stroke="#0B4491" stroke-width="1.12071"></rect>
+            <path d="M6.56326 12V5.8137H7.94173V12H6.56326ZM10.2868 12L8.48807 9.36074H10.001L11.8838 12H10.2868ZM7.57189 10.0332V8.94888H9.08485C9.28657 8.94888 9.46028 8.90965 9.60598 8.8312C9.75727 8.74715 9.87214 8.63228 9.95059 8.48659C10.0346 8.33529 10.0767 8.16158 10.0767 7.96546C10.0767 7.76933 10.0346 7.59843 9.95059 7.45273C9.87214 7.30144 9.75727 7.18657 9.60598 7.10812C9.46028 7.02406 9.28657 6.98204 9.08485 6.98204H7.57189V5.8137H8.97558C9.4855 5.8137 9.92818 5.89215 10.3036 6.04905C10.6791 6.20035 10.9676 6.42729 11.1694 6.72988C11.3711 7.03247 11.472 7.41351 11.472 7.873V8.00748C11.472 8.46137 11.3683 8.83961 11.161 9.1422C10.9592 9.43919 10.6706 9.66333 10.2952 9.81462C9.92538 9.96031 9.4855 10.0332 8.97558 10.0332H7.57189Z" fill="#0B4491"></path>
+          </svg>
+        </span>
+        <span class="text">2026 • Todos os direitos reservados</span>
+      </li>
+
+      <li>
+        <a href="https://www.instagram.com/pinacria/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0C4491" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-template-icon lucide-layout-template"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></svg>
+          </span>
+          <span class="text">Conceito incial por @pinacria</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="https://nelren.com.br">
+          <span class="icon">
+            <Image 
+              class="nelren" 
+              src={Nelren} 
+              alt="" 
+              aria-hidden="true" 
+              loading="lazy" 
+            />
+          </span>
+          <span class="text">Desenvolvido por Nelren</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<a href="https://api.whatsapp.com/send/?phone=5537998164092&text=Ol%C3%A1%2C+vim+do+site+e+gostaria+de+tirar+algumas+d%C3%BAvidas%21&type=phone_number&app_absent=0" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Fale comigo no WhatsApp">
+  <span class="btn-icon">
+    <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
+    </svg>
+  </span>
+</a>
+
+<style>
+  :root {
+    --color-accent: #D94881; /* Fundo do Footer */
+    --color-text: #F9F2EC;   /* Cor do texto */
+    --color-whatsapp: #47C243; /* Fundo do botão do Whats */
+    --color-whatsapp-hover: #30A32C; /* Hover do Whats */
+    --font-primary: 'DM Serif Text', serif;
+  }
+
+  /* Reset local apenas para o footer */
+  .site-footer * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Footer Section */
+  .site-footer {
+    background-color: var(--color-accent);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+    position: relative;
+    width: 100%;
+  }
+
+  .footer-container {
+    width: 100%;
+    max-width: 1140px;
+  }
+
+  /* Links Flex Container */
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    list-style: none;
+  }
+
+  .footer-links li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .footer-links a:hover {
+    opacity: 0.8;
+  }
+
+  .footer-links .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px; /* Aumentei levemente para melhor leitura */
+    height: 14px;
+  }
+
+  /* Ajuste para garantir que todos SVG's fiquem proporcionais */
+  .footer-links .icon svg {
+    width: 100%;
+    height: auto;
+    max-height: 14px;
+  }
+
+  .footer-links .text {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--color-text);
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  /* Botão Flutuante do WhatsApp */
+  .floating-whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--color-whatsapp);
+    color: #FFFFFF;
+    border-radius: 100px;
+    padding: 11px 13px 9px 13px;
+    box-shadow: 0px 0px 10px 0px var(--color-whatsapp);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .floating-whatsapp:hover,
+  .floating-whatsapp:focus {
+    background-color: var(--color-whatsapp-hover);
+    transform: scale(1.05);
+  }
+
+  .floating-whatsapp .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .floating-whatsapp svg {
+    width: 45px;
+    height: 45px;
+    fill: #FFFFFF;
+  }
+
+  /* Responsividade */
+  @media (max-width: 1024px) {
+    .footer-links {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+    }
+
+    .footer-links li, .footer-links a {
+      justify-content: center;
+    }
+
+    /* Ajuste no tamanho do ícone do Whats mobile */
+    .floating-whatsapp svg {
+      width: 35px;
+      height: 35px;
+    }
+    
+    .floating-whatsapp {
+      padding: 9px 11px 7px 11px;
+    }
+
+    .footer-links .text {
+      font-size: 14px;
+    }
+
+  }
+</style>

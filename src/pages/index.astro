@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageRenderer from '../components/PageRenderer.astro';
+
+// Importação das seções (exemplo estático)
+import Hero from '../components/blocks/Hero.astro';
+import PainPoints from '../components/blocks/PainPoints.astro';
+import AboutUS from '../components/blocks/AboutUS.astro';
+import CarouselAboutUs from '../components/blocks/CarouselAboutUs.astro';
+import Testimonials from '../components/blocks/Testimonials.astro';
+import Instagram from '../components/blocks/Instagram.astro';
+import Process from '../components/blocks/Process.astro';
+import Methodology from '../components/blocks/Methodology.astro';
+import ExtensionMethodology from '../components/blocks/ExtensionMethodology.astro';
+import PersonalText from '../components/blocks/PersonalText.astro';
+import FAQ from '../components/blocks/FAQ.astro';
+import Footer from '../components/blocks/Footer.astro';
+
+const PACKAGE_JSON_CONTENT = {
+  "name": "Samuel Alcântara - Psicólogo",
+  "version": "0.0.1",
+  "description": "Site oficial do Psic\u00f3logo Samuel Alc\u00e2ntara"
+};
+---
+<Layout title={PACKAGE_JSON_CONTENT.name} description={PACKAGE_JSON_CONTENT.description}>
+    <main class="min-h-screen">
+        <Hero />
+        <PainPoints />
+        <AboutUS />
+        <CarouselAboutUs />
+        <Testimonials />
+        <Instagram />
+        <Process />
+        <Methodology />
+        <ExtensionMethodology />
+        <PersonalText />
+        <FAQ />
+        <Footer />
+    </main>
+</Layout>

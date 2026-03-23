@@ -1,0 +1,204 @@
+---
+// src/components/Testimonials.astro
+
+import { Image } from 'astro:assets';
+import Divisor06 from '../../assets/divisor-06.webp';
+
+const testimonials = [
+  "Eu sempre tive medo de fazer terapia, mas o jeito que o Samuel trabalha é muito prático e acolhedor. Sinto que cada conversa tem um propósito e que estou, de fato, caminhando. Recomendo muito.",
+  "Sou grata por ter encontrado um espaço onde posso realmente ser eu e ser entendida. Desde a primeira sessão, senti que estava num lugar seguro, onde fui ouvida de verdade.",
+  "O que mais me chamou atenção desde o começo foi o quanto o Samuel é humano no jeito de conduzir as sessões. Não me senti só mais um paciente. Isso fez muita diferença. Também vejo que as explicações e propostas de atividades em terapia estão alinhadas com o que eu busco.",
+  "Eu tinha uma visão distorcida sobre terapia. Hoje vejo que estou construindo ferramentas pra lidar melhor com os desafios do dia a dia. Samuel é um querido e ótimo profissional!",
+  "Falar sobre alguns assuntos pessoais sempre foi difícil pra mim. Mas, nas sessões, fui conseguindo abrir espaço pra coisas que antes eu evitava até pensar. Tem sido importante olhar pra isso com menos culpa e mais acolhimento."
+];
+---
+
+<div class="testimonials-top-divider">
+  <Image 
+    src={Divisor06}
+    alt="" 
+    aria-hidden="true"
+    width="1920"
+    height="120"
+  />
+</div>
+
+<section class="testimonials-section">
+  <div class="container">
+    
+    <header class="section-header">
+      <h2>Depoimentos dos meus pacientes</h2>
+      <p>Todos os depoimentos dos meus pacientes foram anonimizados por questões éticas</p>
+    </header>
+
+    <div class="testimonials-grid">
+      {testimonials.map((quote, index) => (
+        <article class={`testimonial-card ${index === 2 ? 'featured' : ''}`}>
+          
+          <div class="stars" aria-label="Classificado como 5 de 5">
+            {/* Renderiza 5 estrelas para cada card */}
+            {Array.from({ length: 5 }).map(() => (
+              <svg aria-hidden="true" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <path d="M450 75L338 312 88 350C46 354 25 417 58 450L238 633 196 896C188 942 238 975 275 954L500 837 725 954C767 975 813 942 804 896L763 633 942 450C975 417 954 358 913 350L663 312 550 75C529 33 471 33 450 75Z"></path>
+              </svg>
+            ))}
+          </div>
+          
+          <blockquote>"{quote}"</blockquote>
+          
+        </article>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* --- Novo Divisor Acima (Entidade Separada) --- */
+  .testimonials-top-divider {
+    width: 100%;
+    /* A imagem original do Elementor é um divisor de transição.
+       Nós a forçamos a ficar colada na seção abaixo, removendo qualquer gap
+       que o navegador adiciona em imagens inline.
+    */
+    display: flex; 
+    background-color: transparent; /* Ou a cor da seção de cima se necessário */
+    margin: 0;
+    padding: 0;
+    line-height: 0; /* Garante que não haja gap de texto abaixo da imagem */
+  }
+
+  .testimonials-top-divider img {
+    width: 100%;
+    height: auto; /* Mantém a proporção */
+    display: block; /* Remove o gap inferior padrão do navegador */
+    margin: 0;
+    padding: 0;
+  }
+
+  /* --- Seção Principal --- */
+  .testimonials-section {
+    background-color: #0B4491; /* Azul principal */
+    padding: 80px 20px; /* Padding original restaurado */
+    width: 100%;
+    /* Removido o relative/::before daqui */
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  /* --- Cabeçalho --- */
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-header h2 {
+    font-family: "DM Serif Text", serif;
+    font-size: 46px;
+    font-weight: 500;
+    color: #F9F2EC;
+    margin: 0 0 10px 0;
+    line-height: 1.2em;
+  }
+
+  .section-header p {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #F9F2EC;
+    margin: 0;
+    line-height: 1.2em;
+  }
+
+  /* --- Grid de Depoimentos --- */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 80px;
+    row-gap: 40px;
+  }
+
+  /* --- Card Individual --- */
+  .testimonial-card {
+    background-color: #D94881; /* Rosa destaque */
+    border: 2px dotted #FFFFFF;
+    border-radius: 5px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* O 3º card centralizado que quebra o padrão no layout original */
+  .testimonial-card.featured {
+    grid-column: 1 / -1; /* Ocupa as duas colunas */
+    width: 60%; /* Mantém o tamanho reduzido como no Elementor */
+    margin: 0 auto; /* Centraliza */
+  }
+
+  .stars {
+    display: flex;
+    gap: 4px;
+  }
+
+  .stars svg {
+    width: 22px;
+    height: 22px;
+    fill: #F7F701; /* Amarelo das estrelas */
+  }
+
+  .testimonial-card blockquote {
+    font-family: "Open Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    font-style: italic;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* --- Responsividade --- */
+  @media (max-width: 1024px) {
+    .section-header h2 {
+      font-size: 38px;
+      margin-bottom: 20px;
+    }
+    .testimonials-grid {
+      column-gap: 40px;
+    }
+    .testimonial-card.featured {
+      width: 80%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* A imagem do divisor já escala automaticamente com width: 100% no CSS global,
+       não precisa de ajustes específicos de altura aqui se display:block estiver correto.
+    */
+    .testimonials-section {
+      padding: 60px 20px 80px 30px; /* Reduz padding no mobile */
+    }
+    .section-header h2 {
+      font-size: 32px;
+    }
+    .section-header p {
+      font-size: 16px;
+    }
+    .testimonials-grid {
+      grid-template-columns: 1fr; /* Coluna única no celular */
+      gap: 30px;
+    }
+    .testimonial-card.featured {
+      width: 100%;
+      grid-column: auto;
+    }
+    .testimonial-card blockquote {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* 1. Design Tokens extraídos do Elementor */
+@theme {
+  /* Cores Globais */
+  --color-brand-primary: #0B4491;   /* Azul escuro principal */
+  --color-brand-secondary: #0B4491; /* No seu Elementor, estava igual a primária */
+  --color-brand-text: #0B4491;      /* Cor do texto base (azul escuro) */
+  --color-brand-accent: #D94881;    /* Rosa/Magenta de destaque */
+  --color-brand-light: #FFFFFF;     /* Bege claro de fundo (antigo bf478e4) */
+
+  /* Tipografia Global */
+  --font-heading: "DM Serif Text", serif;
+  --font-body: "Open Sans", sans-serif;
+}
+
+/* 2. Estilos base da página */
+html, body {
+  @apply antialiased scroll-smooth;
+  
+  /* Mantendo o custom CSS que você tinha no final do Elementor */
+  width: 100%;
+  overflow-x: hidden;
+  
+  /* Aplicando o fundo, cor de texto e fonte base usando as variáveis acima */
+  background-color: var(--color-brand-light);
+  color: var(--color-brand-text);
+  font-family: var(--font-body);
+}
+
+/* 3. Estilização Global de Títulos */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  /* A cor principal para títulos e pesos padrões podem ser definidos aqui */
+  color: var(--color-brand-primary);
+  font-weight: 400; 
+}
+
+/* 4. Estilos globais para links e botões (opcional, base de reset) */
+a {
+  color: var(--color-brand-accent);
+  @apply transition-colors duration-300;
+}
+
+a:hover {
+  @apply opacity-80;
+}

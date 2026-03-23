@@ -1,0 +1,404 @@
+---
+// PainPoints.astro
+
+const whatsappLinkAgendar = "https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!";
+
+const painPoints = [
+  {
+    id: "rejeicao",
+    animation: "fadeInLeft",
+    icon: "M368-80v-538q-95-20-152.5-85.5T158-856h60q0 78 60.5 131T426-672h100q38 0 56 6.5t46 30.5l184 172-43 43-185-174v514h-60v-255h-96v255h-60Zm108.08-654q-30.08 0-51.58-21.42t-21.5-51.5q0-30.08 21.42-51.58t51.5-21.5q30.08 0 51.58 21.42t21.5 51.5q0 30.08-21.42 51.58t-51.5 21.5Z",
+    shortTitle: "Medo da Rejeição Social",
+    modalSubtitle: "Medo da Rejeição Social",
+    modalTitle: "Tenho medo de me assumir e de ser rejeitado por isso",
+    modalText: "Se você sente esse medo, quero que saiba que ele é mais comum (e humano) do que parece. Muitas pessoas que acompanho carregam essa angústia: “E se eu for rejeitado por quem eu amo?” <br><br> Neste espaço, vamos conversar sobre o peso de esconder quem você é, os receios que te impedem de se mostrar ao mundo e como começar a lidar com tudo isso com mais leveza, no seu tempo. Você não precisa enfrentar isso sozinho."
+  },
+  {
+    id: "pressao",
+    animation: "fadeInDown",
+    icon: "M642-332v-96l-35-64q-22-1-36.5 15T556-442v215L659-59h-91l-88-147v-236q0-40 23.5-73.5T569-561l-76-134q-23-38-18.5-84.5T511-856l65-67 286 337 42 527h-78l-39-497-214-255-10 11q-12 12-13.5 28t6.5 30l163 295v115h-77Zm-401 0v-115l164-295q6-14 4-30t-11-28l-11-11-214 255-39 497H56l42-527 286-337 65 67q32 30 36.5 76.5T467-695l-76 134q41 12 65 45.5t24 73.5v236L391-59h-90l103-168v-215q0-19-14-35t-37-15l-35 64v96h-77Z",
+    shortTitle: "Pressão cultural ou religiosa",
+    modalSubtitle: "Pressão Cultural e Religiosa",
+    modalTitle: "Sinto que minha fé e minha cultura não me permitem ser quem eu sou",
+    modalText: "É muito difícil crescer ouvindo que existe algo de errado com quem você é. A pressão cultural e religiosa pode gerar culpa, medo, vergonha sentimentos profundos que te fazem se esconder até de si mesmo.<br><br> Se isso te toca, quero te dizer: não há nada de errado em sentir esse conflito. Aqui, vamos conversar com respeito e acolhimento sobre essa dor que muitos enfrentam em silêncio e sobre caminhos possíveis para viver com mais verdade, sem precisar abandonar suas raízes."
+  },
+  {
+    id: "luto",
+    animation: "fadeInRight",
+    icon: "M799.82-524q-14.85 0-25.33-10.66Q764-545.32 764-560.16T774.66-586q10.66-11 25.5-11T826-586.05q11 10.95 11 26.23 0 14.85-10.95 25.33Q815.1-524 799.82-524ZM764-657v-193h73v193h-73ZM360-487q-71.46 0-116.23-44.77Q199-576.54 199-648q0-71.46 44.77-116.23Q288.54-809 360-809q71.46 0 116.23 44.77Q521-719.46 521-648q0 71.46-44.77 116.23Q431.46-487 360-487ZM25-130v-109q0-39.11 18.59-69.55Q62.19-338.98 97-354q77-35 138.29-49 61.29-14 124.5-14T484-403q61 14 138 49 34.81 16.02 53.91 45.95Q695-278.11 695-239v109H25Zm73-73h524v-36q0-16-7.83-29.67Q606.35-282.35 593-288q-72-33-123.5-44.5T360-344q-58 0-110 11.5T127-288q-13.8 5.65-21.4 19.33Q98-255 98-239v36Zm262-357q38 0 63-25t25-63q0-38-25-63t-63-25q-38 0-63 25t-25 63q0 38 25 63t63 25Zm0-88Zm0 445Z",
+    shortTitle: "Luto, trauma ou experiências de discriminação e violência",
+    modalSubtitle: "Luto, trauma ou experiências de discriminação e violência",
+    modalTitle: "O luto, trauma ou discriminação e violência têm deixado você sobrecarregado?",
+    modalText: "Situações como luto, traumas ou experiências de discriminação e violência podem deixar marcas profundas e difíceis de carregar sozinho. Seja por uma perda, por algo que aconteceu no passado ou por viver em um mundo que julga e exclui quem simplesmente é diferente, a dor pode ser intensa, confusa e constante.<br><br>Na terapia, você encontra um espaço seguro para falar sobre isso, validar o que sente e cuidar das suas feridas com respeito e acolhimento. Juntos, no seu tempo, é possível entender seus sentimentos, recuperar o equilíbrio emocional e seguir com mais leveza e dignidade."
+  },
+  {
+    id: "autoaceitacao",
+    animation: "fadeInLeft",
+    icon: "M261-151q-30.5 0-49.75-19.58T192-221.13q0-20.78 10.5-39.33Q213-279 233.23-288L399-353v-117q-69 74-135 111t-152 37v-80q71.2 0 127.1-31 55.9-31 97.9-84.9l58-66.1q11.39-14 26.8-22 15.42-8 34.2-8h48q18.78 0 34.7 8.5Q554.61-597 566-583l58 67.1q45 51.9 98.9 82.9 53.9 31 125.1 31v80q-85 0-151.5-37T561-470v117l167 65q19 9 29.5 27.49T768-221.3q0 30.88-19.25 50.59Q729.5-151 699-151H396v-21q0-30 15.5-43.5t42.31-13.5h132.71q8.28 0 14.38-6 6.1-6 6.1-14 0-9-6.12-14.5t-14.45-5.5H453q-42.58 0-68.79 26.16Q358-216.68 358-172v21h-97Zm219.25-525q-34.25 0-58.75-24.62T397-759.5q0-33.85 24.25-58.17Q445.5-842 479.75-842t58.75 24.46q24.5 24.46 24.5 58.5t-24.25 58.54Q514.5-676 480.25-676Z",
+    shortTitle: "Dificuldade de Autoaceitação",
+    modalSubtitle: "Dificuldade de Autoaceitação",
+    modalTitle: "Por que é tão difícil me aceitar do jeito que eu sou?",
+    modalText: "Antes mesmo de pensar em se assumir para os outros, muita gente trava uma batalha silenciosa dentro de si. A autoaceitação não acontece de uma hora para outra especialmente quando crescemos ouvindo que ser quem somos é errado.<br><br>Se você sente vergonha, culpa ou confusão, saiba: esses sentimentos não te definem, mas merecem ser acolhidos. Neste espaço, vamos conversar sobre como começar a se olhar com mais compaixão, respeitar o seu tempo e reconstruir, aos poucos, o relacionamento mais importante de todos: o que você tem com você mesmo."
+  },
+  {
+    id: "apoio",
+    animation: "fadeIn",
+    icon: "M754.92-733q-34.92 0-59.42-24.11-24.5-24.1-24.5-58.06Q671-849 695.49-874q24.48-25 58.73-25 34.13 0 58.95 24.91Q838-849.19 838-815.63q0 34.14-24.58 58.38Q788.83-733 754.92-733ZM670-74v-342q0-26.18-12.12-47.22Q645.75-484.26 621-491l52-141q8-25 31.16-40 23.17-15 50.5-15Q782-687 805-671.5q23 15.5 31 39.5l117 309H828v249H670ZM495.18-496q-29.6 0-49.39-20.29T426-566.18q0-29.59 19.62-49.7Q465.23-636 494.82-636q29.6 0 49.89 20.12Q565-595.77 565-566.18q0 29.6-20.12 49.89Q524.77-496 495.18-496ZM194.25-733q-35.77 0-60.01-24.11Q110-781.21 110-815.17 110-849 133.97-874t59.45-25q33.93 0 58.26 24.91Q276-849.19 276-815.63q0 34.14-24.19 58.38Q227.62-733 194.25-733ZM101-74v-290H35v-230q0-38.17 27.41-64.59Q89.81-685 127.44-685h131.12q36.63 0 64.53 26.41Q351-632.17 351-594v230h-65v290H101Zm330 0v-170h-50v-148q0-29.5 19.25-48.75T449-460h93q28.5 0 48.25 19.25T610-392v148h-50v170H431Z",
+    shortTitle: "Falta de Apoio Familiar ou Social",
+    modalSubtitle: "Falta de Apoio Familiar ou Social",
+    modalTitle: "E quando quem deveria estar do meu lado… não está?",
+    modalText: "Às vezes, o mais difícil não é entender sua orientação sexual, mas perceber que não podem contar com quem mais gostariam. A ausência de apoio da família ou de um círculo social confiável machuca e pode deixar um vazio profundo. <br><br>Se você sente essa solidão, eu quero te dizer que seu sofrimento é legítimo. Aqui, vamos falar sobre essa dor com respeito, entender o impacto dela na sua autoestima e explorar caminhos para que você se sinta menos sozinho e mais amparado em quem você é."
+  },
+  {
+    id: "conflitos",
+    animation: "fadeInRight",
+    icon: "M-8-232v-61q0-43.02 43.5-69.01Q79-388 150.38-388q8.16 0 15.39.5t15.23.15q-10 20.35-14.5 40.03Q162-327.65 162-305v73H-8Zm240 0v-73q0-34 17.48-62.18Q266.96-395.37 301-416q33.87-21 79.29-31.5 45.43-10.5 99.55-10.5 55.16 0 100.56 10.5Q625.79-437 660-416q33 21 50.5 49t17.5 62v73H232Zm566 0v-73.14q0-22.09-4.5-42.41-4.5-20.32-13.5-39.72 8 .27 15.23-.23T810-388q71.7 0 114.85 25.64Q968-336.72 968-293v61H798Zm-486-73h336v-6q-6-34-51.5-54T480-385q-71 0-116.5 20.5T312-310v5ZM149.61-416Q119-416 97-438.01q-22-22-22-52.9Q75-522 97.01-544q22-22 52.9-22Q181-566 203-544.08q22 21.93 22 53.47Q225-460 203.08-438q-21.93 22-53.47 22Zm660 0Q779-416 757-438.01q-22-22-22-52.9Q735-522 757.01-544q22-22 52.9-22Q841-566 863-544.08q22 21.93 22 53.47Q885-460 863.08-438q-21.93 22-53.47 22Zm-329.14-72q-53.14 0-90.8-37.21Q352-562.42 352-615.58q0-53.42 37.67-90.92 37.66-37.5 90.8-37.5 53.4 0 90.47 37.27Q608-669.46 608-615.76q0 53.43-37.06 90.59Q533.87-488 480.47-488Zm.38-73Q503-561 519-576.85t16-40Q535-639 518.73-655q-16.28-16-38.38-16Q457-671 441-654.73q-16 16.28-16 38.38Q425-593 440.85-577t40 16ZM480-305Zm0-311Z",
+    shortTitle: "Conflitos em relacionamentos amorosos ou interpessoais",
+    modalSubtitle: "Conflitos em relacionamentos amorosos ou interpessoais",
+    modalTitle: "Dificuldades em relacionamentos estão te sobrecarregando?",
+    modalText: "Relacionamentos, sejam amorosos ou de outra natureza podem despertar inseguranças, frustrações e até a sensação de que você nunca será amado do jeito que é. Conflitos recorrentes, dúvidas sobre o relacionamento, medo de rejeição ou de não encontrar alguém com quem compartilhar a vida são questões que mexem profundamente com a autoestima e o bem-estar.<br><br>Na terapia, você encontra um espaço seguro para refletir sobre seus vínculos, entender padrões emocionais e desenvolver formas mais saudáveis de se expressar e se relacionar. Juntos, podemos buscar mais clareza, leveza e autenticidade nas suas relações, respeitando o que você sente e o que realmente deseja viver."
+  },
+  {
+    id: "ansiedade",
+    animation: "fadeInLeft",
+    icon: "M480-317q59.77 0 130.67-21.13Q681.58-359.26 811-417q1-10 2-19.69 1-9.69 1-20.31 0-17.84-14.43-28.92Q785.14-497 768-492q-14.71 4.69-32.35 10.59Q718-475.5 693-464q-68 27-115.49 38.5-47.49 11.5-96.99 11.5-51.52 0-100.02-11.5Q332-437 262.27-465q-28.27-11-42.44-16.5Q205.67-487 192-492q-17.14-5-31.07 5.67Q147-475.65 147-457.5q0 10.78.5 21.14Q148-426 149-416q106.18 50.45 188.16 74.72Q419.14-317 480-317Zm-.04 170Q583-147 662-195q79-48 116-128-95.95 42.17-165.97 60.58Q542-244 480.03-244 419-244 343.5-264T181-323q36 80 114.5 128t184.46 48Zm-.04-407q-69.08 0-117.5-48.42T314-719.92Q314-789 362.42-838t117.5-49Q549-887 598-838t49 118.08q0 69.08-49 117.5T479.92-554Zm.08-73q38.64 0 66.32-26.94Q574-680.89 574-720q0-38.64-27.68-66.32Q518.64-814 480-814q-38.64 0-65.82 27.68Q387-758.64 387-720q0 38.64 26.94 65.82Q440.89-627 480-627Zm-.6 553q-179.55 0-292.47-107.05Q74-288.1 74-457q0-55 44-88t96-17q16.21 6.18 33.45 12.41Q264.68-543.36 290-533q63.43 26 104.4 36 40.98 10 85.08 10 42.15 0 83.7-10 41.56-10 102.82-35 28-12 46.5-18.5T748-562q52-15 95.5 17.62Q887-511.77 887-457q0 79.54-32 149.77t-86.78 122.31q-54.79 52.09-129.19 81.5Q564.62-74 479.4-74Z",
+    shortTitle: "Ansiedade, depressão ou sensação de vazio",
+    modalSubtitle: "Ansiedade, depressão ou sensação de vazio",
+    modalTitle: "A ansiedade ou a tristeza constante têm atrapalhado sua vida?",
+    modalText: "Sentir-se angustiado, sem energia ou carregando um vazio difícil de explicar pode ser sinal de que algo dentro de você precisa de atenção e cuidado. Essas sensações, muitas vezes ligadas à ansiedade, depressão ou a experiências mal elaboradas do passado, não são fraqueza, são sinais legítimos de sofrimento emocional.<br><br>Na terapia, você encontrará um espaço seguro para entender melhor esses sentimentos, explorar suas causas e construir formas mais saudáveis de lidar com o que está te machucando. Juntos, podemos buscar mais clareza, equilíbrio e um novo sentido para sua vida."
+  },
+  {
+    id: "identidade",
+    animation: "fadeInUp",
+    icon: "M479.73-347q63.74 0 109.01-44.49Q634-435.98 634-499.73q0-63.74-45.06-109.01Q543.88-654 480.13-654q-63.74 0-108.44 45.06Q327-563.88 327-500.13q0 63.74 44.49 108.44Q415.98-347 479.73-347ZM444-34v-79h-80v-67h80v-96q-84.33-15.1-137.17-78.15Q254-417.19 254-500q0-35.66 10.5-69.44T296-632l-34-34-56 55-51-51 56-55-84-85v108H54v-233h233v73H179l84 85 56-56 51 51-56 55 35 36q29-21 62.17-32.5T480-727q35.66 0 69.33 11T612-684l170-170H674v-73h233v233h-73v-108L665-632q21.03 29 31.51 62.77Q707-535.45 707-500q0 82.81-53.33 145.85Q600.33-291.1 517-276v96h80v67h-80v79h-73Z",
+    shortTitle: "Desafios relacionados à sexualidade e identidade de gênero",
+    modalSubtitle: "Desafios relacionados à sexualidade e identidade de gênero",
+    modalTitle: "Sexualidade e identidade: conflitos, dúvidas e acolhimento",
+    modalText: "Questões ligadas à sexualidade e identidade de gênero podem gerar conflitos internos, medo de rejeição e sofrimento silencioso. Muitas vezes, crenças aprendidas, experiências negativas ou a falta de espaço para falar sobre isso com liberdade dificultam a construção de uma relação mais autêntica consigo mesmo.<br><br>Na terapia, você encontra um espaço seguro e sem julgamentos para explorar essas vivências, compreender seus sentimentos e desenvolver mais confiança para viver sua identidade com respeito e autonomia. Juntos, podemos fortalecer o seu processo de aceitação e cuidado emocional."
+  },
+  {
+    id: "autoestima",
+    animation: "fadeInRight",
+    icon: "M629.94-529q24.56 0 41.81-17.19Q689-563.38 689-587.94t-17.19-41.81Q654.62-647 630.06-647t-41.81 17.19Q571-612.62 571-588.06t17.19 41.81Q605.38-529 629.94-529Zm-300 0q24.56 0 41.81-17.19Q389-563.38 389-587.94t-17.19-41.81Q354.62-647 330.06-647t-41.81 17.19Q271-612.62 271-588.06t17.19 41.81Q305.38-529 329.94-529ZM351-334h259v-57H351v57ZM480-64q-85.64 0-161.89-32.73-76.26-32.73-132.66-88.84-56.41-56.11-88.93-132.45Q64-394.36 64-480q0-85.64 32.73-161.89 32.73-76.26 88.84-132.66 56.11-56.41 132.45-88.93Q394.36-896 480-896q85.64 0 161.89 32.73 76.26 32.73 132.66 88.84 56.41 56.11 88.93 132.45Q896-565.64 896-480q0 85.64-32.73 161.89-32.73 76.26-88.84 132.66-56.11 56.41-132.45 88.93Q565.64-64 480-64Zm0-416Zm.18 343q143.2 0 243.01-99.99Q823-336.99 823-480.18q0-143.2-99.99-243.01Q623.01-823 479.82-823t-243.01 99.99Q137-623.01 137-479.82t99.99 243.01Q336.99-137 480.18-137Z",
+    shortTitle: "Baixa autoestima recorrente",
+    modalSubtitle: "Baixa autoestima recorrente",
+    modalTitle: "Você constantemente duvida de si mesmo e se sente incapaz?",
+    modalText: "A baixa autoestima recorrente pode fazer você se sentir inadequado e inseguro em diversas áreas da vida, afetando suas escolhas e relacionamentos. Isso acontece quando você não reconhece seu valor ou tem uma visão distorcida de si mesmo.<br><br>Na terapia, você poderá entender as origens dessa baixa autoestima e trabalhar para fortalecer sua autoconfiança. Juntos, podemos buscar um caminho para que você se enxergue com mais empatia e respeito, construindo uma base sólida de autoestima."
+  }
+];
+---
+
+<section class="pain-points-section">
+  <div class="container">
+    <h2 class="section-title">Você enfrenta alguma destas dificuldades? Se sim, posso te ajudar!</h2>
+    
+    <div class="cards-grid">
+      {painPoints.map((point, index) => (
+        <button 
+          class={`pain-card ${index % 2 === 0 ? 'bg-pink' : 'bg-blue'} animate-hidden`} 
+          data-animation={point.animation}
+          data-popup-trigger={point.id} 
+          aria-label={`Ler mais sobre ${point.shortTitle}`}
+        >
+          <div class="card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="currentColor">
+              <path d={point.icon}></path>
+            </svg>
+          </div>
+          <p class="card-text">{point.shortTitle}</p>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {painPoints.map((point) => (
+    <dialog id={`dialog-${point.id}`} class="pain-dialog">
+      <div class="dialog-content">
+        <button class="dialog-close" aria-label="Fechar" data-popup-close={point.id}>✕</button>
+        
+        <div class="dialog-inner">
+          <h3 class="modal-subtitle">{point.modalSubtitle}</h3>
+          <h2 class="modal-title">{point.modalTitle}</h2>
+          <p class="modal-text" set:html={point.modalText}></p>
+          
+          <a class="modal-btn" href={whatsappLinkAgendar} target="_blank" rel="noopener noreferrer">
+            <span>Agendar Minha Consulta</span>
+            <svg class="icon-whatsapp" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+              <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </dialog>
+  ))}
+</section>
+
+<style>
+  :root {
+    --color-primary: #0B4491;
+    --color-primary-hover: #235BB2;
+    --color-accent: #DC4C86;
+    --color-accent-hover: #E86498;
+    --font-heading: 'DM Serif Text', serif;
+    --font-text: 'Open Sans', sans-serif;
+  }
+
+  /* --- Keyframes do Elementor replicados --- */
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translate3d(-100%, 0, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translate3d(0, -100%, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translate3d(100%, 0, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translate3d(0, 100%, 0); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Classes de controle de animação no Scroll */
+  .animate-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .animated {
+    visibility: visible;
+    animation-duration: 1.25s; /* Duração clássica do Elementor */
+    animation-fill-mode: both;
+  }
+
+  .fadeInLeft { animation-name: fadeInLeft; }
+  .fadeInDown { animation-name: fadeInDown; }
+  .fadeInRight { animation-name: fadeInRight; }
+  .fadeIn { animation-name: fadeIn; }
+  .fadeInUp { animation-name: fadeInUp; }
+
+
+  /* --- Estilos da Seção (Sem alterações) --- */
+  .pain-points-section {
+    padding: 90px 20px 170px;
+    background-color: #ffffff;
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    font-weight: 400;
+    color: var(--color-primary);
+    text-align: center;
+    margin: 0 auto 50px;
+    padding: 0 100px;
+    line-height: 1.3em;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 0.5% de espaço entre as linhas (cima/baixo) e 1% entre as colunas (lados) */
+    gap: 1% 0.5%; 
+  }
+
+  .pain-card {
+    color: #ffffff;
+    border: none;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .pain-card.bg-pink { background-color: var(--color-accent); }
+  .pain-card.bg-pink:hover { background-color: var(--color-accent-hover); }
+
+  .pain-card.bg-blue { background-color: var(--color-primary); }
+  .pain-card.bg-blue:hover { background-color: var(--color-primary-hover); }
+
+  .card-icon { margin-bottom: 15px; }
+
+  .pain-card:hover .card-icon {
+    animation: bob 1s infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .card-text {
+    font-family: var(--font-text);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2em;
+    margin: 0;
+  }
+
+  /* --- Popups Dialogs (Sem alterações) --- */
+  .pain-dialog {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: auto;
+    overflow: visible;
+    max-width: 90vw;
+  }
+
+  .pain-dialog::backdrop { background-color: rgba(0, 0, 0, 0.8); }
+
+  .dialog-content {
+    background-image: linear-gradient(180deg, #F9C5CC 5%, #FACFD6 25%);
+    width: 635px;
+    max-width: 100%;
+    position: relative;
+    border-radius: 3px;
+    clip-path: polygon(0% 0%, 0.5% 20%, 0 100%, 80% 98.7%, 90% 98.7%, 100% 98.9%, 99.9% 90%, 99% 0%);
+    padding: 60px 85px 60px 50px;
+    transform: rotate(-0.4deg);
+    animation: colaPostIt 0.8s cubic-bezier(0.25, 0.46, 0.45, 1.2) forwards;
+    transform-origin: left center;
+  }
+
+  @keyframes colaPostIt {
+    0% { transform: translateX(-100%) rotate(-15deg) scale(0.8); opacity: 0; }
+    70% { transform: translateX(5%) rotate(-8deg) scale(1.02); opacity: 0.9; }
+    100% { transform: translateX(0) rotate(-0.4deg) scale(1); opacity: 1; }
+  }
+
+  .dialog-inner {
+    transform: rotate(-0.02deg);
+    position: relative;
+    animation: aparecerSuave 0.5s ease-out 0.3s both;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @keyframes aparecerSuave {
+    from { opacity: 0; transform: translateY(20px) rotate(-0.02deg); }
+    to { opacity: 1; transform: translateY(0) rotate(-0.02deg); }
+  }
+
+  .dialog-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: var(--color-primary);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s;
+  }
+  .dialog-close:hover { transform: scale(1.2); }
+
+  .modal-subtitle { font-family: var(--font-heading); font-size: 18px; font-weight: 500; color: var(--color-primary); margin: 0 0 10px 0; }
+  .modal-title { font-family: var(--font-heading); font-size: 32px; font-weight: 400; line-height: 1.2em; color: var(--color-primary); margin: 0 0 15px 0; }
+  .modal-text { font-family: var(--font-text); font-size: 16px; font-weight: 400; line-height: 1.5em; color: var(--color-primary); margin: 0 0 25px 0; }
+
+.modal-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    text-decoration: none; font-family: var(--font-heading); font-size: 16px; font-weight: 400; color: #ffffff; fill: #ffffff;
+    /* Ajuste aqui: 25px (cima), 75px (direita), 25px (baixo), 45px (esquerda) */
+    padding: 25px 45px 25px 75px; 
+    background-image: url('../../assets/bg-botao.webp');
+    background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; transition: filter 0.3s ease;
+  }
+  .modal-btn:hover { filter: brightness(1.2); }
+  .icon-whatsapp { width: 1.2em; height: 1.2em; }
+
+  @media (max-width: 1024px) { .dialog-content { padding: 50px; } }
+  @media (max-width: 767px) {
+    .cards-grid { 
+      margin-top: 50px;
+      grid-template-columns: 1fr; 
+      gap: 1px; /* Espacinho sutil entre um e outro no celular */
+    }
+    .card-text { font-size: 16px; }
+    .pain-points-section { padding: 0 20px 60px; text-wrap: balance; }
+    .section-title { font-size: 1.8em; padding: 0; margin: 30px 0 15px 0; }
+    .dialog-content { padding: 30px; }
+    .modal-subtitle { font-size: 14px; }
+    .modal-title { font-size: 24px; }
+    .modal-text { font-size: 15px; }
+    .modal-btn { padding: 20px 30px 20px 0; font-size: 14px; width: 100%; background-size: contain; background-position: left; }
+    .pain-card:nth-child(odd).animated {
+      animation-name: fadeInLeft !important;
+    }
+    .pain-card:nth-child(even).animated {
+      animation-name: fadeInRight !important;
+    }
+  }
+</style>
+
+<script>
+  // Script para lidar com os Popups
+  const triggers = document.querySelectorAll('[data-popup-trigger]');
+  const closeBtns = document.querySelectorAll('[data-popup-close]');
+  
+  triggers.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-popup-trigger');
+      const dialog = document.getElementById(`dialog-${id}`) as HTMLDialogElement;
+      if (dialog) dialog.showModal();
+    });
+  });
+
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-popup-close');
+      const dialog = document.getElementById(`dialog-${id}`) as HTMLDialogElement;
+      if (dialog) dialog.close();
+    });
+  });
+
+  const dialogs = document.querySelectorAll('dialog');
+  dialogs.forEach(dialog => {
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) {
+        dialog.close();
+      }
+    });
+  });
+
+  // Script para disparar as animações ao rolar a página (Intersection Observer)
+  const animateObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        // Pega qual animação deve rodar
+        const animClass = el.getAttribute('data-animation');
+        // Remove a classe que esconde e aplica as classes de animação
+        el.classList.remove('animate-hidden');
+        if (animClass) {
+          el.classList.add('animated', animClass);
+        }
+        // Para de observar depois que animou a primeira vez
+        observer.unobserve(el);
+      }
+    });
+  }, {
+    threshold: 0.1 // Dispara quando 10% do card aparecer na tela
+  });
+
+  document.querySelectorAll('.pain-card').forEach(card => {
+    animateObserver.observe(card);
+  });
+</script>

@@ -1,0 +1,361 @@
+---
+// src/components/CarouselAboutUs.astro
+import { Image } from 'astro:assets';
+import Slide1 from '../../assets/row-1-column-1-818x1024.jpg';
+import Slide2 from '../../assets/row-2-column-1-818x1024.jpg';
+import Slide3 from '../../assets/3-818x1024.jpg';
+import Slide4 from '../../assets/4-818x1024.jpg';
+import Slide5 from '../../assets/5-818x1024.jpg';
+
+const slides = [
+  { src: Slide1, alt: "Foto Samuel 1" },
+  { src: Slide2, alt: "Foto Samuel 2" },
+  { src: Slide3, alt: "Foto Samuel 3" },
+  { src: Slide4, alt: "Foto Samuel 4" },
+  { src: Slide5, alt: "Foto Samuel 5" },
+];
+---
+
+<section class="carousel-section">
+  <div class="carousel-container">
+    
+    <button class="carousel-btn prev" aria-label="Slide anterior" disabled>
+      <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path>
+      </svg>
+    </button>
+
+    <div class="carousel-track" id="about-carousel">
+      {slides.map((slide, index) => (
+        <div class="carousel-slide" data-index={index}>
+          <figure>
+            <Image 
+              src={slide.src} 
+              alt={slide.alt} 
+              loading={index < 3 ? "eager" : "lazy"} 
+              width="818" 
+              height="1024" 
+            />
+          </figure>
+        </div>
+      ))}
+    </div>
+
+    <button class="carousel-btn next" aria-label="Próximo slide">
+      <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm113.9 231L234.4 103.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L285.1 256 183.5 357.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L369.9 273c9.4-9.4 9.4-24.6 0-34z"></path>
+      </svg>
+    </button>
+
+  </div>
+
+  <div class="carousel-pagination">
+    {slides.map((_, index) => (
+      <button 
+        class={`dot ${index === 0 ? 'active' : ''}`} 
+        data-target={index} 
+        aria-label={`Ir para a página ${index + 1}`}>
+      </button>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* --- Layout Base --- */
+  .carousel-section {
+    max-width: 100%;
+    position: relative;
+  }
+
+  .carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden; 
+  }
+
+  /* --- Trilha e Slides --- */
+  .carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; 
+    width: 100%;
+  }
+
+  .carousel-track::-webkit-scrollbar {
+    display: none; 
+  }
+
+  .carousel-slide {
+    flex: 0 0 calc(33.333%); 
+    scroll-snap-align: start;
+    will-change: transform; 
+  }
+
+  .carousel-slide figure {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* --- Botões de Navegação --- */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+
+  .carousel-btn:hover:not(:disabled) {
+    opacity: 1;
+  }
+
+  /* Adicionado estilo para botão desativado */
+  .carousel-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .carousel-btn svg {
+    width: 40px;
+    height: 40px;
+    fill: #FFFFFF;
+    filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3)); 
+  }
+
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  /* --- Paginação (Dots) --- */
+  .carousel-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #0B4491; 
+    opacity: 0.3;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  /* --- Lógica Responsiva dos Dots --- */
+  @media (min-width: 1025px) {
+    .dot:nth-child(n+4) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .dot:nth-child(n+5) {
+      display: none;
+    }
+  }
+
+  /* --- Animação de Dica (Hint) --- */
+  @keyframes elementorHint {
+    0% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-25%, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+  }
+
+  .animate-hint .carousel-slide {
+    animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* --- Responsividade da Trilha --- */
+  @media (max-width: 1024px) {
+    .carousel-slide {
+      flex: 0 0 calc(50% - 5px); 
+    }
+  }
+
+  @media (max-width: 767px) {
+    .carousel-slide {
+      flex: 0 0 100%; 
+    }
+    .carousel-btn svg {
+      width: 25px;
+      height: 25px;
+    }
+    .prev { left: 5px; }
+    .next { right: 5px; }
+    .carousel-section {
+      margin-bottom:80px;
+    }
+  }
+</style>
+
+<script>
+  function initCarousel() {
+    const track = document.getElementById('about-carousel');
+    const prevBtn = document.querySelector('.carousel-btn.prev');
+    const nextBtn = document.querySelector('.carousel-btn.next');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (!track) return;
+
+    const getSlideWidth = () => {
+      const slide = track.querySelector('.carousel-slide');
+      return slide ? slide.offsetWidth : 0;
+    };
+
+    // Nova função para atualizar o estado dos botões
+    const updateButtons = () => {
+      if (!prevBtn || !nextBtn) return;
+      
+      const scrollPosition = track.scrollLeft;
+      const maxScroll = track.scrollWidth - track.clientWidth;
+
+      // Desativa o botão Prev se estiver no início (margem de 1px por segurança)
+      if (scrollPosition <= 1) {
+        prevBtn.setAttribute('disabled', 'true');
+      } else {
+        prevBtn.removeAttribute('disabled');
+      }
+
+      // Desativa o botão Next se estiver no final
+      if (scrollPosition >= maxScroll - 1) {
+        nextBtn.setAttribute('disabled', 'true');
+      } else {
+        nextBtn.removeAttribute('disabled');
+      }
+    };
+
+    prevBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      track.scrollBy({ left: getSlideWidth(), behavior: 'smooth' });
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        const targetElement = e.target;
+        const targetIndex = parseInt(targetElement.getAttribute('data-target') || '0');
+        track.scrollTo({ left: targetIndex * getSlideWidth(), behavior: 'smooth' });
+      });
+    });
+
+    // Evento de Scroll
+    track.addEventListener('scroll', () => {
+      const scrollPosition = track.scrollLeft;
+      const slideWidth = getSlideWidth();
+      
+      if (slideWidth === 0) return; 
+
+      // Chama a atualização das setas a cada movimento de scroll
+      updateButtons();
+
+      const slidesPerView = Math.round(track.clientWidth / slideWidth);
+      const maxIndex = dots.length - slidesPerView;
+      let currentIndex = Math.round(scrollPosition / slideWidth);
+      
+      if (currentIndex > maxIndex) {
+          currentIndex = maxIndex;
+      }
+
+      dots.forEach((dot, index) => {
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }, { passive: true });
+
+    // --- Drag to Scroll ---
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      track.style.scrollSnapType = 'none'; 
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+    });
+
+    track.addEventListener('mouseleave', () => {
+      isDown = false;
+      track.style.scrollSnapType = 'x mandatory';
+      track.style.cursor = 'auto';
+    });
+
+    track.addEventListener('mouseup', () => {
+      isDown = false;
+      track.style.scrollSnapType = 'x mandatory';
+      track.style.cursor = 'auto';
+      track.scrollBy({ left: 1, behavior: 'smooth' });
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.5; 
+      track.scrollLeft = scrollLeft - walk;
+    });
+
+    // --- Intersection Observer ---
+    let animationExecuted = false; 
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (animationExecuted) return; 
+        
+        if (entry.isIntersecting) {
+          animationExecuted = true; 
+          entry.target.classList.add('animate-hint');
+          
+          setTimeout(() => {
+            entry.target.classList.remove('animate-hint');
+          }, 2500); 
+          
+          observer.disconnect(); 
+        }
+      });
+    }, { threshold: 0.6 });
+
+    observer.observe(track);
+
+    // Chamada inicial para garantir que o estado comece correto
+    updateButtons();
+  }
+
+  document.addEventListener('DOMContentLoaded', initCarousel);
+  document.addEventListener('astro:page-load', initCarousel);
+</script>

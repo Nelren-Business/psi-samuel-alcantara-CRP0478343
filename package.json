@@ -1,0 +1,22 @@
+{
+  "name": "psicologo-samuel",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/dm-serif-text": "^5.2.8",
+    "@fontsource/open-sans": "^5.2.7",
+    "@fontsource/plus-jakarta-sans": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.6",
+    "autoprefixer": "^10.4.23",
+    "tailwindcss": "^4.1.18",
+    "zod": "^3.25.76"
+  }
+}
