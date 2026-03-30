@@ -567,5 +567,9 @@ const posts = [
   }
 
   initInstagramCarousel();
-  document.addEventListener('astro:page-load', initInstagramCarousel);
+  document.addEventListener('astro:page-load', () => {
+    // Dá 100ms para o navegador terminar de pintar o Hero (LCP) 
+    // antes de começar a calcular larguras de carrossel
+    setTimeout(initInstagramCarousel, 100); 
+  });
 </script>

@@ -377,5 +377,7 @@ const slides = [
   }
 
   document.addEventListener('DOMContentLoaded', initCarousel);
-  document.addEventListener('astro:page-load', initCarousel);
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(initCarousel, 100); 
+  });
 </script>
