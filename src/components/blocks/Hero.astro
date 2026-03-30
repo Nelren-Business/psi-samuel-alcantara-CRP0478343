@@ -6,29 +6,30 @@ import { Image, getImage } from 'astro:assets';
 import TerapiaSVG from '../../assets/Terapia.svg';
 import BgHeroDesktop from '../../assets/bg-hero-01.webp';
 import BgHeroMobile from '../../assets/bg-mobile-01.webp';
+
+// Geramos apenas a URL otimizada do Mobile para alimentar a tag <source>
+const mobileImg = await getImage({ 
+  src: BgHeroMobile, 
+  format: 'webp', 
+  width: 412, 
+  height: 618, 
+  quality: 80 
+});
 ---
 
 <section class="hero-section">
-  <Image 
-    src={BgHeroDesktop}
-    alt="Fundo Desktop"
-    class="hero-bg desktop-bg"
-    fetchpriority="high"
-    loading="eager"
-    decoding="sync"
-  />
-
-  <Image 
-    src={BgHeroMobile}
-    alt="Fundo Mobile"
-    class="hero-bg mobile-bg"
-    fetchpriority="high"
-    loading="eager"
-    decoding="sync"
-    width={412} 
-    height={618}
-    quality={80}
-  />
+  
+  <picture>
+    <source media="(max-width: 1024px)" srcset={mobileImg.src} />
+    <Image 
+      src={BgHeroDesktop}
+      alt="Fundo Desktop"
+      class="hero-bg"
+      fetchpriority="high"
+      loading="eager"
+      decoding="sync"
+    />
+  </picture>
 
   <Image 
     src={TerapiaSVG} 
@@ -100,14 +101,11 @@ import BgHeroMobile from '../../assets/bg-mobile-01.webp';
     left: 0;
     width: 100%;
     height: 100%;
+    /* No Desktop, ela preenche a tela toda */
     object-fit: cover;
     object-position: top center;
-    z-index: 0; /* MUDOU AQUI: Agora ela fica no fundo real */
+    z-index: 0; 
   }
-
-  /* Controle de qual imagem aparece (Desktop vs Mobile) */
-  .desktop-bg { display: block; }
-  .mobile-bg { display: none; }
 
   .deco-image {
     position: absolute;
@@ -240,18 +238,17 @@ import BgHeroMobile from '../../assets/bg-mobile-01.webp';
 
   /* --- Responsividade (Mobile & Tablet) --- */
   @media (max-width: 1024px) {
+    
+    /* Quando for mobile, a imagem se comporta perfeitamente sem cortar */
+    .hero-bg {
+      object-fit: contain;
+      object-position: top;
+    }
+
     .hero-section {
       align-items: center;
       padding-top: 750px; 
       padding-bottom: 20px;
-    }
-
-    /* Alterna as imagens de fundo para Mobile */
-    .desktop-bg { display: none; }
-    .mobile-bg { 
-      display: block; 
-      object-fit: contain; /* Mantido do seu background-size: contain */
-      object-position: top;
     }
     
     .hero-content {
