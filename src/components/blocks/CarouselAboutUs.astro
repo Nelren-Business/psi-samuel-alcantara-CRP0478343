@@ -33,10 +33,10 @@ const slides = [
               src={slide.src} 
               alt={slide.alt} 
               loading={index < 3 ? "eager" : "lazy"} 
-              width={721} 
-              height={903}
-              widths={[400, 721, 1080]}
-              sizes="(max-width: 721px) 100vw, 721px"
+              width={412} 
+              height={516}
+              widths={[400, 412, 1080]}
+              sizes="(max-width: 412px) 100vw, 412px"
               quality={80} 
               style={{ objectFit: 'cover' }}
             />
@@ -231,40 +231,47 @@ const slides = [
     
     if (!track) return;
 
-    // Lemos a largura do slide uma vez na interação, e não dezenas de vezes.
-    const getSlideWidth = () => {
+    // --- CACHE DE DIMENSÕES (O Segredo do PageSpeed) ---
+    // Guardamos as medidas aqui para nunca ter que consultar o DOM durante o scroll
+    let cachedSlideWidth = 0;
+    let cachedClientWidth = 0;
+    let cachedScrollWidth = 0;
+
+    const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
-      return slide ? slide.offsetWidth : 0;
+      cachedSlideWidth = slide ? slide.offsetWidth : 0;
+      cachedClientWidth = track.clientWidth;
+      cachedScrollWidth = track.scrollWidth;
+      handleScrollUpdates(); // Atualiza os botões assim que medimos
     };
 
-    // --- OTIMIZAÇÃO: Loop de Scroll com requestAnimationFrame ---
-    // Isso impede o Layout Thrashing (Reflow Forçado) limitando a execução
-    // a uma vez por frame de tela do monitor.
+    // Atualiza as medidas se o usuário virar o celular ou mudar o tamanho da janela
+    window.addEventListener('resize', () => {
+      window.requestAnimationFrame(updateDimensions);
+    }, { passive: true });
+
     let isTicking = false;
 
     const handleScrollUpdates = () => {
-      // 1. FASE DE LEITURA (Apenas consulta as dimensões geométricas - não altera DOM)
+      // 1. FASE DE LEITURA (Lê apenas a posição do scroll, o que não força reflow)
       const scrollPosition = track.scrollLeft;
-      const scrollWidth = track.scrollWidth;
-      const clientWidth = track.clientWidth;
-      const slideWidth = getSlideWidth();
 
-      if (slideWidth === 0) {
+      if (cachedSlideWidth === 0) {
         isTicking = false;
         return;
       }
 
-      // Cálculos Matemáticos em Memória (Rápido, sem afetar o navegador)
-      const maxScroll = scrollWidth - clientWidth;
+      // Cálculos Matemáticos na Memória
+      const maxScroll = cachedScrollWidth - cachedClientWidth;
       const isAtStart = scrollPosition <= 1;
       const isAtEnd = scrollPosition >= maxScroll - 1;
       
-      const slidesPerView = Math.round(clientWidth / slideWidth);
+      const slidesPerView = Math.round(cachedClientWidth / cachedSlideWidth);
       const maxIndex = dots.length - slidesPerView;
-      let currentIndex = Math.round(scrollPosition / slideWidth);
+      let currentIndex = Math.round(scrollPosition / cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-      // 2. FASE DE ESCRITA (Apenas altera o DOM - não consulta mais nada)
+      // 2. FASE DE ESCRITA
       if (prevBtn) {
         if (isAtStart) prevBtn.setAttribute('disabled', 'true');
         else prevBtn.removeAttribute('disabled');
@@ -283,11 +290,9 @@ const slides = [
         }
       });
 
-      // Libera para o próximo frame
       isTicking = false;
     };
 
-    // Adiciona o throttle do frame no evento de scroll
     track.addEventListener('scroll', () => {
       if (!isTicking) {
         window.requestAnimationFrame(handleScrollUpdates);
@@ -295,33 +300,33 @@ const slides = [
       }
     }, { passive: true });
 
-    // --- Navegação de Botões ---
+    // --- Navegação ---
     prevBtn?.addEventListener('click', () => {
-      track.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
+      track.scrollBy({ left: -cachedSlideWidth, behavior: 'smooth' });
     });
 
     nextBtn?.addEventListener('click', () => {
-      track.scrollBy({ left: getSlideWidth(), behavior: 'smooth' });
+      track.scrollBy({ left: cachedSlideWidth, behavior: 'smooth' });
     });
 
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
         const targetElement = e.target;
         const targetIndex = parseInt(targetElement.getAttribute('data-target') || '0');
-        track.scrollTo({ left: targetIndex * getSlideWidth(), behavior: 'smooth' });
+        track.scrollTo({ left: targetIndex * cachedSlideWidth, behavior: 'smooth' });
       });
     });
 
-    // --- OTIMIZAÇÃO: Drag to Scroll ---
+    // --- Drag to Scroll ---
     let isDown = false;
     let startX;
     let scrollLeft;
-    let trackOffsetLeft; // Cache para evitar leitura no mousemove
+    let trackOffsetLeft; 
 
     track.addEventListener('mousedown', (e) => {
       isDown = true;
       track.style.scrollSnapType = 'none'; 
-      trackOffsetLeft = track.offsetLeft; // LEITURA: Feita apenas uma vez no clique
+      trackOffsetLeft = track.offsetLeft; 
       startX = e.pageX - trackOffsetLeft;
       scrollLeft = track.scrollLeft;
       track.style.cursor = 'grabbing';
@@ -345,13 +350,12 @@ const slides = [
     track.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      // Usa a variável em cache (trackOffsetLeft) em vez de consultar track.offsetLeft repetidamente
       const x = e.pageX - trackOffsetLeft; 
       const walk = (x - startX) * 1.5; 
-      track.scrollLeft = scrollLeft - walk; // ESCRITA pura
+      track.scrollLeft = scrollLeft - walk; 
     });
 
-    // --- Intersection Observer (Inalterado) ---
+    // --- Intersection Observer ---
     let animationExecuted = false; 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -360,11 +364,7 @@ const slides = [
         if (entry.isIntersecting) {
           animationExecuted = true; 
           entry.target.classList.add('animate-hint');
-          
-          setTimeout(() => {
-            entry.target.classList.remove('animate-hint');
-          }, 2500); 
-          
+          setTimeout(() => { entry.target.classList.remove('animate-hint'); }, 2500); 
           observer.disconnect(); 
         }
       });
@@ -372,8 +372,8 @@ const slides = [
 
     observer.observe(track);
 
-    // Chamada inicial para configurar estado das setas/bolinhas
-    handleScrollUpdates();
+    // INICIALIZAÇÃO: Calcula tudo pela primeira vez
+    updateDimensions();
   }
 
   document.addEventListener('DOMContentLoaded', initCarousel);

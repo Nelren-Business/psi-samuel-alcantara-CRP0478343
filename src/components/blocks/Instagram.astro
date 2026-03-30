@@ -433,50 +433,57 @@ const posts = [
     
     if (!track) return;
 
-    const getSlideWidth = () => {
+    // --- CACHE DE DIMENSÕES ---
+    let cachedSlideWidth = 0;
+    let cachedClientWidth = 0;
+
+    const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
-      return slide ? slide.offsetWidth + 30 : 0; 
+      // Soma os 30px do gap do seu CSS
+      cachedSlideWidth = slide ? slide.offsetWidth + 30 : 0; 
+      cachedClientWidth = track.clientWidth;
+      handleScrollUpdates();
     };
+
+    window.addEventListener('resize', () => {
+      window.requestAnimationFrame(updateDimensions);
+    }, { passive: true });
 
     // --- Navegação pelas Setas ---
     if (prevBtn) {
       prevBtn.onclick = () => {
-        track.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
+        track.scrollBy({ left: -cachedSlideWidth, behavior: 'smooth' });
       };
     }
 
     if (nextBtn) {
       nextBtn.onclick = () => {
-        track.scrollBy({ left: getSlideWidth(), behavior: 'smooth' });
+        track.scrollBy({ left: cachedSlideWidth, behavior: 'smooth' });
       };
     }
 
-    // --- Lógica de clique nos Dots ---
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
         const targetElement = e.target;
         const targetIndex = parseInt(targetElement.getAttribute('data-target') || '0');
-        track.scrollTo({ left: targetIndex * getSlideWidth(), behavior: 'smooth' });
+        track.scrollTo({ left: targetIndex * cachedSlideWidth, behavior: 'smooth' });
       });
     });
 
-    // --- OTIMIZAÇÃO: Atualização de Dots com o Scroll ---
     let isTicking = false;
 
     const handleScrollUpdates = () => {
-      // 1. FASE DE LEITURA
+      // 1. FASE DE LEITURA (Lê apenas a barra de rolagem)
       const scrollPosition = track.scrollLeft;
-      const clientWidth = track.clientWidth;
-      const slideWidth = getSlideWidth();
       
-      if (slideWidth === 0) {
+      if (cachedSlideWidth === 0) {
         isTicking = false;
         return; 
       }
 
-      const slidesPerView = Math.round(clientWidth / slideWidth);
+      const slidesPerView = Math.round(cachedClientWidth / cachedSlideWidth);
       const maxIndex = dots.length - slidesPerView;
-      let currentIndex = Math.round(scrollPosition / slideWidth);
+      let currentIndex = Math.round(scrollPosition / cachedSlideWidth);
       
       if (currentIndex > maxIndex) {
           currentIndex = maxIndex;
@@ -501,16 +508,16 @@ const posts = [
       }
     }, { passive: true });
 
-    // --- OTIMIZAÇÃO: Arrasto com o mouse no Desktop ---
+    // --- Arrasto com o mouse ---
     let isDown = false;
     let startX;
     let scrollLeft;
-    let trackOffsetLeft; // Cache para o offset
+    let trackOffsetLeft;
 
     track.addEventListener('mousedown', (e) => {
       isDown = true;
       track.style.scrollSnapType = 'none'; 
-      trackOffsetLeft = track.offsetLeft; // LEITURA: Guardada apenas no clique
+      trackOffsetLeft = track.offsetLeft; 
       startX = e.pageX - trackOffsetLeft;
       scrollLeft = track.scrollLeft;
       track.style.cursor = 'grabbing';
@@ -535,35 +542,30 @@ const posts = [
     track.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      // Usa a variável em cache em vez de ler o DOM repetidamente
       const x = e.pageX - trackOffsetLeft;
       const walk = (x - startX) * 1.5; 
-      track.scrollLeft = scrollLeft - walk; // ESCRITA
+      track.scrollLeft = scrollLeft - walk; 
     });
 
-    // --- Animação Hint via IntersectionObserver ---
     let animationExecuted = false; 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (animationExecuted) return; 
-        
         if (entry.isIntersecting) {
           animationExecuted = true; 
           entry.target.classList.add('animate-hint');
-          
-          setTimeout(() => {
-            entry.target.classList.remove('animate-hint');
-          }, 2500); 
-          
+          setTimeout(() => { entry.target.classList.remove('animate-hint'); }, 2500); 
           observer.disconnect(); 
         }
       });
     }, { threshold: 0.6 });
 
     observer.observe(track);
+    
+    // INICIALIZAÇÃO
+    updateDimensions();
   }
 
-  // Executa o script
   initInstagramCarousel();
   document.addEventListener('astro:page-load', initInstagramCarousel);
 </script>
