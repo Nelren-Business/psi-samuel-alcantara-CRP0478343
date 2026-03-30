@@ -33,8 +33,12 @@ const slides = [
               src={slide.src} 
               alt={slide.alt} 
               loading={index < 3 ? "eager" : "lazy"} 
-              width="818" 
-              height="1024" 
+              width={721} 
+              height={903}
+              widths={[400, 721, 1080]}
+              sizes="(max-width: 721px) 100vw, 721px"
+              quality={80} 
+              style={{ objectFit: 'cover' }}
             />
           </figure>
         </div>
@@ -227,33 +231,71 @@ const slides = [
     
     if (!track) return;
 
+    // Lemos a largura do slide uma vez na interação, e não dezenas de vezes.
     const getSlideWidth = () => {
       const slide = track.querySelector('.carousel-slide');
       return slide ? slide.offsetWidth : 0;
     };
 
-    // Nova função para atualizar o estado dos botões
-    const updateButtons = () => {
-      if (!prevBtn || !nextBtn) return;
-      
+    // --- OTIMIZAÇÃO: Loop de Scroll com requestAnimationFrame ---
+    // Isso impede o Layout Thrashing (Reflow Forçado) limitando a execução
+    // a uma vez por frame de tela do monitor.
+    let isTicking = false;
+
+    const handleScrollUpdates = () => {
+      // 1. FASE DE LEITURA (Apenas consulta as dimensões geométricas - não altera DOM)
       const scrollPosition = track.scrollLeft;
-      const maxScroll = track.scrollWidth - track.clientWidth;
+      const scrollWidth = track.scrollWidth;
+      const clientWidth = track.clientWidth;
+      const slideWidth = getSlideWidth();
 
-      // Desativa o botão Prev se estiver no início (margem de 1px por segurança)
-      if (scrollPosition <= 1) {
-        prevBtn.setAttribute('disabled', 'true');
-      } else {
-        prevBtn.removeAttribute('disabled');
+      if (slideWidth === 0) {
+        isTicking = false;
+        return;
       }
 
-      // Desativa o botão Next se estiver no final
-      if (scrollPosition >= maxScroll - 1) {
-        nextBtn.setAttribute('disabled', 'true');
-      } else {
-        nextBtn.removeAttribute('disabled');
+      // Cálculos Matemáticos em Memória (Rápido, sem afetar o navegador)
+      const maxScroll = scrollWidth - clientWidth;
+      const isAtStart = scrollPosition <= 1;
+      const isAtEnd = scrollPosition >= maxScroll - 1;
+      
+      const slidesPerView = Math.round(clientWidth / slideWidth);
+      const maxIndex = dots.length - slidesPerView;
+      let currentIndex = Math.round(scrollPosition / slideWidth);
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+      // 2. FASE DE ESCRITA (Apenas altera o DOM - não consulta mais nada)
+      if (prevBtn) {
+        if (isAtStart) prevBtn.setAttribute('disabled', 'true');
+        else prevBtn.removeAttribute('disabled');
       }
+
+      if (nextBtn) {
+        if (isAtEnd) nextBtn.setAttribute('disabled', 'true');
+        else nextBtn.removeAttribute('disabled');
+      }
+
+      dots.forEach((dot, index) => {
+        if (index === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      // Libera para o próximo frame
+      isTicking = false;
     };
 
+    // Adiciona o throttle do frame no evento de scroll
+    track.addEventListener('scroll', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(handleScrollUpdates);
+        isTicking = true;
+      }
+    }, { passive: true });
+
+    // --- Navegação de Botões ---
     prevBtn?.addEventListener('click', () => {
       track.scrollBy({ left: -getSlideWidth(), behavior: 'smooth' });
     });
@@ -270,53 +312,30 @@ const slides = [
       });
     });
 
-    // Evento de Scroll
-    track.addEventListener('scroll', () => {
-      const scrollPosition = track.scrollLeft;
-      const slideWidth = getSlideWidth();
-      
-      if (slideWidth === 0) return; 
-
-      // Chama a atualização das setas a cada movimento de scroll
-      updateButtons();
-
-      const slidesPerView = Math.round(track.clientWidth / slideWidth);
-      const maxIndex = dots.length - slidesPerView;
-      let currentIndex = Math.round(scrollPosition / slideWidth);
-      
-      if (currentIndex > maxIndex) {
-          currentIndex = maxIndex;
-      }
-
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
-      });
-    }, { passive: true });
-
-    // --- Drag to Scroll ---
+    // --- OTIMIZAÇÃO: Drag to Scroll ---
     let isDown = false;
     let startX;
     let scrollLeft;
+    let trackOffsetLeft; // Cache para evitar leitura no mousemove
 
     track.addEventListener('mousedown', (e) => {
       isDown = true;
       track.style.scrollSnapType = 'none'; 
-      startX = e.pageX - track.offsetLeft;
+      trackOffsetLeft = track.offsetLeft; // LEITURA: Feita apenas uma vez no clique
+      startX = e.pageX - trackOffsetLeft;
       scrollLeft = track.scrollLeft;
       track.style.cursor = 'grabbing';
     });
 
     track.addEventListener('mouseleave', () => {
+      if (!isDown) return;
       isDown = false;
       track.style.scrollSnapType = 'x mandatory';
       track.style.cursor = 'auto';
     });
 
     track.addEventListener('mouseup', () => {
+      if (!isDown) return;
       isDown = false;
       track.style.scrollSnapType = 'x mandatory';
       track.style.cursor = 'auto';
@@ -326,12 +345,13 @@ const slides = [
     track.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
+      // Usa a variável em cache (trackOffsetLeft) em vez de consultar track.offsetLeft repetidamente
+      const x = e.pageX - trackOffsetLeft; 
       const walk = (x - startX) * 1.5; 
-      track.scrollLeft = scrollLeft - walk;
+      track.scrollLeft = scrollLeft - walk; // ESCRITA pura
     });
 
-    // --- Intersection Observer ---
+    // --- Intersection Observer (Inalterado) ---
     let animationExecuted = false; 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -352,8 +372,8 @@ const slides = [
 
     observer.observe(track);
 
-    // Chamada inicial para garantir que o estado comece correto
-    updateButtons();
+    // Chamada inicial para configurar estado das setas/bolinhas
+    handleScrollUpdates();
   }
 
   document.addEventListener('DOMContentLoaded', initCarousel);

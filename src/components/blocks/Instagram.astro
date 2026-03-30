@@ -62,7 +62,19 @@ const posts = [
         {posts.map((post) => (
           <a href={post.link} target="_blank" rel="noopener noreferrer" class="carousel-slide" aria-label="Ver post no Instagram">
             <figure class="slide-inner">
-              <Image src={post.img} alt={post.alt} width="819" height="1024" loading="lazy" decoding="async" />
+              <Image 
+                src={post.img} 
+                alt={post.alt} 
+                width={819} 
+                height={1024} 
+                /* Gera as versões otimizadas */
+                widths={[400, 600, 819]} 
+                /* Explica o layout do seu CSS para o navegador */
+                sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                quality={80}
+                loading="lazy" 
+                decoding="async" 
+              />
               
               <div class="slide-overlay">
                 <svg class="overlay-icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
@@ -332,7 +344,7 @@ const posts = [
 
   /* Botão WhatsApp */
   .btn-whatsapp {
-    background-image: url('https://samuelalcantara.com.br/wp-content/uploads/2025/02/bg-botao.webp');
+    background-image: url('../../assets/bg-botao.webp');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -421,10 +433,9 @@ const posts = [
     
     if (!track) return;
 
-    // Calcula a largura atual de um slide + gap
     const getSlideWidth = () => {
       const slide = track.querySelector('.carousel-slide');
-      return slide ? slide.offsetWidth + 30 : 0; // 30px é o gap definido no CSS
+      return slide ? slide.offsetWidth + 30 : 0; 
     };
 
     // --- Navegação pelas Setas ---
@@ -449,14 +460,21 @@ const posts = [
       });
     });
 
-    // --- Atualização de Dots com o Scroll ---
-    track.addEventListener('scroll', () => {
+    // --- OTIMIZAÇÃO: Atualização de Dots com o Scroll ---
+    let isTicking = false;
+
+    const handleScrollUpdates = () => {
+      // 1. FASE DE LEITURA
       const scrollPosition = track.scrollLeft;
+      const clientWidth = track.clientWidth;
       const slideWidth = getSlideWidth();
       
-      if (slideWidth === 0) return; 
+      if (slideWidth === 0) {
+        isTicking = false;
+        return; 
+      }
 
-      const slidesPerView = Math.round(track.clientWidth / slideWidth);
+      const slidesPerView = Math.round(clientWidth / slideWidth);
       const maxIndex = dots.length - slidesPerView;
       let currentIndex = Math.round(scrollPosition / slideWidth);
       
@@ -464,6 +482,7 @@ const posts = [
           currentIndex = maxIndex;
       }
 
+      // 2. FASE DE ESCRITA
       dots.forEach((dot, index) => {
         if (index === currentIndex) {
           dot.classList.add('active');
@@ -471,21 +490,30 @@ const posts = [
           dot.classList.remove('active');
         }
       });
+
+      isTicking = false;
+    };
+
+    track.addEventListener('scroll', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(handleScrollUpdates);
+        isTicking = true;
+      }
     }, { passive: true });
 
-    // --- Arrasto com o mouse no Desktop (Drag to Scroll) ---
+    // --- OTIMIZAÇÃO: Arrasto com o mouse no Desktop ---
     let isDown = false;
     let startX;
     let scrollLeft;
+    let trackOffsetLeft; // Cache para o offset
 
     track.addEventListener('mousedown', (e) => {
       isDown = true;
-      track.style.scrollSnapType = 'none'; // Desativa o snap durante o arrasto
-      startX = e.pageX - track.offsetLeft;
+      track.style.scrollSnapType = 'none'; 
+      trackOffsetLeft = track.offsetLeft; // LEITURA: Guardada apenas no clique
+      startX = e.pageX - trackOffsetLeft;
       scrollLeft = track.scrollLeft;
       track.style.cursor = 'grabbing';
-      
-      // Previne que as imagens sejam "arrastadas" nativamente pelo navegador, quebrando a interação
       e.preventDefault(); 
     });
 
@@ -501,16 +529,16 @@ const posts = [
       isDown = false;
       track.style.scrollSnapType = 'x mandatory';
       track.style.cursor = 'auto';
-      // Força um pequeno scroll para ativar o snap após soltar
       track.scrollBy({ left: 1, behavior: 'smooth' });
     });
 
     track.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
-      const walk = (x - startX) * 1.5; // Multiplicador para a velocidade do arrasto
-      track.scrollLeft = scrollLeft - walk;
+      // Usa a variável em cache em vez de ler o DOM repetidamente
+      const x = e.pageX - trackOffsetLeft;
+      const walk = (x - startX) * 1.5; 
+      track.scrollLeft = scrollLeft - walk; // ESCRITA
     });
 
     // --- Animação Hint via IntersectionObserver ---
@@ -521,7 +549,6 @@ const posts = [
         
         if (entry.isIntersecting) {
           animationExecuted = true; 
-          
           entry.target.classList.add('animate-hint');
           
           setTimeout(() => {

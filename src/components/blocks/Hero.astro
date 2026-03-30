@@ -4,15 +4,35 @@ const whatsappLink = "https://api.whatsapp.com/send/?phone=5537998164092&text=Ol
 const whatsappLinkAgendar = "https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!";
 import { Image } from 'astro:assets';
 import TerapiaSVG from '../../assets/Terapia.svg';
+import BgHeroDesktop from '../../assets/bg-hero-01.webp';
+import BgHeroMobile from '../../assets/bg-mobile-01.webp';
 ---
 
 <section class="hero-section">
   <Image 
-    fetchpriority="high" 
-    decoding="async" 
+    src={BgHeroDesktop}
+    alt="Fundo Desktop"
+    class="hero-bg desktop-bg"
+    fetchpriority="high"
+    loading="eager"
+    decoding="sync"
+  />
+
+  <Image 
+    src={BgHeroMobile}
+    alt="Fundo Mobile"
+    class="hero-bg mobile-bg"
+    fetchpriority="high"
+    loading="eager"
+    decoding="sync"
+  />
+
+  <Image 
     src={TerapiaSVG} 
     class="deco-image" 
     alt="Ilustração Terapia"
+    loading="eager"
+    decoding="async"
   />
 
   <div class="hero-content">
@@ -66,12 +86,25 @@ import TerapiaSVG from '../../assets/Terapia.svg';
     min-height: 800px;
     padding: 90px 20px 100px 20px;
     
-    background-image: url('../../assets/bg-hero-01.webp');
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    /* REMOVIDAS AS PROPRIEDADES DE BACKGROUND DO CSS */
     overflow: hidden;
   }
+
+  /* --- Estilo das Imagens de Fundo no HTML --- */
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    z-index: 1; /* Fica atrás do conteúdo, mas à frente da svg de deco */
+  }
+
+  /* Controle de qual imagem aparece (Desktop vs Mobile) */
+  .desktop-bg { display: block; }
+  .mobile-bg { display: none; }
 
   .deco-image {
     position: absolute;
@@ -174,8 +207,8 @@ import TerapiaSVG from '../../assets/Terapia.svg';
     font-family: var(--font-text);
     font-size: 16px;
     color: var(--color-primary);
-    margin-top: 12px;   /* Afasta o botão do texto acima */
-    margin-bottom: 8px; /* Dá um respiro abaixo do botão */
+    margin-top: 12px;   
+    margin-bottom: 8px; 
     fill: var(--color-primary);
     border: 1px solid rgba(217, 72, 129, 0.42);
     padding: 8px 8px;
@@ -191,12 +224,11 @@ import TerapiaSVG from '../../assets/Terapia.svg';
     fill: var(--color-bg-light);
     padding: 31px 40px 32px 85px; 
     
-    /* Imagem de fundo recuperada do WP Rocket */
     background-image: url('../../assets/bg-botao.webp');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: transparent; /* Remove a cor sólida para mostrar a imagem */
+    background-color: transparent; 
   }
   
   .btn-solid:hover {
@@ -209,9 +241,14 @@ import TerapiaSVG from '../../assets/Terapia.svg';
       align-items: center;
       padding-top: 750px; 
       padding-bottom: 20px;
-      
-      /* Imagem de fundo Mobile recuperada do WP Rocket */
-      background-image: url('../../assets/bg-mobile-01.webp');
+    }
+
+    /* Alterna as imagens de fundo para Mobile */
+    .desktop-bg { display: none; }
+    .mobile-bg { 
+      display: block; 
+      object-fit: contain; /* Mantido do seu background-size: contain */
+      object-position: top;
     }
     
     .hero-content {
@@ -242,7 +279,6 @@ import TerapiaSVG from '../../assets/Terapia.svg';
     .hero-section {
       min-height: auto;
       padding-top: 100%;
-      background-size: contain;
     }
 
     .title {
