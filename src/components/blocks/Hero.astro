@@ -13,9 +13,11 @@ import BgHeroMobile from '../../assets/bg-mobile-01.webp';
     src={BgHeroDesktop}
     alt="Fundo Desktop"
     class="hero-bg desktop-bg"
-    fetchpriority="low"
-    loading="lazy"
-    decoding="async"
+    fetchpriority="high"
+    loading="eager"
+    decoding="sync"
+    width={1920} 
+    height={800}
   />
 
   <Image 
@@ -23,8 +25,8 @@ import BgHeroMobile from '../../assets/bg-mobile-01.webp';
     alt="Fundo Mobile"
     class="hero-bg mobile-bg"
     fetchpriority="high"
-    loading="lazy"
-    decoding="async"
+    loading="eager"
+    decoding="sync"
     width={412} 
     height={618}
   />
