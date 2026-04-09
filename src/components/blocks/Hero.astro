@@ -6,25 +6,28 @@ import { Image, getImage } from 'astro:assets';
 import TerapiaSVG from '../../assets/Terapia.svg';
 import BgHeroDesktop from '../../assets/bg-hero-01.webp';
 import BgHeroMobile from '../../assets/bg-mobile-01.webp';
-
-// Otimiza as imagens para extrair o src correto no build
-const desktopImg = await getImage({ src: BgHeroDesktop, format: 'webp' });
-const mobileImg = await getImage({ src: BgHeroMobile, format: 'webp', width: 412, height: 618 });
 ---
 
 <section class="hero-section">
-  <picture>
-    <source media="(max-width: 1024px)" srcset={mobileImg.src} />
-    
-    <img 
-      src={desktopImg.src} 
-      alt="Fundo da seção principal" 
-      class="hero-bg"
-      fetchpriority="high"
-      loading="eager"
-      decoding="sync"
-    />
-  </picture>
+  <Image 
+    src={BgHeroDesktop}
+    alt="Fundo Desktop"
+    class="hero-bg desktop-bg"
+    fetchpriority="low"
+    loading="eager"
+    decoding="async"
+  />
+
+  <Image 
+    src={BgHeroMobile}
+    alt="Fundo Mobile"
+    class="hero-bg mobile-bg"
+    fetchpriority="high"
+    loading="eager"
+    decoding="sync"
+    width={412} 
+    height={618}
+  />
 
   <Image 
     src={TerapiaSVG} 
@@ -100,6 +103,10 @@ const mobileImg = await getImage({ src: BgHeroMobile, format: 'webp', width: 412
     object-position: top center;
     z-index: 0; /* MUDOU AQUI: Agora ela fica no fundo real */
   }
+
+  /* Controle de qual imagem aparece (Desktop vs Mobile) */
+  .desktop-bg { display: block; }
+  .mobile-bg { display: none; }
 
   .deco-image {
     position: absolute;
@@ -237,9 +244,12 @@ const mobileImg = await getImage({ src: BgHeroMobile, format: 'webp', width: 412
       padding-top: 750px; 
       padding-bottom: 20px;
     }
-    
-    .hero-bg {
-      object-fit: contain; 
+
+    /* Alterna as imagens de fundo para Mobile */
+    .desktop-bg { display: none; }
+    .mobile-bg { 
+      display: block; 
+      object-fit: contain; /* Mantido do seu background-size: contain */
       object-position: top;
     }
     
