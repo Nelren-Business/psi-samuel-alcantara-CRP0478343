@@ -43,6 +43,8 @@ main {
   /* Garante que o conteúdo principal empurre o footer para baixo */
   display: block;
   width: 100%;
+  /* O CADEADO FINAL: Corta qualquer carrossel ou imagem que tente vazar no mobile */
+  overflow-x: hidden; 
 }
 
 /* 4. ESTILIZAÇÃO DE TÍTULOS */
