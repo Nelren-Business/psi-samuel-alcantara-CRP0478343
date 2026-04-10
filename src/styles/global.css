@@ -1,47 +1,81 @@
-@import "tailwindcss";
+/* 1. CSS RESET BÁSICO (Substitui o Preflight do Tailwind) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* 1. Design Tokens extraídos do Elementor */
-@theme {
+html {
+  overflow-y: auto;   /* A rolagem vertical acontece SÓ aqui */
+  overflow-x: hidden; /* Corta qualquer elemento que vaze para os lados */
+  height: 100%;       /* Garante que a raiz ocupe a tela toda */
+  scroll-behavior: smooth;
+}
+
+/* 2. DESIGN TOKENS (Variáveis Nativas) */
+:root {
   /* Cores Globais */
-  --color-brand-primary: #0B4491;   /* Azul escuro principal */
-  --color-brand-secondary: #0B4491; /* No seu Elementor, estava igual a primária */
-  --color-brand-text: #0B4491;      /* Cor do texto base (azul escuro) */
-  --color-brand-accent: #D94881;    /* Rosa/Magenta de destaque */
-  --color-brand-light: #FFFFFF;     /* Bege claro de fundo (antigo bf478e4) */
+  --color-brand-primary: #0B4491;
+  --color-brand-secondary: #0B4491;
+  --color-brand-text: #0B4491;
+  --color-brand-accent: #D94881;
+  --color-brand-light: #FFFFFF;
 
-  /* Tipografia Global */
+  /* Tipografia */
   --font-heading: "DM Serif Text", serif;
   --font-body: "Open Sans", sans-serif;
 }
 
-/* 2. Estilos base da página */
-html, body {
-  @apply antialiased scroll-smooth;
+body {
+  overflow: visible;  /* O SEGREDO: O body não cria scroll, ele deixa vazar pro HTML */
+  min-height: 100%;   /* Ocupa pelo menos a tela toda */
+  margin: 0;          /* Tira as margens nativas */
+  padding: 0;
   
-  /* Mantendo o custom CSS que você tinha no final do Elementor */
-  width: 100%;
-  overflow-x: hidden;
-  
-  /* Aplicando o fundo, cor de texto e fonte base usando as variáveis acima */
+  /* Seus estilos de design que já estavam aí */
   background-color: var(--color-brand-light);
   color: var(--color-brand-text);
   font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 3. Estilização Global de Títulos */
+main {
+  /* Garante que o conteúdo principal empurre o footer para baixo */
+  display: block;
+  width: 100%;
+}
+
+/* 4. ESTILIZAÇÃO DE TÍTULOS */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  /* A cor principal para títulos e pesos padrões podem ser definidos aqui */
   color: var(--color-brand-primary);
   font-weight: 400; 
 }
 
-/* 4. Estilos globais para links e botões (opcional, base de reset) */
+/* 5. LINKS E BOTÕES */
 a {
   color: var(--color-brand-accent);
-  @apply transition-colors duration-300;
+  text-decoration: none;
+  /* Equivalente ao @apply transition-colors duration-300 */
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 a:hover {
-  @apply opacity-80;
+  /* Equivalente ao @apply opacity-80 */
+  opacity: 0.8;
+}
+
+/* 6. CORREÇÃO DE LARGURA PARA MOBILE (Substitui o Preflight de mídia do Tailwind) */
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  max-width: 100%; /* Impede que imagens e vídeos quebrem a tela no mobile */
+  height: auto;
+}
+
+/* Garante que palavras muito longas ou links não quebrem o layout */
+p, h1, h2, h3, h4, h5, h6, a {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }

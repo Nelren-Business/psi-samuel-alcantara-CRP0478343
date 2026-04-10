@@ -130,11 +130,13 @@ import Nelren from '../../assets/NelrenLogo.png';
     height: 14px;
   }
 
-  /* Ajuste para garantir que todos SVG's fiquem proporcionais */
-  .footer-links .icon svg {
+  /* Ajuste para garantir que SVG's e Imagens fiquem proporcionais */
+  .footer-links .icon svg,
+  .footer-links .icon img {
     width: 100%;
     height: auto;
     max-height: 14px;
+    object-fit: contain; /* Garante que a imagem se ajuste sem distorcer */
   }
 
   .footer-links .text {
