@@ -4,6 +4,11 @@
 import { Image } from 'astro:assets';
 import LinhaGrande from '../../assets/linha-grande.png';
 
+// Novas importações de imagem
+import PranchetaFinal from '../../assets/Prancheta-Final.png';
+import BluePin4 from '../../assets/Blue-Pin-4.svg';
+import BluePin5 from '../../assets/Blue-Pin-5.svg';
+
 const steps = [
   {
     title: "Contato Inicial",
@@ -49,6 +54,15 @@ const steps = [
 ---
 
 <section class="process-section">
+  <Image 
+    src={PranchetaFinal} 
+    alt="" 
+    class="bg-section-process" 
+    loading="lazy" 
+    decoding="async" 
+    aria-hidden="true" 
+  />
+
   <div class="container">
     
     <header class="section-header">
@@ -60,6 +74,29 @@ const steps = [
 
       {steps.map((step) => (
         <div class={`timeline-item ${step.align} ${step.pinClass}`} style={`width: ${step.width};`}>
+          
+          {step.pinClass === 'card1' && (
+            <Image 
+              src={BluePin4} 
+              alt="" 
+              class="pin-image pin-left" 
+              loading="lazy" 
+              decoding="async" 
+              aria-hidden="true" 
+            />
+          )}
+
+          {step.pinClass === 'card2' && (
+            <Image 
+              src={BluePin5} 
+              alt="" 
+              class="pin-image pin-right" 
+              loading="lazy" 
+              decoding="async" 
+              aria-hidden="true" 
+            />
+          )}
+
           <div class="timeline-icon" set:html={step.icon} />
           
           <div class="timeline-content">
@@ -77,19 +114,30 @@ const steps = [
   /* --- Seção Base --- */
   .process-section {
     background-color: #0B4491;
-    background-image: url('../../assets/Prancheta-Final.png');
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-size: contain;
     padding: 90px 20px 160px;
     position: relative;
     overflow: hidden;
+    /* Removidos: background-image, background-position, background-repeat, background-size */
+  }
+
+  /* Nova Classe para o fundo da Seção */
+  .bg-section-process {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .container {
     max-width: 1140px;
     margin: 0 auto;
     position: relative;
+    z-index: 1; /* Garante que o conteúdo fica sobre a imagem de fundo */
   }
 
   /* --- Cabeçalho e Destaque --- */
@@ -167,29 +215,26 @@ const steps = [
 
   .timeline-item.right {
     align-self: flex-end;
-    text-align: left; /* Modificado de right para left */
+    text-align: left; /* Mantido como você deixou */
   }
 
-  /* --- Alfinetes (Pins) --- */
-  .timeline-item.card1::before {
-    content: "";
+  /* --- NOVAS CLASSES: Alfinetes (Pins) com tags Image --- */
+  /* Removemos o pseudo-elemento ::before das classes .card1 e .card2 */
+  .pin-image {
     position: absolute;
     top: -55px;
+    width: 40px;
+    height: 60px;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .pin-left {
     left: 0;
-    background: url('../../assets/Blue-Pin-4.svg') center/contain no-repeat;
-    width: 40px;
-    height: 60px;
   }
 
-  .timeline-item.card2::before {
-    content: "";
-    position: absolute;
-    top: -55px;
+  .pin-right {
     right: 0;
-    left: auto;
-    background: url('../../assets/Blue-Pin-5.svg') center/contain no-repeat;
-    width: 40px;
-    height: 60px;
   }
 
   /* --- Ícones --- */
@@ -265,7 +310,8 @@ const steps = [
       text-align: left !important;
     }
 
-    .timeline-item::before {
+    /* Agora ocultamos os alfinetes pelo elemento da classe no mobile */
+    .pin-image {
       display: none;
     }
   }

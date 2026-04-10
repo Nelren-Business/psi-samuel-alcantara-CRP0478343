@@ -3,6 +3,9 @@
 import { Image } from 'astro:assets';
 import Terapia1 from '../../assets/Terapia-1.svg';
 
+// NOVA IMPORTAÇÃO DO FUNDO DIVISOR
+import BgDivisor3 from '../../assets/divisor-03-1.webp';
+
 const steps = [
   {
     title: "Pensar, agir e sentir:",
@@ -28,7 +31,24 @@ const steps = [
 ---
 
 <section class="methodology-section">
-  <Image src={Terapia1} class="bg-shape" alt="" loading="lazy" decoding="async" aria-hidden="true" />
+  
+  <Image 
+    src={BgDivisor3} 
+    class="bg-section-divisor" 
+    alt="" 
+    loading="lazy" 
+    decoding="async" 
+    aria-hidden="true" 
+  />
+
+  <Image 
+    src={Terapia1} 
+    class="bg-shape" 
+    alt="" 
+    loading="lazy" 
+    decoding="async" 
+    aria-hidden="true" 
+  />
   
   <div class="container">
     <header class="methodology-header">
@@ -54,13 +74,23 @@ const steps = [
 <style>
   /* --- Seção Base --- */
   .methodology-section {
-    background-image: url('../../assets/divisor-03-1.webp');
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-size: contain;
     position: relative;
     padding: 90px 20px 200px;
     overflow: hidden;
+    /* Removidos: background-image, background-position, background-repeat, background-size */
+  }
+
+  /* --- NOVA CLASSE PARA O DIVISOR DE FUNDO --- */
+  .bg-section-divisor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Simula o background-size: contain */
+    object-position: bottom center; /* Simula o background-position: bottom center */
+    z-index: 0;
+    pointer-events: none;
   }
 
   /* Ilustração Absoluta no Topo Esquerdo */

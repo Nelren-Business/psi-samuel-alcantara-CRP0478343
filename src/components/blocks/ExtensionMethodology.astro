@@ -4,9 +4,22 @@ import { Image } from 'astro:assets';
 import Vector10 from '../../assets/Vector-10.svg';
 import BluePin2 from '../../assets/Blue-Pin-2.svg';
 import BluePin3 from '../../assets/Blue-Pin-3.svg';
+
+// Novas importações de background
+import BgDivisor from '../../assets/divisor-04.webp';
+import Box1Bg from '../../assets/Vector-3-1.svg';
+import Box2Bg from '../../assets/Vector-2-1.svg';
 ---
 
 <section class="extension-methodology">
+  <Image 
+    src={BgDivisor} 
+    alt="" 
+    class="bg-section-divisor" 
+    loading="lazy" 
+    decoding="async" 
+  />
+
   <div class="container">
     <div class="absolute-ornament">
       <Image 
@@ -16,6 +29,14 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
     </div>
 
     <div class="methodology-box box-1">
+      <Image 
+        src={Box1Bg} 
+        alt="" 
+        class="box-bg" 
+        loading="lazy" 
+        decoding="async" 
+      />
+      
       <figure class="box-image">
         <Image 
           src={BluePin2}
@@ -28,6 +49,14 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
     </div>
 
     <div class="methodology-box box-2">
+      <Image 
+        src={Box2Bg} 
+        alt="" 
+        class="box-bg box-2-bg" 
+        loading="lazy" 
+        decoding="async" 
+      />
+
       <figure class="box-image box-image-right">
         <Image 
           src={BluePin3} 
@@ -46,15 +75,26 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
   .extension-methodology {
     position: relative;
     background-color: #1155B0;
-    background-image: url('../../assets/divisor-04.webp');
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-size: contain;
     padding: 2% 3% 5% 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden; /* Garante que as bordas da imagem não vazem */
+    /* Removidos: background-image, background-position, background-repeat, background-size */
+  }
+
+  /* Nova classe para simular o background-size: contain da seção */
+  .bg-section-divisor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    object-position: bottom center;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .container {
@@ -66,6 +106,7 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
     width: 100%;
     max-width: 1140px;
     margin-bottom: 60px;
+    z-index: 2; /* Garante que o container fique acima da bg-section-divisor */
   }
 
   /* Ornamento Absoluto (Vector-10) */
@@ -85,6 +126,19 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
     flex-direction: column;
     position: relative;
     z-index: 2;
+  }
+
+  /* Nova classe genérica para o fundo das duas Boxes (simulando background-size: cover) */
+  .box-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .methodology-box p {
@@ -112,12 +166,9 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
   .box-1 {
     width: 100%;
     max-width: 510px;
-    background-image: url('../../assets/Vector-3-1.svg');
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: cover;
     padding: 8px 20px 30px 30px;
     text-align: left;
+    /* Removidos: background-image, background-position, background-repeat, background-size */
   }
 
   .box-1 .box-image img {
@@ -129,13 +180,10 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
   .box-2 {
     width: 100%;
     max-width: 500px;
-    background-image: url('../../assets/Vector-2-1.svg');
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: cover;
     padding: 0 40px 30px 30px;
     align-self: flex-end;
     text-align: right;
+    /* Removidos: background-image, background-position, background-repeat, background-size */
   }
 
   .box-image-right {
@@ -158,7 +206,7 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
 
     .container {
       justify-content: center;
-      gap: 40px; /* Adicionado gap por conta do wrap no mobile */
+      gap: 40px; 
     }
 
     .absolute-ornament {
@@ -169,8 +217,9 @@ import BluePin3 from '../../assets/Blue-Pin-3.svg';
       align-self: center;
     }
 
-    .box-2 {
-      background-position: bottom center;
+    /* Ajusta a posição da imagem de fundo da Box 2 no mobile/tablet */
+    .box-2-bg {
+      object-position: bottom center;
     }
   }
 

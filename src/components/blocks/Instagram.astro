@@ -8,6 +8,9 @@ import Slide4 from '../../assets/4-819x1024.jpg';
 import Slide5 from '../../assets/5-819x1024.jpg';
 import Slide6 from '../../assets/6-819x1024.jpg';
 
+// NOVA IMPORTAÇÃO DO FUNDO DO BOTÃO
+import BgBotao from '../../assets/bg-botao.webp';
+
 const posts = [
   {
     img: Slide1,
@@ -67,9 +70,7 @@ const posts = [
                 alt={post.alt} 
                 width={819} 
                 height={1024} 
-                /* Gera as versões otimizadas */
                 widths={[400, 600, 819]} 
-                /* Explica o layout do seu CSS para o navegador */
                 sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 quality={80}
                 loading="lazy" 
@@ -107,6 +108,15 @@ const posts = [
 
     <div class="action-buttons">
       <a href="https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        
+        <Image 
+          src={BgBotao} 
+          alt="" 
+          class="bg-btn-img"
+          loading="lazy"
+          decoding="async"
+        />
+
         <span class="btn-content">
           <span>Agendar Minha Consulta</span>
           <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
@@ -169,7 +179,7 @@ const posts = [
   .carousel-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 20px; /* Reduzido levemente para dar espaço aos dots */
+    margin-bottom: 20px; 
   }
 
   .carousel-track {
@@ -301,19 +311,12 @@ const posts = [
     transform: scale(1.2);
   }
 
-  /* Lógica de ocultação dos dots excedentes baseada em 6 itens */
   @media (min-width: 1025px) {
-    /* Exibe 3 itens por vez, então precisamos apenas de 4 dots (0, 1, 2, 3) */
-    .dot:nth-child(n+5) {
-      display: none;
-    }
+    .dot:nth-child(n+5) { display: none; }
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    /* Exibe 2 itens por vez, então precisamos de 5 dots */
-    .dot:nth-child(n+6) {
-      display: none;
-    }
+    .dot:nth-child(n+6) { display: none; }
   }
 
   /* --- Botões --- */
@@ -344,16 +347,29 @@ const posts = [
 
   /* Botão WhatsApp */
   .btn-whatsapp {
-    background-image: url('../../assets/bg-botao.webp');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    position: relative; /* Adicionado para prender a tag Image dentro do botão */
+    z-index: 1; /* Adicionado para garantir que ele respeita a camada correta */
+    background-color: transparent;
     padding: 31px 40px 32px 85px;
     font-family: "DM Serif Text", serif;
     font-size: 20px;
     font-weight: 400;
     color: #F9F2EC;
     fill: #F9F2EC;
+    /* Removidos: background-image, background-size, background-repeat, background-position */
+  }
+
+  /* NOVA CLASSE DA IMAGEM DE FUNDO DO BOTÃO */
+  .bg-btn-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .btn-whatsapp svg { width: 20px; height: 20px; }

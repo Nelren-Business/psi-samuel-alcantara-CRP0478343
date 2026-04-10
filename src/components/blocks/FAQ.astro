@@ -1,5 +1,9 @@
 ---
 // FAQ.astro
+import { Image } from 'astro:assets';
+import Vector22 from '../../assets/Vector-2-2.png';
+import Vector111 from '../../assets/Vector-1-1-1.svg';
+import BgBotao from '../../assets/bg-botao.webp';
 
 const faqs = [
   {
@@ -34,8 +38,24 @@ const faqs = [
   <div class="container">
     
     <div class="faq-header">
+      <Image 
+        src={Vector22} 
+        alt="" 
+        class="bg-faq-header" 
+        loading="lazy" 
+        decoding="async" 
+      />
       <h2 class="title">
-        <span class="destaque">FAQ</span> - Perguntas Frequentes
+        <span class="destaque">
+          <Image 
+            src={Vector111} 
+            alt="" 
+            class="bg-destaque" 
+            loading="lazy" 
+            decoding="async" 
+          />
+          FAQ
+        </span> - Perguntas Frequentes
       </h2>
     </div>
 
@@ -62,6 +82,13 @@ const faqs = [
         <span class="dest2">Ainda tem dúvidas?</span>
       </h2>
       <a href="https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+        <Image 
+          src={BgBotao} 
+          alt="" 
+          class="bg-whatsapp-btn" 
+          loading="lazy" 
+          decoding="async" 
+        />
         <span class="btn-text">Me chame no WhatsApp</span>
         <span class="btn-icon">
           <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
@@ -108,12 +135,24 @@ const faqs = [
   }
 
   .faq-header {
+    position: relative; /* Adicionado para conter a tag Image */
     text-align: center;
     padding: 50px 50px 80px 50px;
-    background-image: url('../../assets/Vector-2-2.png');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    z-index: 1;
+    /* Removidos: background-image, background-position, background-repeat, background-size */
+  }
+
+  /* Nova classe da imagem de fundo do header */
+  .bg-faq-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .title {
@@ -125,12 +164,25 @@ const faqs = [
   }
 
   .destaque {
-    background-image: url('../../assets/Vector-1-1-1.svg');
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+    position: relative; /* Adicionado */
+    display: inline-block; /* Adicionado para garantir o respeito ao padding/espaço */
     padding: 10px 30px;
     font-style: normal;
+    z-index: 1;
+    /* Removidos: background-image, background-position, background-size, background-repeat */
+  }
+
+  /* Nova classe da imagem de fundo do FAQ destaque */
+  .bg-destaque {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    z-index: -1;
+    pointer-events: none;
   }
 
   /* Accordion */
@@ -248,18 +300,30 @@ const faqs = [
 
   /* Botão do WhatsApp */
   .whatsapp-button {
+    position: relative; /* Adicionado */
     display: flex;
     align-items: center;
     gap: 15px;
-    background-color: transparent; /* Removido background para evitar hover retangular */
-    background-image: url('../../assets/bg-botao.webp');
-    background-size: contain; /* Ajusta a imagem no formato original sem esticar */
-    background-repeat: no-repeat;
-    background-position: center;
+    background-color: transparent; 
     color: var(--color-text-light);
     text-decoration: none;
-    padding: 31px 40px 32px 85px; /* Restaurado o padding original do Elementor */
+    padding: 31px 40px 32px 85px; 
     transition: filter 0.3s ease;
+    z-index: 1;
+    /* Removidos: background-image, background-size, background-repeat, background-position */
+  }
+
+  /* Nova classe da imagem do botão */
+  .bg-whatsapp-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    z-index: -1;
+    pointer-events: none;
   }
 
   .whatsapp-button:hover {
@@ -286,12 +350,20 @@ const faqs = [
     
     .faq-header {
       padding: 0 30px 15px;
-      background-position: bottom center;
+    }
+
+    /* Regra transferida do background-position para o mobile/tablet */
+    .bg-faq-header {
+      object-position: bottom center;
     }
 
     .destaque {
-      background-size: cover;
       padding: 5px 15px;
+    }
+
+    /* Regra transferida do background-size */
+    .bg-destaque {
+      object-fit: cover;
     }
     
     .faq-summary {
@@ -312,7 +384,7 @@ const faqs = [
       width: 100%;
       max-width: 300px;
       justify-content: center;
-      padding: 25px 10px 28px 40px; /* Alinhamento especial mobile */
+      padding: 25px 10px 28px 40px; 
     }
   }
 
@@ -324,10 +396,11 @@ const faqs = [
     .faq-header {
       text-align: center;
       padding: 20px 0px 30px 0px;
-      background-image: url('../../assets/Vector-2-2.png');
-      background-position: right;
-      background-repeat: no-repeat;
-      background-size: contain;
+    }
+
+    /* Regra transferida do background-position para o mobile */
+    .bg-faq-header {
+      object-position: right;
     }
 
     .title {
