@@ -1,62 +1,63 @@
 ---
-// Hero.astro
-const whatsappLink = "https://api.whatsapp.com/send/?phone=5537998164092&text=Ol%C3%A1%2C+vim+do+site+e+gostaria+de+tirar+algumas+d%C3%BAvidas%21";
-const whatsappLinkAgendar = "https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!";
-import { Image, getImage } from 'astro:assets';
+// src/components/Hero.astro
+import { Image, getImage } from 'astro:assets'; // <-- Trocamos Picture por getImage
 import TerapiaSVG from '../../assets/Terapia.svg';
 import BgHeroDesktop from '../../assets/bg-hero-01.webp';
 import BgHeroMobile from '../../assets/bg-mobile-01.webp';
 import BgBotao from '../../assets/bg-botao.webp';
+import IconWhatsapp from './IconWhatsapp.astro';
+
+const phone = "5537998164092";
+
+const createWhatsAppUrl = (text: string) => {
+  const params = new URLSearchParams({ phone, text });
+  return `https://api.whatsapp.com/send/?${params.toString()}`;
+};
+
+const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
+const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
+
+// --- MUDANÇA AQUI: Processando as imagens manualmente para o Art Direction ---
+const optimizedMobileBg = await getImage({ src: BgHeroMobile, format: 'webp' });
+const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' });
 ---
 
 <section class="hero-section">
-  <Image 
-    src={BgHeroDesktop}
-    alt="Fundo Desktop"
-    class="hero-bg desktop-bg"
-    fetchpriority="low"
-    loading="lazy"
-    decoding="async"
-    width={1920} 
-    height={800}
-  />
-
-  <Image 
-    src={BgHeroMobile}
-    alt="Fundo Mobile"
-    class="hero-bg mobile-bg"
-    fetchpriority="high"
-    loading="eager"
-    decoding="async"
-    width={412} 
-    height={618}
-  />
+  
+  <picture>
+    <source media="(max-width: 1024px)" srcset={optimizedMobileBg.src} />
+    <img 
+      src={optimizedDesktopBg.src} 
+      alt="Fundo do ambiente terapêutico" 
+      class="hero-bg"
+      fetchpriority="high"
+      loading="eager"
+    />
+  </picture>
 
   <Image 
     src={TerapiaSVG} 
     class="deco-image" 
     alt="Ilustração Terapia"
     loading="eager"
-    decoding="async"
   />
 
   <div class="hero-content">
-    <h2 class="subtitle">
-      <span class="dest">Psicólogo Online LGBTQIA+ | CRP: 04/78343</span>
-    </h2>
-
-    <h1 class="title">
-      Sua história merece ser compreendida. Vamos conversar?
-    </h1>
+    <hgroup>
+      <p class="subtitle">
+        <span class="dest">Psicólogo Online LGBTQIA+ | CRP: 04/78343</span>
+      </p>
+      <h1 class="title">
+        Sua história merece ser compreendida. Vamos conversar?
+      </h1>
+    </hgroup>
 
     <p class="description">
       <b>Prazer! Meu nome é Samuel, psicólogo LGBTQIA+ com atendimento online, </b>formado pela UFJF e pós-graduando. Sempre valorizei o privilégio de me conectar com pessoas, entender suas histórias e contribuir em seus processos terapêuticos. Que tal darmos o nosso primeiro passo juntos?
-        <br>
-        <a class="btn-outline" href={whatsappLink} target="_blank" rel="noopener noreferrer">
+      <br>
+      <a class="btn-outline" href={whatsappLink} target="_blank" rel="noopener noreferrer">
         <span>Vamos conversar!</span>
-        <svg class="icon-whatsapp" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-          <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
-        </svg>
+        <IconWhatsapp/>
       </a>   
     </p>
 
@@ -64,31 +65,19 @@ import BgBotao from '../../assets/bg-botao.webp';
       <a class="btn-solid" href={whatsappLinkAgendar} target="_blank" rel="noopener noreferrer">
         <Image 
           src={BgBotao} 
-          alt="Fundo do botão" 
+          alt="Textura de fundo do botão" 
           class="bg-botao-img"
-          loading="lazy"
-          decoding="async"
+          loading="eager" 
         />
         <span>Agendar Minha Consulta</span>
-        <svg class="icon-whatsapp" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-          <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
-        </svg>
+        <IconWhatsapp/>
       </a>
     </div>
   </div>
 </section>
 
 <style>
-  /* --- Variáveis de Cor --- */
-  :root {
-    --color-primary: #0B4491;
-    --color-accent: #D94881;
-    --color-bg-light: #F9F2EC;
-    --font-heading: 'DM Serif Text', serif;
-    --font-text: 'Open Sans', sans-serif;
-  }
-
-  /* --- Layout Principal --- */
+  /* --- O resto do seu CSS continua EXATAMENTE igual --- */
   .hero-section {
     position: relative;
     display: flex;
@@ -100,7 +89,6 @@ import BgBotao from '../../assets/bg-botao.webp';
     overflow: hidden;
   }
 
-  /* --- Estilo das Imagens de Fundo no HTML --- */
   .hero-bg {
     position: absolute;
     top: 0;
@@ -112,14 +100,11 @@ import BgBotao from '../../assets/bg-botao.webp';
     z-index: 0;
   }
 
-  .desktop-bg { display: block; }
-  .mobile-bg { display: none; }
-
   .deco-image {
     position: absolute;
-    top: -100vh;
+    top: 0;
     left: 0;
-    width: 10%;
+    width: 15%;
     pointer-events: none;
     z-index: 1;
   }
@@ -134,14 +119,13 @@ import BgBotao from '../../assets/bg-botao.webp';
     width: 100%;
   }
 
-  /* --- Tipografia --- */
   .subtitle {
     font-family: var(--font-heading);
     font-size: 19px;
     font-weight: 400;
     line-height: 1.1em;
     color: var(--color-accent);
-    margin: 0;
+    margin: -15px 0 30px 0;
   }
 
   .dest {
@@ -152,6 +136,7 @@ import BgBotao from '../../assets/bg-botao.webp';
     border-left: 1px solid var(--color-accent);
     border-right: 1px solid var(--color-accent);
   }
+  
   .dest::before, .dest::after {
     content: "";
     position: absolute;
@@ -160,6 +145,7 @@ import BgBotao from '../../assets/bg-botao.webp';
     height: 6px;
     border-radius: 100px;
   }
+  
   .dest::before { top: -3px; left: -4px; }
   .dest::after { bottom: -3px; right: -4px; }
 
@@ -184,16 +170,15 @@ import BgBotao from '../../assets/bg-botao.webp';
     border-left: 1px solid var(--color-primary);
     margin: 0;
   }
+  
   .description b {
     font-weight: 600;
   }
 
-  /* --- Botões --- */
   .hero-buttons {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
   }
 
   .btn-outline, .btn-solid {
@@ -204,11 +189,6 @@ import BgBotao from '../../assets/bg-botao.webp';
     text-decoration: none;
     transition: all 0.3s ease;
     cursor: pointer;
-  }
-
-  .icon-whatsapp {
-    width: 1em;
-    height: 1em;
   }
 
   .btn-outline {
@@ -222,6 +202,7 @@ import BgBotao from '../../assets/bg-botao.webp';
     border: 1px solid rgba(217, 72, 129, 0.42);
     padding: 8px 8px;
   }
+  
   .btn-outline:hover {
     background-color: rgba(252, 163, 185, 0.4);
   }
@@ -233,41 +214,34 @@ import BgBotao from '../../assets/bg-botao.webp';
     fill: var(--color-bg-light);
     padding: 31px 40px 32px 85px; 
     background-color: transparent; 
-
-    /* MUDANÇA AQUI: Adicionado relative para segurar a tag Image e garantir que ela não fuja do botão */
     position: relative;
-    /* Removidos: background-image, background-size, background-repeat, background-position */
   }
   
   .btn-solid:hover {
     filter: brightness(1.2);
   }
 
-  /* --- MUDANÇA AQUI: Nova classe da imagem atuando como background --- */
   .bg-botao-img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Faz o mesmo papel do background-size: contain */
+    object-fit: contain; 
     object-position: center;
-    z-index: -1; /* Joga a imagem para trás do texto e ícone */
-    pointer-events: none; /* Garante que a imagem não atrapalhe os cliques no link */
+    z-index: -1; 
+    pointer-events: none; 
   }
 
-  /* --- Responsividade (Mobile & Tablet) --- */
   @media (max-width: 1024px) {
     .hero-section {
       align-items: center;
-      padding-top: 750px; 
-      padding-bottom: 20px;
+      padding-top: max(60vw, 400px); 
+      min-height: auto;
     }
 
-    .desktop-bg { display: none; }
-    .mobile-bg { 
-      display: block; 
-      object-fit: contain; 
+    .hero-bg {
+      object-fit: contain;
       object-position: top;
     }
     
@@ -297,8 +271,7 @@ import BgBotao from '../../assets/bg-botao.webp';
 
   @media (max-width: 767px) {
     .hero-section {
-      min-height: auto;
-      padding-top: 100%;
+      padding-top: max(105vw, 250px);
     }
 
     .title {

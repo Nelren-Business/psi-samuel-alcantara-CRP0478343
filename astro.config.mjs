@@ -5,10 +5,6 @@ export default defineConfig({
   site: 'https://samuelalcantara.com.br/',
   output: 'static',
 
-  vite: {
-    plugins: [tailwindcss()],
-  },
-
   build: {
     inlineStylesheets: 'always', 
   },

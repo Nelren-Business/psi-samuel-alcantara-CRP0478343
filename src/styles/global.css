@@ -14,16 +14,11 @@ html {
 
 /* 2. DESIGN TOKENS (Variáveis Nativas) */
 :root {
-  /* Cores Globais */
-  --color-brand-primary: #0B4491;
-  --color-brand-secondary: #0B4491;
-  --color-brand-text: #0B4491;
-  --color-brand-accent: #D94881;
-  --color-brand-light: #FFFFFF;
-
-  /* Tipografia */
-  --font-heading: "DM Serif Text", serif;
-  --font-body: "Open Sans", sans-serif;
+  --color-primary: #0B4491;
+  --color-accent: #D94881;
+  --color-bg-light: #F9F2EC;
+  --font-heading: 'DM Serif Text', serif;
+  --font-text: 'Open Sans', sans-serif;
 }
 
 body {
