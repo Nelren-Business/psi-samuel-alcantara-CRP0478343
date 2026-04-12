@@ -8,38 +8,21 @@ import IconWhatsapp from '../IconWhatsapp.astro';
 import ButtonSolid from '../ButtonSolid.astro';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
 
+// Olha como o código do componente fica limpo sem a lógica da URL misturada:
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
-// --- Processamento Nível Enterprise ---
-// Geramos o srcSet (múltiplas resoluções) e forçamos o formato AVIF para máxima compressão.
-const optimizedMobileBg = await getImage({ 
-  src: BgHeroMobile, 
-  format: 'avif',
-  widths: [412, 824, BgHeroMobile.width] // 1x, 2x (Retina) e tamanho original
-});
-
-const optimizedDesktopBg = await getImage({ 
-  src: BgHeroDesktop, 
-  format: 'avif',
-  widths: [1024, 1440, 1920, BgHeroDesktop.width] // Breakpoints comuns de monitores
-});
+// --- Processando as imagens manualmente para o Art Direction ---
+const optimizedMobileBg = await getImage({ src: BgHeroMobile, format: 'webp' });
+const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' });
 ---
 
 <section class="hero-section">
   
   <picture>
-    <source 
-      media="(max-width: 1024px)" 
-      srcset={optimizedMobileBg.srcSet} 
-      sizes="100vw"
-      type="image/avif"
-    />
-    
+    <source media="(max-width: 1024px)" srcset={optimizedMobileBg.src} />
     <img 
       src={optimizedDesktopBg.src} 
-      srcset={optimizedDesktopBg.srcSet}
-      sizes="100vw"
       alt="Fundo do ambiente terapêutico" 
       class="hero-bg"
       fetchpriority="high"
