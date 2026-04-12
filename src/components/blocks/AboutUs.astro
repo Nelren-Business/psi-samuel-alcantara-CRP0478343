@@ -5,9 +5,8 @@ import TerapiaBG from '../../assets/Terapia-2.svg';
 import PaperBg from '../../assets/Vector-1-1.png';
 import ButtonBg from '../../assets/Vector-1-2.png';
 import PhotoBg from '../../assets/DOBRA-6-02.webp';
-import { createWhatsAppUrl } from '../../utils/whatsapp'; // Mantemos a lógica centralizada
+import { createWhatsAppUrl } from '../../utils/whatsapp';
 
-// Geramos o link de forma dinâmica
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 ---
 
@@ -31,6 +30,9 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
           src={PaperBg} 
           alt="" 
           class="bg-paper-img" 
+          widths={[400, 800, 1200]}
+          sizes="(max-width: 767px) 100vw, 700px"
+          format="avif"
           aria-hidden="true"
           loading="lazy"
         />
@@ -73,6 +75,9 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
           src={ButtonBg} 
           alt="" 
           class="bg-button-img" 
+          widths={[300, 600]}
+          sizes="300px"
+          format="avif"
           aria-hidden="true"
           loading="lazy"
         />
@@ -87,6 +92,9 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
           src={PhotoBg} 
           alt="Foto Samuel" 
           class="photo-img"
+          widths={[400, 800, 1200, 1600]}
+          sizes="(max-width: 767px) 240vw, (max-width: 1024px) 140vw, 1500px"
+          format="avif"
           loading="lazy" 
         />
       </div>

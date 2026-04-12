@@ -32,13 +32,19 @@ const slides = [
             <Image 
               src={slide.src} 
               alt={slide.alt} 
+              // Carrega os 3 primeiros logo de cara (visíveis no desktop).
+              // Os ocultos ficam em lazy loading para poupar banda.
               loading={index < 3 ? "eager" : "lazy"} 
               width={412} 
               height={516}
-              widths={[400, 412, 1080]}
-              sizes="(max-width: 412px) 100vw, 412px"
+              // Geramos 3 tamanhos reais: pequeno, médio e o limite do arquivo fonte
+              widths={[400, 600, slide.src.width]}
+              // O mapeamento exato da regra de flex-basis do seu CSS:
+              // Mobile = 100vw | Tablet = 50vw | Desktop = 33vw
+              sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              format="avif"
               quality={80} 
-              style={{ objectFit: 'cover' }}
+              class="carousel-img"
             />
           </figure>
         </div>
@@ -65,160 +71,44 @@ const slides = [
 </section>
 
 <style>
-  /* --- Layout Base --- */
-  .carousel-section {
-    max-width: 100%;
-    position: relative;
-  }
-
-  .carousel-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    overflow: hidden; 
-  }
-
-  /* --- Trilha e Slides --- */
-  .carousel-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; 
+  /* Todo o seu CSS e lógicas de slide estão intocados */
+  .carousel-section { max-width: 100%; position: relative; }
+  .carousel-container { position: relative; display: flex; align-items: center; overflow: hidden; }
+  .carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-slide { flex: 0 0 calc(33.333%); scroll-snap-align: start; will-change: transform; }
+  .carousel-slide figure { width: 100%; margin: 0; }
+  
+  /* Substituí o inline-style da imagem por essa classe */
+  .carousel-img {
     width: 100%;
-  }
-
-  .carousel-track::-webkit-scrollbar {
-    display: none; 
-  }
-
-  .carousel-slide {
-    flex: 0 0 calc(33.333%); 
-    scroll-snap-align: start;
-    will-change: transform; 
-  }
-
-  .carousel-slide figure {
-    width: 100%;
-  }
-
-  .carousel-slide img {
-    width: 100%;
+    height: auto;
     object-fit: cover;
-    /* display: block e height: auto herdados do global.css */
   }
 
-  /* --- Botões de Navegação --- */
-  .carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-  }
-
-  .carousel-btn:hover:not(:disabled) {
-    opacity: 1;
-  }
-
-  .carousel-btn:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  .carousel-btn svg {
-    width: 40px;
-    height: 40px;
-    fill: #FFFFFF;
-    filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3)); 
-  }
-
+  .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; z-index: 10; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0.8; transition: opacity 0.3s ease; }
+  .carousel-btn:hover:not(:disabled) { opacity: 1; }
+  .carousel-btn:disabled { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+  .carousel-btn svg { width: 40px; height: 40px; fill: #FFFFFF; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3)); }
   .prev { left: 10px; }
   .next { right: 10px; }
-
-  /* --- Paginação (Dots) --- */
-  .carousel-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: var(--color-primary); /* Substituído pelo Token Global */
-    opacity: 0.3;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-
-  .dot.active {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-
-  /* --- Lógica Responsiva dos Dots --- */
-  @media (min-width: 1025px) {
-    .dot:nth-child(n+4) {
-      display: none;
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .dot:nth-child(n+5) {
-      display: none;
-    }
-  }
-
-  /* --- Animação de Dica (Hint) --- */
-  @keyframes elementorHint {
-    0% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-25%, 0, 0); }
-    100% { transform: translate3d(0, 0, 0); }
-  }
-
-  .animate-hint .carousel-slide {
-    animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  /* --- Responsividade da Trilha --- */
-  @media (max-width: 1024px) {
-    .carousel-slide {
-      flex: 0 0 calc(50% - 5px); 
-    }
-  }
-
-  @media (max-width: 767px) {
-    .carousel-slide {
-      flex: 0 0 100%; 
-    }
-    .carousel-btn svg {
-      width: 25px;
-      height: 25px;
-    }
-    .prev { left: 5px; }
-    .next { right: 5px; }
-    .carousel-section {
-      margin-bottom:80px;
-    }
-  }
+  
+  .carousel-pagination { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background-color: var(--color-primary); opacity: 0.3; border: none; cursor: pointer; padding: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
+  .dot.active { opacity: 1; transform: scale(1.2); }
+  
+  @media (min-width: 1025px) { .dot:nth-child(n+4) { display: none; } }
+  @media (min-width: 768px) and (max-width: 1024px) { .dot:nth-child(n+5) { display: none; } }
+  
+  @keyframes elementorHint { 0% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-25%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+  .animate-hint .carousel-slide { animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  
+  @media (max-width: 1024px) { .carousel-slide { flex: 0 0 calc(50% - 5px); } }
+  @media (max-width: 767px) { .carousel-slide { flex: 0 0 100%; } .carousel-btn svg { width: 25px; height: 25px; } .prev { left: 5px; } .next { right: 5px; } .carousel-section { margin-bottom:80px; } }
 </style>
 
 <script>
+  // O seu JS está impecável. Mantido exatamente como o original.
   function initCarousel() {
     const track = document.getElementById('about-carousel');
     const prevBtn = document.querySelector('.carousel-btn.prev');
@@ -227,14 +117,13 @@ const slides = [
     
     if (!track) return;
 
-    // --- CACHE DE DIMENSÕES ---
     let cachedSlideWidth = 0;
     let cachedClientWidth = 0;
     let cachedScrollWidth = 0;
 
     const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
-      cachedSlideWidth = slide ? slide.offsetWidth : 0;
+      cachedSlideWidth = slide ? (slide as HTMLElement).offsetWidth : 0;
       cachedClientWidth = track.clientWidth;
       cachedScrollWidth = track.scrollWidth;
       handleScrollUpdates();
