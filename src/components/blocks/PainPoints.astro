@@ -123,7 +123,7 @@ const painPoints = [
           <h2 style="margin-bottom: 15px;">{point.modalTitle}</h2>
           <p set:html={point.modalText} style="margin-bottom: 30px;"></p>
           
-          <ButtonSolid href={whatsappLinkAgendar} loading="lazy" />
+          <ButtonSolid href={whatsappLinkAgendar} loading="lazy" class="btn-modal-compact" />
         </div>
       </div>
     </dialog>
@@ -158,7 +158,6 @@ const painPoints = [
     margin: 0 auto;
   }
 
-  /* Controla apenas o layout do H2, a fonte já vem do Global */
   .section-title {
     text-align: center;
     margin: 0 auto 50px;
@@ -183,7 +182,6 @@ const painPoints = [
     transition: background-color 0.3s ease;
   }
 
-  /* Cores extraídas diretamente para os cards, herdando variáveis base */
   .pain-card.bg-pink { background-color: var(--color-accent); }
   .pain-card.bg-pink:hover { background-color: #E86498; }
 
@@ -267,6 +265,15 @@ const painPoints = [
   
   .dialog-close:hover { transform: scale(1.2); }
 
+  /* =========================================
+     NOVO: Modificador do Botão no Modal
+  ========================================= */
+  .dialog-inner :global(.btn-modal-compact) {
+    padding: 20px 30px 20px 65px; /* Reduz a altura e mantém a área da esquerda para a textura */
+    font-size: 16px; /* Fonte levemente menor que a do Hero (20px) */
+    width: fit-content;
+  }
+
   @media (max-width: 1024px) { 
     .dialog-content { padding: 50px; } 
   }
@@ -281,6 +288,14 @@ const painPoints = [
     .pain-points-section { padding: 0 20px 60px; text-wrap: balance; }
     .section-title { padding: 0; margin: 30px 0 15px 0; }
     .dialog-content { padding: 30px; }
+
+    /* Ajuste fino do botão no mobile */
+    .dialog-inner :global(.btn-modal-compact) {
+      padding: 18px 20px 18px 50px;
+      font-size: 14px;
+      width: fit-content;
+      align-self: flex-start;
+    }
 
     .pain-card:nth-child(odd).animated {
       animation-name: fadeInLeft !important;
