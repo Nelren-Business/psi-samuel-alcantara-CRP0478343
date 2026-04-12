@@ -1,4 +1,6 @@
-/* 1. CSS RESET BÁSICO (Substitui o Preflight do Tailwind) */
+/* =========================================
+   1. CSS RESET BÁSICO
+========================================= */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -12,25 +14,46 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 2. DESIGN TOKENS (Variáveis Nativas) */
+/* =========================================
+   2. DESIGN TOKENS (Variáveis)
+========================================= */
 :root {
+  /* Cores da Marca */
   --color-primary: #0B4491;
   --color-accent: #D94881;
-  --color-bg-light: #F9F2EC;
+  --color-bg-light: #ffffff;
+  --color-text: #333333;
+  
+  /* Família de Fontes */
   --font-heading: 'DM Serif Text', serif;
   --font-text: 'Open Sans', sans-serif;
+
+  /* Escala Tipográfica (1rem = ~16px) */
+  --text-sm: 0.875rem;  /* 14px */
+  --text-base: 1rem;    /* 16px */
+  --text-md: 1.1875rem; /* 19px */
+  --text-lg: 1.5rem;    /* 24px */
+  --text-xl: 2rem;      /* 32px */
+  --text-2xl: 2.75rem;  /* 44px */
+
+  /* Espaçamento de Linha (Line Height) */
+  --leading-tight: 1.1;
+  --leading-snug: 1.2;
+  --leading-relaxed: 1.5;
 }
 
+/* =========================================
+   3. ESTILOS BASE (Body e Main)
+========================================= */
 body {
-  overflow: visible;  /* O SEGREDO: O body não cria scroll, ele deixa vazar pro HTML */
+  overflow: visible;  /* O body não cria scroll, ele deixa vazar pro HTML */
   min-height: 100%;   /* Ocupa pelo menos a tela toda */
   margin: 0;          /* Tira as margens nativas */
   padding: 0;
   
-  /* Seus estilos de design que já estavam aí */
-  background-color: var(--color-brand-light);
-  color: var(--color-brand-text);
-  font-family: var(--font-body);
+  background-color: var(--color-bg-light);
+  color: var(--color-text);
+  font-family: var(--font-text);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -38,41 +61,156 @@ main {
   /* Garante que o conteúdo principal empurre o footer para baixo */
   display: block;
   width: 100%;
-  /* O CADEADO FINAL: Corta qualquer carrossel ou imagem que tente vazar no mobile */
+  /* Corta qualquer carrossel ou imagem que tente vazar no mobile */
   overflow-x: hidden; 
 }
 
-/* 4. ESTILIZAÇÃO DE TÍTULOS */
+/* =========================================
+   4. TIPOGRAFIA GLOBAL (Tags e Utilitários)
+========================================= */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--color-brand-primary);
+  color: var(--color-primary);
   font-weight: 400; 
+  margin-bottom: 0.5em; /* Espaçamento padrão abaixo de títulos */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
-/* 5. LINKS E BOTÕES */
+/* Escala padrão das tags HTML */
+h1 { font-size: var(--text-2xl); line-height: var(--leading-snug); }
+h2 { font-size: var(--text-xl); line-height: var(--leading-snug); }
+h3 { font-size: var(--text-lg); line-height: var(--leading-snug); }
+
+p {
+  font-family: var(--font-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Utilitários Textuais */
+.text-subtitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  line-height: var(--leading-tight);
+  color: var(--color-accent);
+}
+
+/* Responsividade Global de Tipografia */
+@media (max-width: 767px) {
+  :root {
+    --text-2xl: 2rem;      /* h1 cai de 44px para 32px */
+    --text-xl: 1.75rem;    /* h2 cai para 28px */
+    --text-md: 1rem;       /* subtitle cai para 16px */
+    --text-base: 0.9rem;   /* base cai levemente */
+  }
+}
+
+/* =========================================
+   5. LINKS E MÍDIAS
+========================================= */
 a {
-  color: var(--color-brand-accent);
+  color: var(--color-accent);
   text-decoration: none;
-  /* Equivalente ao @apply transition-colors duration-300 */
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 a:hover {
-  /* Equivalente ao @apply opacity-80 */
   opacity: 0.8;
 }
 
-/* 6. CORREÇÃO DE LARGURA PARA MOBILE (Substitui o Preflight de mídia do Tailwind) */
 img, svg, video, canvas, audio, iframe, embed, object {
   display: block;
-  max-width: 100%; /* Impede que imagens e vídeos quebrem a tela no mobile */
+  max-width: 100%; /* Impede que quebrem a tela no mobile */
   height: auto;
 }
 
-/* Garante que palavras muito longas ou links não quebrem o layout */
-p, h1, h2, h3, h4, h5, h6, a {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+/* =========================================
+   6. DESIGN SYSTEM (Componentes Globais)
+========================================= */
+
+/* --- Destaques de Texto (.tag-highlight) --- */
+.tag-highlight {
+  background-color: #d9488115;
+  padding: 0px 6px;
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid var(--color-accent);
+  border-right: 1px solid var(--color-accent);
+}
+
+.tag-highlight::before, .tag-highlight::after {
+  content: "";
+  position: absolute;
+  background: var(--color-accent);
+  width: 6px;
+  height: 6px;
+  border-radius: 100px;
+}
+
+.tag-highlight::before { top: -3px; left: -4px; }
+.tag-highlight::after { bottom: -3px; right: -4px; }
+
+/* --- Botões Principais --- */
+.btn-outline, .btn-solid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background-color: rgba(252, 163, 185, 0.23);
+  font-family: var(--font-text);
+  font-size: 16px;
+  color: var(--color-primary);
+  fill: var(--color-primary);
+  border: 1px solid rgba(217, 72, 129, 0.42);
+  padding: 8px 8px;
+}
+
+.btn-outline:hover {
+  background-color: rgba(252, 163, 185, 0.4);
+}
+
+.btn-solid {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  color: var(--color-bg-light);
+  fill: var(--color-bg-light);
+  padding: 31px 40px 32px 85px; 
+  background-color: transparent; 
+  position: relative;
+}
+
+.btn-solid:hover {
+  filter: brightness(1.2);
+}
+
+/* --- Responsividade dos Componentes Globais --- */
+@media (max-width: 1024px) {
+  .btn-solid {
+    max-width: 300px;
+    width: 100%;
+    padding: 25px 10px 28px 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .btn-outline {
+    font-size: 0.9em;
+  }
+  .btn-solid {
+    font-size: 1em;
+  }
 }

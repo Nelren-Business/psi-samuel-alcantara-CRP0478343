@@ -1,0 +1,47 @@
+---
+// src/components/ButtonSolid.astro
+import { Image } from 'astro:assets';
+import BgBotao from '../assets/bg-botao.webp'; // Verifique se o caminho bate com sua estrutura
+import IconWhatsapp from './IconWhatsapp.astro'; // Ajuste o caminho se necessário
+
+interface Props {
+  href: string;
+  text?: string;
+  loading?: "eager" | "lazy";
+  class?: string;
+}
+
+const { 
+  href, 
+  text = "Agendar Minha Consulta", // Texto padrão caso você não passe nenhum
+  loading = "lazy",                // Por padrão carrega em lazy para otimizar performance
+  class: className = "" 
+} = Astro.props;
+---
+
+<a class={`btn-solid ${className}`} href={href} target="_blank" rel="noopener noreferrer">
+  <Image 
+    src={BgBotao} 
+    alt="Textura de fundo do botão" 
+    class="bg-botao-img"
+    loading={loading} 
+  />
+  <span>{text}</span>
+  <IconWhatsapp />
+</a>
+
+<style>
+  /* Trouxemos o CSS da imagem de fundo pra cá. 
+     Isso é encapsulamento: o botão cuida do próprio lixo. */
+  .bg-botao-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    object-position: center;
+    z-index: -1; 
+    pointer-events: none; 
+  }
+</style>

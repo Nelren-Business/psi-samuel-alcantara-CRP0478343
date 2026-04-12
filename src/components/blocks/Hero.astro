@@ -1,23 +1,18 @@
 ---
 // src/components/Hero.astro
-import { Image, getImage } from 'astro:assets'; // <-- Trocamos Picture por getImage
+import { Image, getImage } from 'astro:assets'; 
 import TerapiaSVG from '../../assets/Terapia.svg';
 import BgHeroDesktop from '../../assets/bg-hero-01.webp';
 import BgHeroMobile from '../../assets/bg-mobile-01.webp';
-import BgBotao from '../../assets/bg-botao.webp';
-import IconWhatsapp from './IconWhatsapp.astro';
+import IconWhatsapp from '../IconWhatsapp.astro';
+import ButtonSolid from '../ButtonSolid.astro';
+import { createWhatsAppUrl } from '../../utils/whatsapp';
 
-const phone = "5537998164092";
-
-const createWhatsAppUrl = (text: string) => {
-  const params = new URLSearchParams({ phone, text });
-  return `https://api.whatsapp.com/send/?${params.toString()}`;
-};
-
+// Olha como o código do componente fica limpo sem a lógica da URL misturada:
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
-// --- MUDANÇA AQUI: Processando as imagens manualmente para o Art Direction ---
+// --- Processando as imagens manualmente para o Art Direction ---
 const optimizedMobileBg = await getImage({ src: BgHeroMobile, format: 'webp' });
 const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' });
 ---
@@ -44,10 +39,10 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
 
   <div class="hero-content">
     <hgroup>
-      <p class="subtitle">
-        <span class="dest">Psicólogo Online LGBTQIA+ | CRP: 04/78343</span>
+      <p class="text-subtitle">
+        <span class="tag-highlight">Psicólogo Online LGBTQIA+ | CRP: 04/78343</span>
       </p>
-      <h1 class="title">
+      <h1>
         Sua história merece ser compreendida. Vamos conversar?
       </h1>
     </hgroup>
@@ -62,22 +57,17 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
     </p>
 
     <div class="hero-buttons">
-      <a class="btn-solid" href={whatsappLinkAgendar} target="_blank" rel="noopener noreferrer">
-        <Image 
-          src={BgBotao} 
-          alt="Textura de fundo do botão" 
-          class="bg-botao-img"
-          loading="eager" 
-        />
-        <span>Agendar Minha Consulta</span>
-        <IconWhatsapp/>
-      </a>
+      <ButtonSolid href={whatsappLinkAgendar} loading="eager" />
     </div>
   </div>
 </section>
 
 <style>
-  /* --- O resto do seu CSS continua EXATAMENTE igual --- */
+  /* =========================================
+     CSS EXCLUSIVO DE LAYOUT (Scoped)
+     Tipografia e botões foram para o global.css
+  ========================================= */
+
   .hero-section {
     position: relative;
     display: flex;
@@ -85,7 +75,7 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
     justify-content: center;
     align-items: flex-start;
     min-height: 800px;
-    padding: 90px 20px 100px 20px;
+    padding: 80px 20px 100px 20px;
     overflow: hidden;
   }
 
@@ -112,59 +102,20 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
   .hero-content {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 40px;
     z-index: 2;
     max-width: 1140px;
     margin: 0 auto;
     width: 100%;
   }
 
-  .subtitle {
-    font-family: var(--font-heading);
-    font-size: 19px;
-    font-weight: 400;
-    line-height: 1.1em;
-    color: var(--color-accent);
-    margin: -15px 0 30px 0;
-  }
-
-  .dest {
-    background-color: #d9488115;
-    padding: 0px 6px;
-    position: relative;
-    display: inline-block;
-    border-left: 1px solid var(--color-accent);
-    border-right: 1px solid var(--color-accent);
-  }
-  
-  .dest::before, .dest::after {
-    content: "";
-    position: absolute;
-    background: var(--color-accent);
-    width: 6px;
-    height: 6px;
-    border-radius: 100px;
-  }
-  
-  .dest::before { top: -3px; left: -4px; }
-  .dest::after { bottom: -3px; right: -4px; }
-
-  .title {
+  h1 {
     max-width: 580px;
-    font-family: var(--font-heading);
-    font-size: 44px;
-    font-weight: 500;
-    line-height: 1.2em;
-    color: var(--color-primary);
     margin: 0;
   }
 
   .description {
     max-width: 434px;
-    font-family: var(--font-text);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.5em;
     color: var(--color-primary);
     padding-left: 20px;
     border-left: 1px solid var(--color-primary);
@@ -181,58 +132,11 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
     align-items: flex-start;
   }
 
-  .btn-outline, .btn-solid {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
   .btn-outline {
-    background-color: rgba(252, 163, 185, 0.23);
-    font-family: var(--font-text);
-    font-size: 16px;
-    color: var(--color-primary);
-    margin-top: 12px;   
-    margin-bottom: 8px; 
-    fill: var(--color-primary);
-    border: 1px solid rgba(217, 72, 129, 0.42);
-    padding: 8px 8px;
-  }
-  
-  .btn-outline:hover {
-    background-color: rgba(252, 163, 185, 0.4);
+    margin-top:10px;
   }
 
-  .btn-solid {
-    font-family: var(--font-heading);
-    font-size: 20px;
-    color: var(--color-bg-light);
-    fill: var(--color-bg-light);
-    padding: 31px 40px 32px 85px; 
-    background-color: transparent; 
-    position: relative;
-  }
-  
-  .btn-solid:hover {
-    filter: brightness(1.2);
-  }
-
-  .bg-botao-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; 
-    object-position: center;
-    z-index: -1; 
-    pointer-events: none; 
-  }
-
+  /* --- Responsividade apenas Estrutural --- */
   @media (max-width: 1024px) {
     .hero-section {
       align-items: center;
@@ -251,7 +155,12 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
       text-wrap: balance;
     }
 
+    h1 {
+      max-width: 100%;
+    }
+
     .description {
+      margin-top: -10px;
       padding-left: 0;
       border-left: none;
     }
@@ -260,45 +169,17 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'webp' }
       align-items: center;
       width: 100%;
     }
-
-    .btn-solid {
-      max-width: 300px;
-      width: 100%;
-      padding: 25px 10px 28px 40px;
-      justify-content: center;
-    }
   }
 
   @media (max-width: 767px) {
-    .hero-section {
-      padding-top: max(105vw, 250px);
-    }
-
-    .title {
-      font-size: 2em;
-      line-height: 1.1em;
-      margin-top: -10px;
-    }
-
-    .subtitle {
-      font-size: 1em;
-    }
-
-    .description {
-      font-size: 0.9em;
-      margin-top: -10px;
-    }
-
     .btn-outline {
       margin-top: 25px;
-      margin-bottom: 0px;
-      font-size: 0.9em;
+      margin-bottom: -20px;
     }
 
-    .btn-solid {
-      font-size: 1em;
-      margin-top: -10px;
-      margin-bottom: 50px;
+    .hero-section {
+      padding-top: max(105vw, 250px);
+      padding-bottom: 50px;
     }
   }
 </style>
