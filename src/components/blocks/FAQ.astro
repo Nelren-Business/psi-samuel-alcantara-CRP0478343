@@ -1,9 +1,14 @@
 ---
-// FAQ.astro
+// src/components/FAQ.astro
 import { Image } from 'astro:assets';
 import Vector22 from '../../assets/Vector-2-2.png';
 import Vector111 from '../../assets/Vector-1-1-1.svg';
-import BgBotao from '../../assets/bg-botao.webp';
+
+// Nossos Componentes e Módulos Globais
+import ButtonSolid from '../ButtonSolid.astro';
+import { createWhatsAppUrl } from '../../utils/whatsapp';
+
+const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
 const faqs = [
   {
@@ -43,7 +48,8 @@ const faqs = [
         alt="" 
         class="bg-faq-header" 
         loading="lazy" 
-        decoding="async" 
+        decoding="async"
+        aria-hidden="true" 
       />
       <h2 class="title">
         <span class="destaque">
@@ -52,7 +58,8 @@ const faqs = [
             alt="" 
             class="bg-destaque" 
             loading="lazy" 
-            decoding="async" 
+            decoding="async"
+            aria-hidden="true" 
           />
           FAQ
         </span> - Perguntas Frequentes
@@ -81,47 +88,17 @@ const faqs = [
       <h2 class="footer-title">
         <span class="dest2">Ainda tem dúvidas?</span>
       </h2>
-      <a href="https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
-        <Image 
-          src={BgBotao} 
-          alt="" 
-          class="bg-whatsapp-btn" 
-          loading="lazy" 
-          decoding="async" 
-        />
-        <span class="btn-text">Me chame no WhatsApp</span>
-        <span class="btn-icon">
-          <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
-          </svg>
-        </span>
-        
-      </a>
+      
+      <ButtonSolid href={whatsappLink} text="Me chame no WhatsApp" />
     </div>
   </div>
 </section>
 
 <style>
-  :root {
-    --color-primary: #0B4491;
-    --color-accent: #D94881;
-    --color-accordion-bg: #0A3C80;
-    --color-text-light: #F9F2EC;
-    --color-text-content: #E2E8FC;
-    --font-heading: 'DM Serif Text', serif;
-    --font-body: 'Open Sans', sans-serif;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
   .faq-section {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary); /* Token Global */
     padding: 60px 20px 100px;
-    color: var(--color-text-light);
+    color: #F9F2EC; /* Cor específica clara para o fundo escuro */
     display: flex;
     justify-content: center;
   }
@@ -135,14 +112,12 @@ const faqs = [
   }
 
   .faq-header {
-    position: relative; /* Adicionado para conter a tag Image */
+    position: relative;
     text-align: center;
     padding: 50px 50px 80px 50px;
     z-index: 1;
-    /* Removidos: background-image, background-position, background-repeat, background-size */
   }
 
-  /* Nova classe da imagem de fundo do header */
   .bg-faq-header {
     position: absolute;
     top: 0;
@@ -156,23 +131,19 @@ const faqs = [
   }
 
   .title {
-    font-family: var(--font-heading);
     font-size: 70px;
-    font-weight: 400;
     line-height: 1.1em;
-    color: var(--color-text-light);
+    color: #F9F2EC;
   }
 
   .destaque {
-    position: relative; /* Adicionado */
-    display: inline-block; /* Adicionado para garantir o respeito ao padding/espaço */
+    position: relative; 
+    display: inline-block; 
     padding: 10px 30px;
     font-style: normal;
     z-index: 1;
-    /* Removidos: background-image, background-position, background-size, background-repeat */
   }
 
-  /* Nova classe da imagem de fundo do FAQ destaque */
   .bg-destaque {
     position: absolute;
     top: 0;
@@ -193,13 +164,13 @@ const faqs = [
   }
 
   .faq-item {
-    background-color: var(--color-accordion-bg);
+    background-color: #0A3C80; /* Azul específico dos cards do accordion */
     border: 1px solid rgba(149, 192, 208, 0.26);
     transition: background-color 0.3s ease;
   }
 
   .faq-item:hover, .faq-item[open] {
-    background-color: var(--color-accent);
+    background-color: var(--color-accent); /* Token Global */
   }
 
   .faq-summary {
@@ -216,18 +187,17 @@ const faqs = [
   }
 
   .faq-question {
-    font-family: var(--font-heading);
     font-size: 24px;
-    font-weight: 400;
     font-style: italic;
     letter-spacing: 0.3px;
-    color: var(--color-text-light);
+    color: #F9F2EC;
+    margin: 0; /* Prevents global 0.5em margin collision */
   }
 
   .faq-icon svg {
     width: 20px;
     height: 20px;
-    fill: var(--color-text-light);
+    fill: #F9F2EC;
     transition: transform 0.3s ease;
   }
 
@@ -242,11 +212,8 @@ const faqs = [
   }
 
   .faq-content p {
-    font-family: var(--font-body);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.5em;
-    color: var(--color-text-content);
+    color: #E2E8FC; /* Cor de parágrafo ligeiramente mais fria específica daqui */
+    margin: 0; /* Remove a margem padrão dentro da caixa */
   }
 
   /* Rodapé / Chamada para Ação */
@@ -260,15 +227,14 @@ const faqs = [
   }
 
   .footer-title {
-    font-family: var(--font-heading);
     font-size: 70px;
-    font-weight: 400;
-    color: var(--color-text-light);
+    color: #F9F2EC;
+    margin: 0;
   }
 
   /* Destaque "Ainda tem dúvidas?" */
   .dest2 {
-    background: #105FCB;
+    background: #105FCB; /* Azul highlight do componente anterior */
     padding: 0px 8px;
     position: relative;
     z-index: 2;
@@ -288,157 +254,53 @@ const faqs = [
     z-index: 2;
   }
 
-  .dest2::before {
-    top: -3px;
-    left: -4px;
-  }
-
-  .dest2::after {
-    bottom: -3px;
-    right: -4px;
-  }
-
-  /* Botão do WhatsApp */
-  .whatsapp-button {
-    position: relative; /* Adicionado */
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: transparent; 
-    color: var(--color-text-light);
-    text-decoration: none;
-    padding: 31px 40px 32px 85px; 
-    transition: filter 0.3s ease;
-    z-index: 1;
-    /* Removidos: background-image, background-size, background-repeat, background-position */
-  }
-
-  /* Nova classe da imagem do botão */
-  .bg-whatsapp-btn {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .whatsapp-button:hover {
-    filter: brightness(1.2);
-  }
-
-  .btn-icon svg {
-    width: 25px;
-    height: 25px;
-    fill: var(--color-text-light);
-  }
-
-  .btn-text {
-    font-family: var(--font-heading);
-    font-size: 20px;
-    font-weight: 400;
-  }
+  .dest2::before { top: -3px; left: -4px; }
+  .dest2::after { bottom: -3px; right: -4px; }
 
   /* Responsivo para Tablet e Mobile */
   @media (max-width: 1024px) {
-    .title, .footer-title {
-      font-size: 45px;
-    }
+    .title, .footer-title { font-size: 45px; }
     
-    .faq-header {
-      padding: 0 30px 15px;
-    }
+    .faq-header { padding: 0 30px 15px; }
+    .bg-faq-header { object-position: bottom center; }
 
-    /* Regra transferida do background-position para o mobile/tablet */
-    .bg-faq-header {
-      object-position: bottom center;
-    }
-
-    .destaque {
-      padding: 5px 15px;
-    }
-
-    /* Regra transferida do background-size */
-    .bg-destaque {
-      object-fit: cover;
-    }
+    .destaque { padding: 5px 15px; }
+    .bg-destaque { object-fit: cover; }
     
-    .faq-summary {
-      padding: 13px 20px 15px;
-    }
-    
-    .faq-question {
-      font-size: 1.1em;
-    }
+    .faq-summary { padding: 13px 20px 15px; }
+    .faq-question { font-size: 1.1em; }
 
     .faq-footer {
       justify-content: center;
       text-align: center;
       margin-top: 20px;
     }
-    
-    .whatsapp-button {
-      width: 100%;
-      max-width: 300px;
-      justify-content: center;
-      padding: 25px 10px 28px 40px; 
-    }
   }
 
   @media (max-width: 767px) {
-    .faq-section {
-      padding: 70px 20px 70px;
-    }
-
+    .faq-section { padding: 70px 20px; }
+    
     .faq-header {
       text-align: center;
       padding: 20px 0px 30px 0px;
     }
 
-    /* Regra transferida do background-position para o mobile */
-    .bg-faq-header {
-      object-position: right;
-    }
+    .bg-faq-header { object-position: right; }
 
     .title {
       font-size: 24px;
       padding: 0;
     }
 
-    .title br {
-      display: none;
-    }
-
-    .footer-title {
-      font-size: 24px;
-    }
+    .title br { display: none; }
+    .footer-title { font-size: 24px; }
 
     .faq-question {
       font-size: 15px;
       line-height: 1.3em;
     }
 
-    .faq-content {
-      padding: 20px 20px;
-    }
-
-    .faq-content p {
-      font-size: 14px;
-    }
-
-    .btn-text {
-      font-size: 16px;
-      margin: 0 -6px 0 0;
-      padding: 0 0 0 10px;
-    }
-
-    .btn-icon svg {
-      width: 20px;
-      height: 20px;
-    }
-
+    .faq-content { padding: 20px; }
+    .faq-content p { font-size: 14px; }
   }
 </style>

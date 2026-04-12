@@ -57,31 +57,20 @@ const testimonials = [
   /* --- Novo Divisor Acima (Entidade Separada) --- */
   .testimonials-top-divider {
     width: 100%;
-    /* A imagem original do Elementor é um divisor de transição.
-       Nós a forçamos a ficar colada na seção abaixo, removendo qualquer gap
-       que o navegador adiciona em imagens inline.
-    */
     display: flex; 
-    background-color: transparent; /* Ou a cor da seção de cima se necessário */
-    margin: 0;
-    padding: 0;
     line-height: 0; /* Garante que não haja gap de texto abaixo da imagem */
   }
 
   .testimonials-top-divider img {
     width: 100%;
-    height: auto; /* Mantém a proporção */
-    display: block; /* Remove o gap inferior padrão do navegador */
-    margin: 0;
-    padding: 0;
+    /* Display, height, margin e padding já vêm do global.css */
   }
 
   /* --- Seção Principal --- */
   .testimonials-section {
-    background-color: #0B4491; /* Azul principal */
-    padding: 80px 20px; /* Padding original restaurado */
+    background-color: var(--color-primary); /* Substituído pelo Token Global */
+    padding: 80px 20px;
     width: 100%;
-    /* Removido o relative/::before daqui */
   }
 
   .container {
@@ -96,16 +85,14 @@ const testimonials = [
   }
 
   .section-header h2 {
-    font-family: "DM Serif Text", serif;
     font-size: 46px;
     font-weight: 500;
-    color: #F9F2EC;
+    color: #F9F2EC; /* Mantido fixo pois foge do padrão global da marca para contraste no fundo escuro */
     margin: 0 0 10px 0;
     line-height: 1.2em;
   }
 
   .section-header p {
-    font-family: "Open Sans", sans-serif;
     font-size: 18px;
     font-weight: 500;
     color: #F9F2EC;
@@ -123,7 +110,7 @@ const testimonials = [
 
   /* --- Card Individual --- */
   .testimonial-card {
-    background-color: #D94881; /* Rosa destaque */
+    background-color: var(--color-accent); /* Substituído pelo Token Global */
     border: 2px dotted #FFFFFF;
     border-radius: 5px;
     padding: 30px;
@@ -134,9 +121,9 @@ const testimonials = [
 
   /* O 3º card centralizado que quebra o padrão no layout original */
   .testimonial-card.featured {
-    grid-column: 1 / -1; /* Ocupa as duas colunas */
-    width: 60%; /* Mantém o tamanho reduzido como no Elementor */
-    margin: 0 auto; /* Centraliza */
+    grid-column: 1 / -1; 
+    width: 60%; 
+    margin: 0 auto; 
   }
 
   .stars {
@@ -147,11 +134,10 @@ const testimonials = [
   .stars svg {
     width: 22px;
     height: 22px;
-    fill: #F7F701; /* Amarelo das estrelas */
+    fill: #F7F701; 
   }
 
   .testimonial-card blockquote {
-    font-family: "Open Sans", sans-serif;
     font-size: 18px;
     font-weight: 500;
     font-style: italic;
@@ -175,11 +161,8 @@ const testimonials = [
   }
 
   @media (max-width: 767px) {
-    /* A imagem do divisor já escala automaticamente com width: 100% no CSS global,
-       não precisa de ajustes específicos de altura aqui se display:block estiver correto.
-    */
     .testimonials-section {
-      padding: 60px 20px 80px 30px; /* Reduz padding no mobile */
+      padding: 60px 20px 80px 30px; 
     }
     .section-header h2 {
       font-size: 32px;
@@ -188,7 +171,7 @@ const testimonials = [
       font-size: 16px;
     }
     .testimonials-grid {
-      grid-template-columns: 1fr; /* Coluna única no celular */
+      grid-template-columns: 1fr; 
       gap: 30px;
     }
     .testimonial-card.featured {
@@ -197,7 +180,6 @@ const testimonials = [
     }
     .testimonial-card blockquote {
       font-size: 16px;
-      font-weight: 500;
       line-height: 1.4;
     }
   }

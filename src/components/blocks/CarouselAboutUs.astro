@@ -100,16 +100,13 @@ const slides = [
   }
 
   .carousel-slide figure {
-    margin: 0;
-    padding: 0;
     width: 100%;
   }
 
   .carousel-slide img {
     width: 100%;
-    height: auto;
     object-fit: cover;
-    display: block;
+    /* display: block e height: auto herdados do global.css */
   }
 
   /* --- Botões de Navegação --- */
@@ -133,7 +130,6 @@ const slides = [
     opacity: 1;
   }
 
-  /* Adicionado estilo para botão desativado */
   .carousel-btn:disabled {
     opacity: 0.2;
     cursor: not-allowed;
@@ -162,7 +158,7 @@ const slides = [
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: #0B4491; 
+    background-color: var(--color-primary); /* Substituído pelo Token Global */
     opacity: 0.3;
     border: none;
     cursor: pointer;
@@ -231,8 +227,7 @@ const slides = [
     
     if (!track) return;
 
-    // --- CACHE DE DIMENSÕES (O Segredo do PageSpeed) ---
-    // Guardamos as medidas aqui para nunca ter que consultar o DOM durante o scroll
+    // --- CACHE DE DIMENSÕES ---
     let cachedSlideWidth = 0;
     let cachedClientWidth = 0;
     let cachedScrollWidth = 0;
@@ -242,10 +237,9 @@ const slides = [
       cachedSlideWidth = slide ? slide.offsetWidth : 0;
       cachedClientWidth = track.clientWidth;
       cachedScrollWidth = track.scrollWidth;
-      handleScrollUpdates(); // Atualiza os botões assim que medimos
+      handleScrollUpdates();
     };
 
-    // Atualiza as medidas se o usuário virar o celular ou mudar o tamanho da janela
     window.addEventListener('resize', () => {
       window.requestAnimationFrame(updateDimensions);
     }, { passive: true });
@@ -253,7 +247,6 @@ const slides = [
     let isTicking = false;
 
     const handleScrollUpdates = () => {
-      // 1. FASE DE LEITURA (Lê apenas a posição do scroll, o que não força reflow)
       const scrollPosition = track.scrollLeft;
 
       if (cachedSlideWidth === 0) {
@@ -261,7 +254,6 @@ const slides = [
         return;
       }
 
-      // Cálculos Matemáticos na Memória
       const maxScroll = cachedScrollWidth - cachedClientWidth;
       const isAtStart = scrollPosition <= 1;
       const isAtEnd = scrollPosition >= maxScroll - 1;
@@ -271,7 +263,6 @@ const slides = [
       let currentIndex = Math.round(scrollPosition / cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-      // 2. FASE DE ESCRITA
       if (prevBtn) {
         if (isAtStart) prevBtn.setAttribute('disabled', 'true');
         else prevBtn.removeAttribute('disabled');
@@ -300,7 +291,6 @@ const slides = [
       }
     }, { passive: true });
 
-    // --- Navegação ---
     prevBtn?.addEventListener('click', () => {
       track.scrollBy({ left: -cachedSlideWidth, behavior: 'smooth' });
     });
@@ -311,17 +301,16 @@ const slides = [
 
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
-        const targetElement = e.target;
+        const targetElement = e.target as HTMLElement;
         const targetIndex = parseInt(targetElement.getAttribute('data-target') || '0');
         track.scrollTo({ left: targetIndex * cachedSlideWidth, behavior: 'smooth' });
       });
     });
 
-    // --- Drag to Scroll ---
     let isDown = false;
-    let startX;
-    let scrollLeft;
-    let trackOffsetLeft; 
+    let startX: number;
+    let scrollLeft: number;
+    let trackOffsetLeft: number; 
 
     track.addEventListener('mousedown', (e) => {
       isDown = true;
@@ -355,7 +344,6 @@ const slides = [
       track.scrollLeft = scrollLeft - walk; 
     });
 
-    // --- Intersection Observer ---
     let animationExecuted = false; 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -372,7 +360,6 @@ const slides = [
 
     observer.observe(track);
 
-    // INICIALIZAÇÃO: Calcula tudo pela primeira vez
     updateDimensions();
   }
 

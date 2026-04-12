@@ -1,7 +1,13 @@
 ---
-// Footer.astro
+// src/components/Footer.astro
 import { Image } from 'astro:assets';
 import Nelren from '../../assets/NelrenLogo.png';
+
+// Utilitário global do WhatsApp
+import { createWhatsAppUrl } from '../../utils/whatsapp';
+
+// Gera o link dinamicamente para o botão flutuante
+const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
 ---
 
 <footer class="site-footer">
@@ -31,12 +37,12 @@ import Nelren from '../../assets/NelrenLogo.png';
           <span class="icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0C4491" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-template-icon lucide-layout-template"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></svg>
           </span>
-          <span class="text">Conceito incial por @pinacria</span>
+          <span class="text">Conceito inicial por @pinacria</span>
         </a>
       </li>
 
       <li>
-        <a href="https://nelren.com.br">
+        <a href="https://nelren.com.br" target="_blank" rel="noopener noreferrer">
           <span class="icon">
             <Image 
               class="nelren" 
@@ -53,7 +59,7 @@ import Nelren from '../../assets/NelrenLogo.png';
   </div>
 </footer>
 
-<a href="https://api.whatsapp.com/send/?phone=5537998164092&text=Ol%C3%A1%2C+vim+do+site+e+gostaria+de+tirar+algumas+d%C3%BAvidas%21&type=phone_number&app_absent=0" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Fale comigo no WhatsApp">
+<a href={whatsappLink} class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Fale comigo no WhatsApp">
   <span class="btn-icon">
     <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
       <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
@@ -62,24 +68,9 @@ import Nelren from '../../assets/NelrenLogo.png';
 </a>
 
 <style>
-  :root {
-    --color-accent: #D94881; /* Fundo do Footer */
-    --color-text: #F9F2EC;   /* Cor do texto */
-    --color-whatsapp: #47C243; /* Fundo do botão do Whats */
-    --color-whatsapp-hover: #30A32C; /* Hover do Whats */
-    --font-primary: 'DM Serif Text', serif;
-  }
-
-  /* Reset local apenas para o footer */
-  .site-footer * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
   /* Footer Section */
   .site-footer {
-    background-color: var(--color-accent);
+    background-color: var(--color-accent); /* Token Global */
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -126,24 +117,24 @@ import Nelren from '../../assets/NelrenLogo.png';
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 14px; /* Aumentei levemente para melhor leitura */
+    width: 14px; 
     height: 14px;
   }
 
   /* Ajuste para garantir que SVG's e Imagens fiquem proporcionais */
-  .footer-links .icon svg,
-  .footer-links .icon img {
+  .footer-links .icon :global(svg),
+  .footer-links .icon :global(img) {
     width: 100%;
     height: auto;
     max-height: 14px;
-    object-fit: contain; /* Garante que a imagem se ajuste sem distorcer */
+    object-fit: contain; 
   }
 
   .footer-links .text {
-    font-family: var(--font-primary);
+    font-family: var(--font-heading); /* Token Global */
     font-size: 16px;
     font-weight: 400;
-    color: var(--color-text);
+    color: #F9F2EC; 
     letter-spacing: 0.3px;
     line-height: 1.2;
   }
@@ -153,11 +144,11 @@ import Nelren from '../../assets/NelrenLogo.png';
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: var(--color-whatsapp);
+    background-color: #47C243;
     color: #FFFFFF;
     border-radius: 100px;
     padding: 11px 13px 9px 13px;
-    box-shadow: 0px 0px 10px 0px var(--color-whatsapp);
+    box-shadow: 0px 0px 10px 0px rgba(71, 194, 67, 0.4); /* Opacidade ajustada para sombra mais suave */
     z-index: 999;
     display: flex;
     align-items: center;
@@ -168,7 +159,7 @@ import Nelren from '../../assets/NelrenLogo.png';
 
   .floating-whatsapp:hover,
   .floating-whatsapp:focus {
-    background-color: var(--color-whatsapp-hover);
+    background-color: #30A32C;
     transform: scale(1.05);
   }
 
@@ -209,6 +200,5 @@ import Nelren from '../../assets/NelrenLogo.png';
     .footer-links .text {
       font-size: 14px;
     }
-
   }
 </style>

@@ -266,11 +266,11 @@ const painPoints = [
   .dialog-close:hover { transform: scale(1.2); }
 
   /* =========================================
-     NOVO: Modificador do Botão no Modal
+     Modificador do Botão no Modal
   ========================================= */
   .dialog-inner :global(.btn-modal-compact) {
-    padding: 20px 30px 20px 65px; /* Reduz a altura e mantém a área da esquerda para a textura */
-    font-size: 16px; /* Fonte levemente menor que a do Hero (20px) */
+    padding: 20px 30px 20px 65px; 
+    font-size: 16px; 
     width: fit-content;
   }
 
@@ -297,11 +297,14 @@ const painPoints = [
       align-self: flex-start;
     }
 
-    .pain-card:nth-child(odd).animated {
-      animation-name: fadeInLeft !important;
+    /* Remove animações no mobile e mostra os cards direto */
+    .animate-hidden {
+      opacity: 1;
+      visibility: visible;
     }
-    .pain-card:nth-child(even).animated {
-      animation-name: fadeInRight !important;
+    
+    .animated {
+      animation: none !important;
     }
   }
 </style>

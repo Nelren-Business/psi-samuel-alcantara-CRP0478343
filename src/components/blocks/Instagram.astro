@@ -8,40 +8,20 @@ import Slide4 from '../../assets/4-819x1024.jpg';
 import Slide5 from '../../assets/5-819x1024.jpg';
 import Slide6 from '../../assets/6-819x1024.jpg';
 
-// NOVA IMPORTAÇÃO DO FUNDO DO BOTÃO
-import BgBotao from '../../assets/bg-botao.webp';
+// Importamos nossos módulos globais
+import ButtonSolid from '../ButtonSolid.astro'; // Ajuste o caminho se necessário
+import { createWhatsAppUrl } from '../../utils/whatsapp';
+
+// Centralizamos a geração do link
+const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
 const posts = [
-  {
-    img: Slide1,
-    link: "https://www.instagram.com/p/DQuYpPDgcws/?img_index=1",
-    alt: "Post Instagram 1"
-  },
-  {
-    img: Slide2,
-    link: "https://www.instagram.com/p/DQULJScDTeG/?img_index=1",
-    alt: "Post Instagram 2"
-  },
-  {
-    img: Slide3,
-    link: "https://www.instagram.com/p/DReg584DcmZ/?img_index=1",
-    alt: "Post Instagram 3"
-  },
-  {
-    img: Slide4,
-    link: "https://www.instagram.com/p/DS2lBIBjUNT/?img_index=1",
-    alt: "Post Instagram 4"
-  },
-  {
-    img: Slide5,
-    link: "https://www.instagram.com/p/DSBNiusDf3O/?img_index=1",
-    alt: "Post Instagram 5"
-  },
-  {
-    img: Slide6,
-    link: "https://www.instagram.com/p/DP8yIo2DXf3/?img_index=1",
-    alt: "Post Instagram 6"
-  }
+  { img: Slide1, link: "https://www.instagram.com/p/DQuYpPDgcws/?img_index=1", alt: "Post Instagram 1" },
+  { img: Slide2, link: "https://www.instagram.com/p/DQULJScDTeG/?img_index=1", alt: "Post Instagram 2" },
+  { img: Slide3, link: "https://www.instagram.com/p/DReg584DcmZ/?img_index=1", alt: "Post Instagram 3" },
+  { img: Slide4, link: "https://www.instagram.com/p/DS2lBIBjUNT/?img_index=1", alt: "Post Instagram 4" },
+  { img: Slide5, link: "https://www.instagram.com/p/DSBNiusDf3O/?img_index=1", alt: "Post Instagram 5" },
+  { img: Slide6, link: "https://www.instagram.com/p/DP8yIo2DXf3/?img_index=1", alt: "Post Instagram 6" }
 ];
 ---
 
@@ -107,25 +87,10 @@ const posts = [
     </div>
 
     <div class="action-buttons">
-      <a href="https://wa.me/5537998164092?text=Ol%C3%A1,%20vim%20do%20site%20e%20gostaria%20de%20agendar%20uma%20consulta!" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
-        
-        <Image 
-          src={BgBotao} 
-          alt="" 
-          class="bg-btn-img"
-          loading="lazy"
-          decoding="async"
-        />
+      
+      <ButtonSolid href={whatsappLinkAgendar} />
 
-        <span class="btn-content">
-          <span>Agendar Minha Consulta</span>
-          <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path>
-          </svg>
-        </span>
-      </a>
-
-      <a href="https://www.instagram.com/psi.samuelalcantara/" target="_blank" rel="noopener noreferrer" class="btn btn-instagram">
+      <a href="https://www.instagram.com/psi.samuelalcantara/" target="_blank" rel="noopener noreferrer" class="btn-instagram">
         <span class="btn-content">
           <svg aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
             <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path>
@@ -142,7 +107,7 @@ const posts = [
   /* --- Seção e Container --- */
   .instagram-section {
     padding: 80px 20px;
-    background-color: #FFFFFF;
+    background-color: var(--color-bg-light);
     overflow: hidden;
   }
 
@@ -158,21 +123,16 @@ const posts = [
   }
 
   .section-header h2 {
-    font-family: "DM Serif Text", serif;
     font-size: 46px;
-    font-weight: 500;
-    color: #0B4491;
+    color: var(--color-primary);
     margin: 0 0 10px 0;
-    line-height: 1.2em;
   }
 
   .section-header p {
-    font-family: "Open Sans", sans-serif;
     font-size: 18px;
     font-weight: 500;
-    color: #0B4491;
+    color: var(--color-primary);
     margin: 0;
-    line-height: 1.2em;
   }
 
   /* --- Carrossel CSS --- */
@@ -219,10 +179,9 @@ const posts = [
 
   .slide-inner img {
     width: 100%;
-    height: auto;
-    display: block;
     aspect-ratio: 4/5;
     object-fit: cover;
+    /* display e height resolvidos via CSS global */
   }
 
   .slide-overlay {
@@ -298,7 +257,7 @@ const posts = [
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: #0B4491; 
+    background-color: var(--color-primary); 
     opacity: 0.3;
     border: none;
     cursor: pointer;
@@ -319,7 +278,7 @@ const posts = [
     .dot:nth-child(n+6) { display: none; }
   }
 
-  /* --- Botões --- */
+  /* --- Botões Destaque --- */
   .action-buttons {
     display: flex;
     justify-content: center;
@@ -328,55 +287,13 @@ const posts = [
     flex-wrap: wrap;
   }
 
-  .btn {
+  /* Botão Instagram (Customizado pois foge do padrão global) */
+  .btn-instagram {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    transition: filter 0.3s ease;
-  }
-  
-  .btn:hover { filter: brightness(1.2); }
-
-  .btn-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-  }
-
-  /* Botão WhatsApp */
-  .btn-whatsapp {
-    position: relative; /* Adicionado para prender a tag Image dentro do botão */
-    z-index: 1; /* Adicionado para garantir que ele respeita a camada correta */
-    background-color: transparent;
-    padding: 31px 40px 32px 85px;
-    font-family: "DM Serif Text", serif;
-    font-size: 20px;
-    font-weight: 400;
-    color: #F9F2EC;
-    fill: #F9F2EC;
-    /* Removidos: background-image, background-size, background-repeat, background-position */
-  }
-
-  /* NOVA CLASSE DA IMAGEM DE FUNDO DO BOTÃO */
-  .bg-btn-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  .btn-whatsapp svg { width: 20px; height: 20px; }
-
-  /* Botão Instagram */
-  .btn-instagram {
-    background-color: #0B4491;
+    background-color: var(--color-primary);
     border-radius: 5px;
     padding: 11px 13px;
     font-family: "Average Sans", sans-serif;
@@ -384,9 +301,22 @@ const posts = [
     font-weight: 400;
     color: #F9F2EC;
     fill: #F9F2EC;
+    transition: filter 0.3s ease, background-color 0.3s ease;
   }
 
-  .btn-instagram:hover { background-color: #0B4491D6; }
+  .btn-instagram:hover { 
+    filter: brightness(1.2);
+    /* Mantém a camada de cor levemente alterada para efeito visual */
+    background-color: #0B4491D6; 
+  }
+  
+  .btn-instagram .btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+
   .btn-instagram svg { width: 20px; height: 20px; }
 
   /* --- Animação de Dica (Hint) --- */
@@ -412,7 +342,6 @@ const posts = [
     .btn-instagram {
       padding: 8px 13px;
       font-size: 16px;
-      font-weight: 400;
     }
     .carousel-track {
       gap: 0px;
@@ -428,14 +357,8 @@ const posts = [
 
     .action-buttons {
       flex-direction: column;
-      gap: 10px;
-      padding: 0 0 0 0;
-    }
-    
-    .btn-whatsapp {
-      padding: 40px 0px 40px 40px;
-      width: 70%;
-      font-size: 16px;
+      gap: 15px;
+      padding: 0 20px;
     }
   }
 </style>
@@ -489,7 +412,6 @@ const posts = [
     let isTicking = false;
 
     const handleScrollUpdates = () => {
-      // 1. FASE DE LEITURA (Lê apenas a barra de rolagem)
       const scrollPosition = track.scrollLeft;
       
       if (cachedSlideWidth === 0) {
@@ -505,7 +427,6 @@ const posts = [
           currentIndex = maxIndex;
       }
 
-      // 2. FASE DE ESCRITA
       dots.forEach((dot, index) => {
         if (index === currentIndex) {
           dot.classList.add('active');
@@ -584,8 +505,6 @@ const posts = [
 
   initInstagramCarousel();
   document.addEventListener('astro:page-load', () => {
-    // Dá 100ms para o navegador terminar de pintar o Hero (LCP) 
-    // antes de começar a calcular larguras de carrossel
     setTimeout(initInstagramCarousel, 100); 
   });
 </script>

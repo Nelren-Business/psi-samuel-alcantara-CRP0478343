@@ -5,7 +5,7 @@ import Vector10 from '../../assets/Vector-10.svg';
 import BluePin2 from '../../assets/Blue-Pin-2.svg';
 import BluePin3 from '../../assets/Blue-Pin-3.svg';
 
-// Novas importações de background
+// Importações de background
 import BgDivisor from '../../assets/divisor-04.webp';
 import Box1Bg from '../../assets/Vector-3-1.svg';
 import Box2Bg from '../../assets/Vector-2-1.svg';
@@ -18,13 +18,14 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
     class="bg-section-divisor" 
     loading="lazy" 
     decoding="async" 
+    aria-hidden="true"
   />
 
   <div class="container">
     <div class="absolute-ornament">
       <Image 
         src={Vector10}
-        width="1252" height="88" alt="" loading="lazy" decoding="async" 
+        width="1252" height="88" alt="" loading="lazy" decoding="async" aria-hidden="true" 
       />
     </div>
 
@@ -35,12 +36,13 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
         class="box-bg" 
         loading="lazy" 
         decoding="async" 
+        aria-hidden="true"
       />
       
       <figure class="box-image">
         <Image 
           src={BluePin2}
-          width="64" height="80" alt="" loading="lazy" decoding="async" 
+          width="64" height="80" alt="" loading="lazy" decoding="async" aria-hidden="true"
         />
       </figure>
       <div class="box-content">
@@ -55,12 +57,13 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
         class="box-bg box-2-bg" 
         loading="lazy" 
         decoding="async" 
+        aria-hidden="true"
       />
 
       <figure class="box-image box-image-right">
         <Image 
           src={BluePin3} 
-          width="64" height="80" alt="" loading="lazy" decoding="async" 
+          width="64" height="80" alt="" loading="lazy" decoding="async" aria-hidden="true"
         />
       </figure>
       <div class="box-content">
@@ -74,17 +77,16 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
   /* Seção Principal */
   .extension-methodology {
     position: relative;
-    background-color: #1155B0;
+    background-color: var(--color-primary); /* Atualizado para o Design Token */
     padding: 2% 3% 5% 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Garante que as bordas da imagem não vazem */
-    /* Removidos: background-image, background-position, background-repeat, background-size */
+    overflow: hidden; 
   }
 
-  /* Nova classe para simular o background-size: contain da seção */
+  /* Divisor da Seção */
   .bg-section-divisor {
     position: absolute;
     bottom: 0;
@@ -106,7 +108,7 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
     width: 100%;
     max-width: 1140px;
     margin-bottom: 60px;
-    z-index: 2; /* Garante que o container fique acima da bg-section-divisor */
+    z-index: 2; 
   }
 
   /* Ornamento Absoluto (Vector-10) */
@@ -128,7 +130,7 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
     z-index: 2;
   }
 
-  /* Nova classe genérica para o fundo das duas Boxes (simulando background-size: cover) */
+  /* Fundo das duas Boxes */
   .box-bg {
     position: absolute;
     top: 0;
@@ -142,24 +144,23 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
   }
 
   .methodology-box p {
-    color: #F9F2EC;
-    font-family: "Open Sans", sans-serif;
+    color: #F9F2EC; /* Cor mantida por ser contraste off-white */
     font-size: 18px;
     font-weight: 500;
     line-height: 1.4em;
     letter-spacing: 0.3px;
-    margin: 0;
+    margin: 0; /* Sobrescreve o margin-bottom: 1rem do global.css */
   }
 
   .box-image {
-    margin: 0;
+    /* O reset global já cuida do margin, mas mantemos para clareza estrutural local */
+    margin: 0; 
   }
 
   .box-image img {
     width: 40px;
-    height: auto;
-    display: block;
     transition-duration: 0.3s;
+    /* display: block e height: auto são resolvidos pelo global.css */
   }
 
   /* Box 1 (Esquerda) */
@@ -168,7 +169,6 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
     max-width: 510px;
     padding: 8px 20px 30px 30px;
     text-align: left;
-    /* Removidos: background-image, background-position, background-repeat, background-size */
   }
 
   .box-1 .box-image img {
@@ -183,7 +183,6 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
     padding: 0 40px 30px 30px;
     align-self: flex-end;
     text-align: right;
-    /* Removidos: background-image, background-position, background-repeat, background-size */
   }
 
   .box-image-right {
@@ -217,7 +216,6 @@ import Box2Bg from '../../assets/Vector-2-1.svg';
       align-self: center;
     }
 
-    /* Ajusta a posição da imagem de fundo da Box 2 no mobile/tablet */
     .box-2-bg {
       object-position: bottom center;
     }

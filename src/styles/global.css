@@ -191,6 +191,9 @@ img, svg, video, canvas, audio, iframe, embed, object {
   padding: 31px 40px 32px 85px; 
   background-color: transparent; 
   position: relative;
+  /* A MÁGICA ACONTECE AQUI: Cria uma barreira de empilhamento. 
+     O z-index: -1 do background nunca mais vai vazar para trás da seção! */
+  isolation: isolate;
 }
 
 .btn-solid:hover {
