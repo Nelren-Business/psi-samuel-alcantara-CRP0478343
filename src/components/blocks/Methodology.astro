@@ -1,6 +1,5 @@
 ---
-// src/components/Methodology.astro
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // Nossa fonte única de verdade
 import Terapia1 from '../../assets/Terapia-1.svg';
 
 // NOVA IMPORTAÇÃO DO FUNDO DIVISOR
@@ -32,7 +31,7 @@ const steps = [
 
 <section class="methodology-section">
   
-  <Image 
+  <OptimizedImage 
     src={BgDivisor3} 
     class="bg-section-divisor" 
     alt="" 
@@ -41,8 +40,8 @@ const steps = [
     aria-hidden="true" 
   />
 
-  <Image 
-    src={Terapia1} 
+  <img 
+    src={Terapia1.src} 
     class="bg-shape" 
     alt="" 
     loading="lazy" 

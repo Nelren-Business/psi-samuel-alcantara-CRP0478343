@@ -9,4 +9,10 @@ export default defineConfig({
     inlineStylesheets: 'always', 
   },
 
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp', // Sharp é o padrão ouro de performance
+    },
+  },
+
 });

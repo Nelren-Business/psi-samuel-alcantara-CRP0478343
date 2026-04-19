@@ -1,6 +1,5 @@
 ---
-// src/components/CarouselAboutUs.astro
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // Nossa fonte única de verdade
 import Slide1 from '../../assets/row-1-column-1-818x1024.jpg';
 import Slide2 from '../../assets/row-2-column-1-818x1024.jpg';
 import Slide3 from '../../assets/3-818x1024.jpg';
@@ -29,21 +28,15 @@ const slides = [
       {slides.map((slide, index) => (
         <div class="carousel-slide" data-index={index}>
           <figure>
-            <Image 
+            <OptimizedImage 
               src={slide.src} 
               alt={slide.alt} 
-              // Carrega os 3 primeiros logo de cara (visíveis no desktop).
-              // Os ocultos ficam em lazy loading para poupar banda.
               loading={index < 3 ? "eager" : "lazy"} 
+              decoding={index < 3 ? "sync" : "async"}
               width={412} 
               height={516}
-              // Geramos 3 tamanhos reais: pequeno, médio e o limite do arquivo fonte
               widths={[400, 600, slide.src.width]}
-              // O mapeamento exato da regra de flex-basis do seu CSS:
-              // Mobile = 100vw | Tablet = 50vw | Desktop = 33vw
               sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              format="avif"
-              quality={80} 
               class="carousel-img"
             />
           </figure>
@@ -71,7 +64,6 @@ const slides = [
 </section>
 
 <style>
-  /* Todo o seu CSS e lógicas de slide estão intocados */
   .carousel-section { max-width: 100%; position: relative; }
   .carousel-container { position: relative; display: flex; align-items: center; overflow: hidden; }
   .carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; }
@@ -79,7 +71,6 @@ const slides = [
   .carousel-slide { flex: 0 0 calc(33.333%); scroll-snap-align: start; will-change: transform; }
   .carousel-slide figure { width: 100%; margin: 0; }
   
-  /* Substituí o inline-style da imagem por essa classe */
   .carousel-img {
     width: 100%;
     height: auto;
@@ -108,7 +99,6 @@ const slides = [
 </style>
 
 <script>
-  // O seu JS está impecável. Mantido exatamente como o original.
   function initCarousel() {
     const track = document.getElementById('about-carousel');
     const prevBtn = document.querySelector('.carousel-btn.prev');

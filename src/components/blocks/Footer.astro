@@ -1,6 +1,6 @@
 ---
 // src/components/Footer.astro
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // A nossa Fonte Única de Verdade
 import Nelren from '../../assets/NelrenLogo.png';
 
 // Utilitário global do WhatsApp
@@ -8,6 +8,9 @@ import { createWhatsAppUrl } from '../../utils/whatsapp';
 
 // Gera o link dinamicamente para o botão flutuante
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
+
+// Prevenção de Dívida Técnica: Ano dinâmico
+const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
@@ -29,7 +32,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
             <path d="M6.56326 12V5.8137H7.94173V12H6.56326ZM10.2868 12L8.48807 9.36074H10.001L11.8838 12H10.2868ZM7.57189 10.0332V8.94888H9.08485C9.28657 8.94888 9.46028 8.90965 9.60598 8.8312C9.75727 8.74715 9.87214 8.63228 9.95059 8.48659C10.0346 8.33529 10.0767 8.16158 10.0767 7.96546C10.0767 7.76933 10.0346 7.59843 9.95059 7.45273C9.87214 7.30144 9.75727 7.18657 9.60598 7.10812C9.46028 7.02406 9.28657 6.98204 9.08485 6.98204H7.57189V5.8137H8.97558C9.4855 5.8137 9.92818 5.89215 10.3036 6.04905C10.6791 6.20035 10.9676 6.42729 11.1694 6.72988C11.3711 7.03247 11.472 7.41351 11.472 7.873V8.00748C11.472 8.46137 11.3683 8.83961 11.161 9.1422C10.9592 9.43919 10.6706 9.66333 10.2952 9.81462C9.92538 9.96031 9.4855 10.0332 8.97558 10.0332H7.57189Z" fill="#0B4491"></path>
           </svg>
         </span>
-        <span class="text">2026 • Todos os direitos reservados</span>
+        <span class="text">{currentYear} • Todos os direitos reservados</span>
       </li>
 
       <li>
@@ -44,7 +47,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
       <li>
         <a href="https://nelren.com.br" target="_blank" rel="noopener noreferrer">
           <span class="icon">
-            <Image 
+            <OptimizedImage 
               class="nelren" 
               src={Nelren} 
               alt="" 
@@ -68,9 +71,9 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
 </a>
 
 <style>
-  /* Footer Section */
+  /* CSS intocado */
   .site-footer {
-    background-color: var(--color-accent); /* Token Global */
+    background-color: var(--color-accent); 
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -85,7 +88,6 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
     max-width: 1140px;
   }
 
-  /* Links Flex Container */
   .footer-links {
     display: flex;
     flex-wrap: wrap;
@@ -121,7 +123,6 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
     height: 14px;
   }
 
-  /* Ajuste para garantir que SVG's e Imagens fiquem proporcionais */
   .footer-links .icon :global(svg),
   .footer-links .icon :global(img) {
     width: 100%;
@@ -131,7 +132,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
   }
 
   .footer-links .text {
-    font-family: var(--font-heading); /* Token Global */
+    font-family: var(--font-heading); 
     font-size: 16px;
     font-weight: 400;
     color: #F9F2EC; 
@@ -139,7 +140,6 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
     line-height: 1.2;
   }
 
-  /* Botão Flutuante do WhatsApp */
   .floating-whatsapp {
     position: fixed;
     bottom: 20px;
@@ -148,7 +148,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
     color: #FFFFFF;
     border-radius: 100px;
     padding: 11px 13px 9px 13px;
-    box-shadow: 0px 0px 10px 0px rgba(71, 194, 67, 0.4); /* Opacidade ajustada para sombra mais suave */
+    box-shadow: 0px 0px 10px 0px rgba(71, 194, 67, 0.4); 
     z-index: 999;
     display: flex;
     align-items: center;
@@ -175,7 +175,6 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
     fill: #FFFFFF;
   }
 
-  /* Responsividade */
   @media (max-width: 1024px) {
     .footer-links {
       flex-direction: column;
@@ -187,7 +186,6 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar al
       justify-content: center;
     }
 
-    /* Ajuste no tamanho do ícone do Whats mobile */
     .floating-whatsapp svg {
       width: 35px;
       height: 35px;

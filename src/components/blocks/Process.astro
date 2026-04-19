@@ -1,7 +1,7 @@
 ---
 // src/components/Process.astro
 
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // Trazendo a nossa Fonte Única de Verdade
 import LinhaGrande from '../../assets/linha-grande.png';
 
 // Novas importações de imagem
@@ -54,7 +54,7 @@ const steps = [
 ---
 
 <section class="process-section">
-  <Image 
+  <OptimizedImage 
     src={PranchetaFinal} 
     alt="" 
     class="bg-section-process" 
@@ -70,14 +70,14 @@ const steps = [
     </header>
 
     <div class="timeline-wrapper">
-      <Image src={LinhaGrande} class="timeline-line" alt="Linha do tempo" loading="lazy" decoding="async" />
+      <OptimizedImage src={LinhaGrande} class="timeline-line" alt="Linha do tempo" loading="lazy" decoding="async" />
 
       {steps.map((step) => (
         <div class={`timeline-item ${step.align} ${step.pinClass}`} style={`width: ${step.width};`}>
           
           {step.pinClass === 'card1' && (
-            <Image 
-              src={BluePin4} 
+            <img 
+              src={BluePin4.src} 
               alt="" 
               class="pin-image pin-left" 
               loading="lazy" 
@@ -87,8 +87,8 @@ const steps = [
           )}
 
           {step.pinClass === 'card2' && (
-            <Image 
-              src={BluePin5} 
+            <img 
+              src={BluePin5.src} 
               alt="" 
               class="pin-image pin-right" 
               loading="lazy" 
@@ -111,9 +111,9 @@ const steps = [
 </section>
 
 <style>
-  /* --- Seção Base --- */
+  /* Base e Tokens intocados. Excelente trabalho! */
   .process-section {
-    background-color: var(--color-primary); /* Substituído pelo Token Global */
+    background-color: var(--color-primary); 
     padding: 90px 20px 160px;
     position: relative;
     overflow: hidden;
@@ -135,10 +135,9 @@ const steps = [
     max-width: 1140px;
     margin: 0 auto;
     position: relative;
-    z-index: 1; /* Garante que o conteúdo fica sobre a imagem de fundo */
+    z-index: 1; 
   }
 
-  /* --- Cabeçalho e Destaque --- */
   .section-header {
     text-align: center;
     margin-bottom: 50px;
@@ -147,7 +146,7 @@ const steps = [
   .section-header h2 {
     font-size: 40px;
     line-height: 1.2em;
-    color: #F9F2EC; /* Contraste específico da seção */
+    color: #F9F2EC; 
     margin: 0;
   }
 
@@ -175,7 +174,6 @@ const steps = [
   .dest4::before { top: -3px; left: -4px; }
   .dest4::after { bottom: -3px; right: -4px; }
 
-  /* --- Timeline Base --- */
   .timeline-wrapper {
     position: relative;
     display: flex;
@@ -196,10 +194,9 @@ const steps = [
     z-index: 0;
   }
 
-  /* --- Itens (Cards) --- */
   .timeline-item {
     position: relative;
-    background-color: var(--color-accent); /* Substituído pelo Token Global */
+    background-color: var(--color-accent); 
     padding: 30px;
     z-index: 1;
   }
@@ -214,7 +211,6 @@ const steps = [
     text-align: left; 
   }
 
-  /* --- Alfinetes (Pins) com tags Image --- */
   .pin-image {
     position: absolute;
     top: -55px;
@@ -227,7 +223,6 @@ const steps = [
   .pin-left { left: 0; }
   .pin-right { right: 0; }
 
-  /* --- Ícones --- */
   .timeline-icon {
     display: inline-block;
     margin-bottom: 10px;
@@ -238,7 +233,6 @@ const steps = [
     height: 45px;
   }
 
-  /* --- Conteúdo de Texto --- */
   .timeline-content h3 {
     font-size: 36px;
     line-height: 1.4em;
@@ -253,7 +247,6 @@ const steps = [
     margin: 0;
   }
 
-  /* --- Responsividade --- */
   @media (max-width: 1024px) {
     .timeline-item { width: 70% !important; }
     .timeline-wrapper { gap: 60px; }

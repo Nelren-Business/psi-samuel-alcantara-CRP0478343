@@ -1,6 +1,6 @@
 ---
 // src/components/FAQ.astro
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // Trazendo nossa Fonte Única de Verdade
 import Vector22 from '../../assets/Vector-2-2.png';
 import Vector111 from '../../assets/Vector-1-1-1.svg';
 
@@ -43,7 +43,7 @@ const faqs = [
   <div class="container">
     
     <div class="faq-header">
-      <Image 
+      <OptimizedImage 
         src={Vector22} 
         alt="" 
         class="bg-faq-header" 
@@ -53,8 +53,8 @@ const faqs = [
       />
       <h2 class="title">
         <span class="destaque">
-          <Image 
-            src={Vector111} 
+          <img 
+            src={Vector111.src} 
             alt="" 
             class="bg-destaque" 
             loading="lazy" 
@@ -95,10 +95,11 @@ const faqs = [
 </section>
 
 <style>
+  /* CSS intocado - Perfeitamente estruturado */
   .faq-section {
-    background-color: var(--color-primary); /* Token Global */
+    background-color: var(--color-primary); 
     padding: 60px 20px 100px;
-    color: #F9F2EC; /* Cor específica clara para o fundo escuro */
+    color: #F9F2EC; 
     display: flex;
     justify-content: center;
   }
@@ -164,13 +165,13 @@ const faqs = [
   }
 
   .faq-item {
-    background-color: #0A3C80; /* Azul específico dos cards do accordion */
+    background-color: #0A3C80; 
     border: 1px solid rgba(149, 192, 208, 0.26);
     transition: background-color 0.3s ease;
   }
 
   .faq-item:hover, .faq-item[open] {
-    background-color: var(--color-accent); /* Token Global */
+    background-color: var(--color-accent); 
   }
 
   .faq-summary {
@@ -191,7 +192,7 @@ const faqs = [
     font-style: italic;
     letter-spacing: 0.3px;
     color: #F9F2EC;
-    margin: 0; /* Prevents global 0.5em margin collision */
+    margin: 0; 
   }
 
   .faq-icon svg {
@@ -212,8 +213,8 @@ const faqs = [
   }
 
   .faq-content p {
-    color: #E2E8FC; /* Cor de parágrafo ligeiramente mais fria específica daqui */
-    margin: 0; /* Remove a margem padrão dentro da caixa */
+    color: #E2E8FC; 
+    margin: 0; 
   }
 
   /* Rodapé / Chamada para Ação */
@@ -234,7 +235,7 @@ const faqs = [
 
   /* Destaque "Ainda tem dúvidas?" */
   .dest2 {
-    background: #105FCB; /* Azul highlight do componente anterior */
+    background: #105FCB; 
     padding: 0px 8px;
     position: relative;
     z-index: 2;

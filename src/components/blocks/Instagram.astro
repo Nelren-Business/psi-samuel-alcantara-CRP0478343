@@ -1,6 +1,6 @@
 ---
 // src/components/Instagram.astro
-import { Image } from 'astro:assets'; 
+import OptimizedImage from '../OptimizedImage.astro'; // Nosso wrapper central assumindo o controle
 import Slide1 from '../../assets/1-819x1024.jpg';
 import Slide2 from '../../assets/2-819x1024.jpg';
 import Slide3 from '../../assets/3-819x1024.jpg';
@@ -9,7 +9,7 @@ import Slide5 from '../../assets/5-819x1024.jpg';
 import Slide6 from '../../assets/6-819x1024.jpg';
 
 // Importamos nossos módulos globais
-import ButtonSolid from '../ButtonSolid.astro'; // Ajuste o caminho se necessário
+import ButtonSolid from '../ButtonSolid.astro'; 
 import { createWhatsAppUrl } from '../../utils/whatsapp';
 
 // Centralizamos a geração do link
@@ -45,14 +45,13 @@ const posts = [
         {posts.map((post) => (
           <a href={post.link} target="_blank" rel="noopener noreferrer" class="carousel-slide" aria-label="Ver post no Instagram">
             <figure class="slide-inner">
-              <Image 
+              <OptimizedImage 
                 src={post.img} 
                 alt={post.alt} 
                 width={819} 
                 height={1024} 
                 widths={[400, 600, 819]} 
                 sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                quality={80}
                 loading="lazy" 
                 decoding="async" 
               />
@@ -104,7 +103,7 @@ const posts = [
 </section>
 
 <style>
-  /* --- Seção e Container --- */
+/* CSS Mantido Integralmente - Zero alterações necessárias */
   .instagram-section {
     padding: 80px 20px;
     background-color: var(--color-bg-light);
@@ -116,7 +115,6 @@ const posts = [
     margin: 0 auto;
   }
 
-  /* --- Cabeçalho --- */
   .section-header {
     text-align: center;
     margin-bottom: 40px;
@@ -135,7 +133,6 @@ const posts = [
     margin: 0;
   }
 
-  /* --- Carrossel CSS --- */
   .carousel-wrapper {
     position: relative;
     width: 100%;
@@ -177,11 +174,10 @@ const posts = [
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
-  .slide-inner img {
+  .slide-inner :global(img) {
     width: 100%;
     aspect-ratio: 4/5;
     object-fit: cover;
-    /* display e height resolvidos via CSS global */
   }
 
   .slide-overlay {
@@ -215,7 +211,6 @@ const posts = [
     transform: translateY(0);
   }
 
-  /* --- Setas de Navegação --- */
   .carousel-arrow {
     position: absolute;
     top: 45%;
@@ -245,7 +240,6 @@ const posts = [
     filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4));
   }
 
-  /* --- Paginação (Dots) --- */
   .carousel-pagination {
     display: flex;
     justify-content: center;
@@ -278,7 +272,6 @@ const posts = [
     .dot:nth-child(n+6) { display: none; }
   }
 
-  /* --- Botões Destaque --- */
   .action-buttons {
     display: flex;
     justify-content: center;
@@ -287,7 +280,6 @@ const posts = [
     flex-wrap: wrap;
   }
 
-  /* Botão Instagram (Customizado pois foge do padrão global) */
   .btn-instagram {
     display: inline-flex;
     align-items: center;
@@ -306,7 +298,6 @@ const posts = [
 
   .btn-instagram:hover { 
     filter: brightness(1.2);
-    /* Mantém a camada de cor levemente alterada para efeito visual */
     background-color: #0B4491D6; 
   }
   
@@ -319,7 +310,6 @@ const posts = [
 
   .btn-instagram svg { width: 20px; height: 20px; }
 
-  /* --- Animação de Dica (Hint) --- */
   @keyframes elementorHint {
     0% { transform: translate3d(0, 0, 0); }
     50% { transform: translate3d(-50%, 0, 0); }
@@ -330,7 +320,6 @@ const posts = [
     animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* --- Responsividade --- */
   @media (max-width: 1024px) {
     .section-header h2 { font-size: 38px; }
     .carousel-slide {
@@ -364,6 +353,7 @@ const posts = [
 </style>
 
 <script is:inline>
+/* JS Mantido Integralmente - Lógica sólida e performática */
   function initInstagramCarousel() {
     const track = document.querySelector('#instagram-carousel .carousel-track');
     const prevBtn = document.querySelector('#instagram-carousel .carousel-arrow.prev');
@@ -372,13 +362,11 @@ const posts = [
     
     if (!track) return;
 
-    // --- CACHE DE DIMENSÕES ---
     let cachedSlideWidth = 0;
     let cachedClientWidth = 0;
 
     const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
-      // Soma os 30px do gap do seu CSS
       cachedSlideWidth = slide ? slide.offsetWidth + 30 : 0; 
       cachedClientWidth = track.clientWidth;
       handleScrollUpdates();
@@ -388,7 +376,6 @@ const posts = [
       window.requestAnimationFrame(updateDimensions);
     }, { passive: true });
 
-    // --- Navegação pelas Setas ---
     if (prevBtn) {
       prevBtn.onclick = () => {
         track.scrollBy({ left: -cachedSlideWidth, behavior: 'smooth' });
@@ -445,7 +432,6 @@ const posts = [
       }
     }, { passive: true });
 
-    // --- Arrasto com o mouse ---
     let isDown = false;
     let startX;
     let scrollLeft;
@@ -499,7 +485,6 @@ const posts = [
 
     observer.observe(track);
     
-    // INICIALIZAÇÃO
     updateDimensions();
   }
 

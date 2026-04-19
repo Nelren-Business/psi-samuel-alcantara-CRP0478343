@@ -1,8 +1,8 @@
 ---
 // src/components/PersonalText.astro
-import { Image } from 'astro:assets';
+import OptimizedImage from '../OptimizedImage.astro'; // Importando a nossa Fonte Única de Verdade
 
-// Imagens
+// Imagens (Todas Raster - perfeitas para o nosso wrapper)
 import DivisorImg from '../../assets/divisor.png';
 import Vector11 from '../../assets/Vector-1-1.png';
 import BgVector2 from '../../assets/bg-vector-2.webp';
@@ -15,7 +15,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de agendar 
 ---
 
 <section class="personal-text-section">
-  <Image 
+  <OptimizedImage 
     src={DivisorImg} 
     alt="" 
     class="bg-section-divisor" 
@@ -31,7 +31,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de agendar 
 
     <div class="content-wrapper">
       <div class="text-block">
-        <Image 
+        <OptimizedImage 
           src={Vector11} 
           alt="" 
           class="bg-text-block" 
@@ -54,7 +54,7 @@ const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de agendar 
     </div>
 
     <div class="cta-wrapper">
-      <Image 
+      <OptimizedImage 
         src={BgVector2} 
         alt="" 
         class="bg-cta" 
