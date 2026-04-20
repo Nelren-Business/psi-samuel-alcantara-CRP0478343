@@ -15,6 +15,7 @@ import ExtensionMethodology from '../components/blocks/ExtensionMethodology.astr
 import PersonalText from '../components/blocks/PersonalText.astro';
 import FAQ from '../components/blocks/FAQ.astro';
 import Footer from '../components/blocks/Footer.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
 
 const PACKAGE_JSON_CONTENT = {
   "name": "Samuel Alcântara - Psicólogo",
@@ -25,6 +26,7 @@ const PACKAGE_JSON_CONTENT = {
 <Layout title={PACKAGE_JSON_CONTENT.name} description={PACKAGE_JSON_CONTENT.description}>
     <main>
         <Hero />
+        <FloatingWhatsApp />
         <PainPoints />
         <AboutUS />
         <CarouselAboutUs />
