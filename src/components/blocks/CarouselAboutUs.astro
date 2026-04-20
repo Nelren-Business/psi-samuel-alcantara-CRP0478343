@@ -25,18 +25,19 @@ const slides = [
       </svg>
     </button>
 
-    <div class="carousel-track" id="about-carousel">
+<div class="carousel-track" id="about-carousel">
       {slides.map((slide, index) => (
         <div class="carousel-slide" data-index={index}>
           <figure>
             <OptimizedImage 
               src={slide.src} 
               alt={slide.alt} 
-              loading={index < 3 ? "eager" : "lazy"} 
-              decoding={index < 3 ? "sync" : "async"}
+              /* Todas as imagens viram lazy, poupando a rede no load inicial */
+              loading="lazy" 
+              /* O processador descompacta a imagem em background */
+              decoding="async"
               width={412} 
               height={516}
-              /* O Segredo: Breakpoints cirúrgicos cobrindo 1x e 2x de DPR */
               widths={[360, 412, 512, 720, slide.src.width]}
               sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
               class="carousel-img"
