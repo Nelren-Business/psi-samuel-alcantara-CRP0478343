@@ -94,8 +94,7 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
           alt="Foto Samuel" 
           class="photo-img"
           widths={[400, 800, 1200, 1600]}
-          /* Atualizando os tamanhos pro navegador, já que tiramos os abusos do CSS */
-          sizes="(max-width: 767px) 100vw, (max-width: 1024px) 100vw, 1500px"
+          sizes="(max-width: 767px) 240vw, (max-width: 1024px) 140vw, 1500px"
           loading="lazy" 
           decoding="async"
         />
@@ -296,10 +295,9 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
     }
 
     .photo-wrapper {
-      /* Removemos a lógica abusiva e alinhamos à esquerda com um valor seguro */
-      width: 100%;
-      margin-top: 0;
-      margin-left: -15%;
+      width: 140%;
+      margin-top: -10%;
+      margin-left: -20%;
     }
 
     .title {
@@ -329,10 +327,9 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
     }
 
     .photo-wrapper {
-      /* Mesma lógica do tablet para alinhar e não invadir o hero */
-      width: 100vw;
-      margin-top: 0;
-      margin-left: -15%; 
+      width: 240%;
+      margin-top: -80px;
+      margin-left: 0; 
     }
 
     .description {
