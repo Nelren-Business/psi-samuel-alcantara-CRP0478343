@@ -28,7 +28,6 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
       class="hero-bg"
       fetchpriority="high"
       loading="eager"
-      /* Mudança 1: Libera a main thread no mobile */
       decoding="async" 
       /* Mudança 2: Previne layout shifts e ajuda no cálculo de renderização */
       width={BgHeroDesktop.width}
