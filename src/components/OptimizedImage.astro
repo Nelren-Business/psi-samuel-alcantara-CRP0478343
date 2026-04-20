@@ -1,4 +1,5 @@
 ---
+// src/components/OptimizedImage.astro
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -6,26 +7,17 @@ interface Props {
   src: ImageMetadata | string;
   alt: string;
   class?: string;
-  [key: string]: any; // Para aceitar outros atributos como 'loading', 'width', etc.
+  [key: string]: any; // Permite herdar widths, sizes, loading, etc. do componente pai
 }
 
 const { src, alt, class: className, ...rest } = Astro.props;
-
-// Lógica de CTO: SVGs não precisam de processamento raster (AVIF)
-const isSvg = typeof src === 'string' ? src.endsWith('.svg') : (src as ImageMetadata).format === 'svg';
-
-const imageProps = {
-  src,
-  alt,
-  class: className,
-  ...(isSvg ? {} : { format: 'avif', quality: 82 }), // Só aplica se não for SVG
-  ...rest
-};
 ---
 
-{isSvg ? (
-  /* Se for SVG, o Astro apenas renderiza. Se for string (URL), usamos img normal ou Image */
-  <Image {...imageProps} />
-) : (
-  <Image {...imageProps} />
-)}
+<Image 
+  src={src} 
+  alt={alt} 
+  class={className} 
+  format="avif" 
+  quality={82} 
+  {...rest} 
+/>

@@ -1,5 +1,4 @@
 ---
-// src/components/Hero.astro
 import { getImage } from 'astro:assets'; 
 import TerapiaSVG from '../../assets/Terapia.svg';
 import BgHeroDesktop from '../../assets/bg-hero-01.webp';
@@ -8,11 +7,10 @@ import IconWhatsapp from '../IconWhatsapp.astro';
 import ButtonSolid from '../ButtonSolid.astro';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
 
-// Lógica isolada e limpa
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
-// --- Processando imagens para AVIF (Máxima Performance) ---
+// Pré-otimizando as imagens para o fallback das sources
 const optimizedMobileBg = await getImage({ src: BgHeroMobile, format: 'avif' });
 const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' });
 ---
@@ -30,7 +28,11 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
       class="hero-bg"
       fetchpriority="high"
       loading="eager"
-      decoding="sync"
+      /* Mudança 1: Libera a main thread no mobile */
+      decoding="async" 
+      /* Mudança 2: Previne layout shifts e ajuda no cálculo de renderização */
+      width={BgHeroDesktop.width}
+      height={BgHeroDesktop.height}
     />
   </picture>
 
@@ -39,7 +41,8 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     class="deco-image" 
     alt="Ilustração Terapia"
     loading="eager"
-    decoding="sync"
+    decoding="async"
+    aria-hidden="true"
   />
 
   <div class="hero-content">
@@ -70,6 +73,7 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
 </section>
 
 <style>
+  /* Todo o CSS estrutural foi mantido idêntico */
   .hero-section {
     position: relative;
     display: flex;
@@ -117,7 +121,7 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
   }
 
   .description-wrapper {
-    max-width: 454px; /* Aumentei 20px para compensar o padding interno */
+    max-width: 454px; 
     padding-left: 20px;
     border-left: 1px solid var(--color-primary);
     display: flex;
@@ -142,7 +146,6 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     align-items: flex-start;
   }
 
-  /* --- Responsividade estrutural --- */
   @media (max-width: 1024px) {
     .description-wrapper {
       padding-left: 0;

@@ -1,4 +1,5 @@
 ---
+// src/components/CarouselAboutUs.astro
 import OptimizedImage from '../OptimizedImage.astro'; // Nossa fonte única de verdade
 import Slide1 from '../../assets/row-1-column-1-818x1024.jpg';
 import Slide2 from '../../assets/row-2-column-1-818x1024.jpg';
@@ -35,7 +36,8 @@ const slides = [
               decoding={index < 3 ? "sync" : "async"}
               width={412} 
               height={516}
-              widths={[400, 600, slide.src.width]}
+              /* O Segredo: Breakpoints cirúrgicos cobrindo 1x e 2x de DPR */
+              widths={[360, 412, 512, 720, slide.src.width]}
               sizes="(max-width: 767px) 100vw, (max-width: 1024px) 50vw, 33vw"
               class="carousel-img"
             />
