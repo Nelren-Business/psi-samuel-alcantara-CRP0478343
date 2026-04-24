@@ -113,6 +113,7 @@ const slides = [
 
     const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
+      // 1. Fase de LEITURA apenas
       cachedSlideWidth = slide ? (slide as HTMLElement).offsetWidth : 0;
       cachedClientWidth = track.clientWidth;
       cachedScrollWidth = track.scrollWidth;
@@ -126,6 +127,7 @@ const slides = [
     let isTicking = false;
 
     const handleScrollUpdates = () => {
+      // 1. Fase de LEITURA
       const scrollPosition = track.scrollLeft;
 
       if (cachedSlideWidth === 0) {
@@ -142,22 +144,25 @@ const slides = [
       let currentIndex = Math.round(scrollPosition / cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-      if (prevBtn) {
-        if (isAtStart) prevBtn.setAttribute('disabled', 'true');
-        else prevBtn.removeAttribute('disabled');
-      }
-
-      if (nextBtn) {
-        if (isAtEnd) nextBtn.setAttribute('disabled', 'true');
-        else nextBtn.removeAttribute('disabled');
-      }
-
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
+      // 🟢 NOVO: Fase de ESCRITA separada em requestAnimationFrame
+      requestAnimationFrame(() => {
+        if (prevBtn) {
+          if (isAtStart) prevBtn.setAttribute('disabled', 'true');
+          else prevBtn.removeAttribute('disabled');
         }
+
+        if (nextBtn) {
+          if (isAtEnd) nextBtn.setAttribute('disabled', 'true');
+          else nextBtn.removeAttribute('disabled');
+        }
+
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
       });
 
       isTicking = false;
@@ -239,7 +244,10 @@ const slides = [
 
     observer.observe(track);
 
-    updateDimensions();
+    // 🟢 NOVO: Aguarda o layout estar pronto antes da primeira medição
+    requestAnimationFrame(() => {
+      updateDimensions();
+    });
   }
 
   document.addEventListener('DOMContentLoaded', initCarousel);

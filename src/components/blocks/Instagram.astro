@@ -353,7 +353,6 @@ const posts = [
 </style>
 
 <script is:inline>
-/* JS Mantido Integralmente - Lógica sólida e performática */
   function initInstagramCarousel() {
     const track = document.querySelector('#instagram-carousel .carousel-track');
     const prevBtn = document.querySelector('#instagram-carousel .carousel-arrow.prev');
@@ -367,6 +366,7 @@ const posts = [
 
     const updateDimensions = () => {
       const slide = track.querySelector('.carousel-slide');
+      // LEITURA apenas
       cachedSlideWidth = slide ? slide.offsetWidth + 30 : 0; 
       cachedClientWidth = track.clientWidth;
       handleScrollUpdates();
@@ -399,6 +399,7 @@ const posts = [
     let isTicking = false;
 
     const handleScrollUpdates = () => {
+      // 1. Fase de LEITURA
       const scrollPosition = track.scrollLeft;
       
       if (cachedSlideWidth === 0) {
@@ -414,12 +415,15 @@ const posts = [
           currentIndex = maxIndex;
       }
 
-      dots.forEach((dot, index) => {
-        if (index === currentIndex) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
+      // 🟢 NOVO: Fase de ESCRITA separada
+      requestAnimationFrame(() => {
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
       });
 
       isTicking = false;
@@ -485,7 +489,10 @@ const posts = [
 
     observer.observe(track);
     
-    updateDimensions();
+    // 🟢 NOVO: Aguarda o layout estar pronto antes da primeira medição
+    requestAnimationFrame(() => {
+      updateDimensions();
+    });
   }
 
   initInstagramCarousel();
