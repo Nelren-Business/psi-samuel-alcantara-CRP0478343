@@ -77,28 +77,31 @@ const dots = Array.from({ length: itemCount });
   :global(.animate-hint > *) { animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 </style>
 
-<script>
+<script is:inline type="module">
   class BaseCarousel extends HTMLElement {
-    track: HTMLElement | null = null;
-    prevBtn: HTMLButtonElement | null = null;
-    nextBtn: HTMLButtonElement | null = null;
-    dots: NodeListOf<HTMLElement> | null = null;
-    observer: IntersectionObserver | null = null;
-
-    isDown = false;
-    hasDragged = false;
-    startX = 0;
-    scrollLeft = 0;
-    trackOffsetLeft = 0;
-    cachedSlideWidth = 0;
-    cachedClientWidth = 0;
-    cachedScrollWidth = 0;
-    
-    isTicking = false;
-    isDraggingTick = false; // Nova flag dedicada para o mousemove
-
     constructor() {
       super();
+      
+      // Propriedades internas
+      this.track = null;
+      this.prevBtn = null;
+      this.nextBtn = null;
+      this.dots = null;
+      this.observer = null;
+
+      this.isDown = false;
+      this.hasDragged = false;
+      this.startX = 0;
+      this.scrollLeft = 0;
+      this.trackOffsetLeft = 0;
+      this.cachedSlideWidth = 0;
+      this.cachedClientWidth = 0;
+      this.cachedScrollWidth = 0;
+      
+      this.isTicking = false;
+      this.isDraggingTick = false;
+
+      // Bindings para preservar o contexto do 'this'
       this.updateDimensions = this.updateDimensions.bind(this);
       this.handleScrollUpdates = this.handleScrollUpdates.bind(this);
       this.endDrag = this.endDrag.bind(this);
@@ -125,64 +128,70 @@ const dots = Array.from({ length: itemCount });
     setupEventListeners() {
       window.addEventListener('resize', () => window.requestAnimationFrame(this.updateDimensions), { passive: true });
 
-      this.track?.addEventListener('scroll', () => {
+      this.track.addEventListener('scroll', () => {
         if (!this.isTicking) {
           window.requestAnimationFrame(this.handleScrollUpdates);
           this.isTicking = true;
         }
       }, { passive: true });
 
-      this.prevBtn?.addEventListener('click', () => this.track?.scrollBy({ left: -this.cachedSlideWidth, behavior: 'smooth' }));
-      this.nextBtn?.addEventListener('click', () => this.track?.scrollBy({ left: this.cachedSlideWidth, behavior: 'smooth' }));
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => this.track.scrollBy({ left: -this.cachedSlideWidth, behavior: 'smooth' }));
+      }
+      
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => this.track.scrollBy({ left: this.cachedSlideWidth, behavior: 'smooth' }));
+      }
 
-      this.dots?.forEach((dot) => {
-        dot.addEventListener('click', (e) => {
-          const targetIndex = parseInt((e.target as HTMLElement).getAttribute('data-target') || '0');
-          this.track?.scrollTo({ left: targetIndex * this.cachedSlideWidth, behavior: 'smooth' });
+      if (this.dots) {
+        this.dots.forEach((dot) => {
+          dot.addEventListener('click', (e) => {
+            const targetIndex = parseInt(e.target.getAttribute('data-target') || '0');
+            this.track.scrollTo({ left: targetIndex * this.cachedSlideWidth, behavior: 'smooth' });
+          });
         });
-      });
+      }
 
-      // Lógica de Drag
-      this.track?.addEventListener('mousedown', (e) => {
+      // Drag Logic
+      this.track.addEventListener('mousedown', (e) => {
         this.isDown = true;
         this.hasDragged = false;
         
-        // READ
-        this.trackOffsetLeft = this.track!.offsetLeft;
-        this.scrollLeft = this.track!.scrollLeft;
+        // FASE READ
+        this.trackOffsetLeft = this.track.offsetLeft;
+        this.scrollLeft = this.track.scrollLeft;
         this.startX = e.pageX - this.trackOffsetLeft;
         
-        // WRITE isolado
+        // FASE WRITE
         requestAnimationFrame(() => {
-          this.track!.style.scrollSnapType = 'none'; 
-          this.track!.style.cursor = 'grabbing';
+          this.track.style.scrollSnapType = 'none'; 
+          this.track.style.cursor = 'grabbing';
         });
       });
 
       window.addEventListener('mouseup', this.endDrag);
-      this.track?.addEventListener('mouseleave', this.endDrag);
+      this.track.addEventListener('mouseleave', this.endDrag);
 
-      this.track?.addEventListener('mousemove', (e) => {
+      this.track.addEventListener('mousemove', (e) => {
         if (!this.isDown || !this.track) return;
         e.preventDefault();
         
-        const currentX = e.pageX; // Salva o valor síncrono do evento
+        const currentX = e.pageX; 
         
-        // THROTTLE DE MOUSEMOVE: Evita reflows forçados escrevendo apenas 1x por frame
         if (!this.isDraggingTick) {
           window.requestAnimationFrame(() => {
             const x = currentX - this.trackOffsetLeft; 
             const walk = (x - this.startX) * 1.5; 
             
             if (Math.abs(walk) > 5) this.hasDragged = true;
-            this.track!.scrollLeft = this.scrollLeft - walk; // WRITE no tempo certo
+            this.track.scrollLeft = this.scrollLeft - walk; 
             this.isDraggingTick = false;
           });
           this.isDraggingTick = true;
         }
       });
 
-      this.track?.addEventListener('click', (e) => {
+      this.track.addEventListener('click', (e) => {
         if (this.hasDragged) {
           e.preventDefault();
           e.stopPropagation();
@@ -195,18 +204,19 @@ const dots = Array.from({ length: itemCount });
       this.isDown = false;
       
       requestAnimationFrame(() => {
-        this.track!.style.scrollSnapType = 'x mandatory';
-        this.track!.style.cursor = 'auto';
+        this.track.style.scrollSnapType = 'x mandatory';
+        this.track.style.cursor = 'auto';
       });
       
-      setTimeout(() => this.track?.scrollBy({ left: 1, behavior: 'smooth' }), 10);
+      setTimeout(() => {
+        if (this.track) this.track.scrollBy({ left: 1, behavior: 'smooth' });
+      }, 10);
     }
 
     updateDimensions() {
       if (!this.track) return;
       
-      // READ Phase
-      const slide = this.track.firstElementChild as HTMLElement;
+      const slide = this.track.firstElementChild;
       const gapValue = parseInt(getComputedStyle(this.track).gap) || 0;
       this.cachedSlideWidth = slide ? slide.offsetWidth + gapValue : 0;
       this.cachedClientWidth = this.track.clientWidth;
@@ -221,23 +231,24 @@ const dots = Array.from({ length: itemCount });
         return;
       }
 
-      // FASE DE LEITURA (READ): Coleta o estado atual do DOM
+      // READ Phase
       const scrollPosition = this.track.scrollLeft;
       const maxScroll = this.cachedScrollWidth - this.cachedClientWidth;
       const isAtStart = scrollPosition <= 2;
       const isAtEnd = scrollPosition >= maxScroll - 2;
       const slidesPerView = Math.round(this.cachedClientWidth / this.cachedSlideWidth) || 1;
-      const maxIndex = (this.dots?.length || 0) - slidesPerView;
+      const maxIndex = (this.dots ? this.dots.length : 0) - slidesPerView;
       let currentIndex = Math.round(scrollPosition / this.cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-      // FASE DE ESCRITA (WRITE): Tudo agrupado no próximo frame
+      // WRITE Phase
       requestAnimationFrame(() => {
         if (this.prevBtn) isAtStart ? this.prevBtn.setAttribute('disabled', 'true') : this.prevBtn.removeAttribute('disabled');
         if (this.nextBtn) isAtEnd ? this.nextBtn.setAttribute('disabled', 'true') : this.nextBtn.removeAttribute('disabled');
-        this.dots?.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
+        if (this.dots) {
+          this.dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
+        }
         
-        // A MÁGICA: Só liberamos a catraca do scroll APÓS pintar o DOM!
         this.isTicking = false; 
       });
     }
@@ -251,14 +262,16 @@ const dots = Array.from({ length: itemCount });
             animationExecuted = true; 
             
             requestAnimationFrame(() => {
-               this.track!.classList.add('animate-hint');
+               this.track.classList.add('animate-hint');
             });
             
             setTimeout(() => {
-                requestAnimationFrame(() => this.track?.classList.remove('animate-hint'));
+                requestAnimationFrame(() => {
+                  if(this.track) this.track.classList.remove('animate-hint');
+                });
             }, 2500); 
             
-            this.observer?.disconnect(); 
+            this.observer.disconnect(); 
           }
         });
       }, { threshold: 0.6 });
@@ -267,5 +280,8 @@ const dots = Array.from({ length: itemCount });
     }
   }
 
-  customElements.define('base-carousel', BaseCarousel);
+  // Verifica se o elemento já não foi definido antes de registrar
+  if (!customElements.get('base-carousel')) {
+    customElements.define('base-carousel', BaseCarousel);
+  }
 </script>
