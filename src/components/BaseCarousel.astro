@@ -79,7 +79,6 @@ const dots = Array.from({ length: itemCount });
 
 <script>
   class BaseCarousel extends HTMLElement {
-    // Definimos as propriedades rigidamente tipadas como antes
     track: HTMLElement | null = null;
     prevBtn: HTMLButtonElement | null = null;
     nextBtn: HTMLButtonElement | null = null;
@@ -94,7 +93,9 @@ const dots = Array.from({ length: itemCount });
     cachedSlideWidth = 0;
     cachedClientWidth = 0;
     cachedScrollWidth = 0;
+    
     isTicking = false;
+    isDraggingTick = false; // Nova flag dedicada para o mousemove
 
     constructor() {
       super();
@@ -141,14 +142,17 @@ const dots = Array.from({ length: itemCount });
         });
       });
 
-      // Lógica de Drag com proteção de cliques (fundido de ambos)
+      // Lógica de Drag
       this.track?.addEventListener('mousedown', (e) => {
         this.isDown = true;
         this.hasDragged = false;
-        this.trackOffsetLeft = this.track!.offsetLeft;
-        this.startX = e.pageX - this.trackOffsetLeft;
-        this.scrollLeft = this.track!.scrollLeft;
         
+        // READ
+        this.trackOffsetLeft = this.track!.offsetLeft;
+        this.scrollLeft = this.track!.scrollLeft;
+        this.startX = e.pageX - this.trackOffsetLeft;
+        
+        // WRITE isolado
         requestAnimationFrame(() => {
           this.track!.style.scrollSnapType = 'none'; 
           this.track!.style.cursor = 'grabbing';
@@ -162,14 +166,22 @@ const dots = Array.from({ length: itemCount });
         if (!this.isDown || !this.track) return;
         e.preventDefault();
         
-        const x = e.pageX - this.trackOffsetLeft; 
-        const walk = (x - this.startX) * 1.5; 
+        const currentX = e.pageX; // Salva o valor síncrono do evento
         
-        if (Math.abs(walk) > 5) this.hasDragged = true;
-        this.track.scrollLeft = this.scrollLeft - walk; 
+        // THROTTLE DE MOUSEMOVE: Evita reflows forçados escrevendo apenas 1x por frame
+        if (!this.isDraggingTick) {
+          window.requestAnimationFrame(() => {
+            const x = currentX - this.trackOffsetLeft; 
+            const walk = (x - this.startX) * 1.5; 
+            
+            if (Math.abs(walk) > 5) this.hasDragged = true;
+            this.track!.scrollLeft = this.scrollLeft - walk; // WRITE no tempo certo
+            this.isDraggingTick = false;
+          });
+          this.isDraggingTick = true;
+        }
       });
 
-      // Previne clique em links/imagens caso tenha havido drag
       this.track?.addEventListener('click', (e) => {
         if (this.hasDragged) {
           e.preventDefault();
@@ -181,21 +193,25 @@ const dots = Array.from({ length: itemCount });
     endDrag() {
       if (!this.isDown || !this.track) return;
       this.isDown = false;
-      this.track.style.scrollSnapType = 'x mandatory';
-      this.track.style.cursor = 'auto';
-      // Pequeno scroll para ativar o snap ao final do drag
+      
+      requestAnimationFrame(() => {
+        this.track!.style.scrollSnapType = 'x mandatory';
+        this.track!.style.cursor = 'auto';
+      });
+      
       setTimeout(() => this.track?.scrollBy({ left: 1, behavior: 'smooth' }), 10);
     }
 
     updateDimensions() {
       if (!this.track) return;
-      // Pegamos o primeiro filho injetado no slot
+      
+      // READ Phase
       const slide = this.track.firstElementChild as HTMLElement;
-      // Pega o gap definido nas variáveis CSS ou assume 0
       const gapValue = parseInt(getComputedStyle(this.track).gap) || 0;
       this.cachedSlideWidth = slide ? slide.offsetWidth + gapValue : 0;
       this.cachedClientWidth = this.track.clientWidth;
       this.cachedScrollWidth = this.track.scrollWidth;
+      
       this.handleScrollUpdates();
     }
 
@@ -205,6 +221,7 @@ const dots = Array.from({ length: itemCount });
         return;
       }
 
+      // FASE DE LEITURA (READ): Coleta o estado atual do DOM
       const scrollPosition = this.track.scrollLeft;
       const maxScroll = this.cachedScrollWidth - this.cachedClientWidth;
       const isAtStart = scrollPosition <= 2;
@@ -214,13 +231,15 @@ const dots = Array.from({ length: itemCount });
       let currentIndex = Math.round(scrollPosition / this.cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
+      // FASE DE ESCRITA (WRITE): Tudo agrupado no próximo frame
       requestAnimationFrame(() => {
         if (this.prevBtn) isAtStart ? this.prevBtn.setAttribute('disabled', 'true') : this.prevBtn.removeAttribute('disabled');
         if (this.nextBtn) isAtEnd ? this.nextBtn.setAttribute('disabled', 'true') : this.nextBtn.removeAttribute('disabled');
         this.dots?.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
+        
+        // A MÁGICA: Só liberamos a catraca do scroll APÓS pintar o DOM!
+        this.isTicking = false; 
       });
-
-      this.isTicking = false;
     }
 
     setupIntersectionObserver() {
@@ -230,8 +249,15 @@ const dots = Array.from({ length: itemCount });
           if (animationExecuted) return; 
           if (entry.isIntersecting && this.track) {
             animationExecuted = true; 
-            this.track.classList.add('animate-hint');
-            setTimeout(() => this.track?.classList.remove('animate-hint'), 2500); 
+            
+            requestAnimationFrame(() => {
+               this.track!.classList.add('animate-hint');
+            });
+            
+            setTimeout(() => {
+                requestAnimationFrame(() => this.track?.classList.remove('animate-hint'));
+            }, 2500); 
+            
             this.observer?.disconnect(); 
           }
         });
