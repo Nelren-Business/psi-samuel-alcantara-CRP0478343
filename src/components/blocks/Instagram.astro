@@ -25,7 +25,7 @@ const posts = [
 ];
 ---
 
-<section class="instagram-section">
+<instagram-carousel-widget class="instagram-section">
   <div class="container">
     
     <header class="section-header">
@@ -100,10 +100,14 @@ const posts = [
     </div>
 
   </div>
-</section>
+</instagram-carousel-widget>
 
 <style>
-/* CSS Mantido Integralmente - Zero alterações necessárias */
+  /* Adicionado para garantir que o Custom Element se comporte como um bloco */
+  instagram-carousel-widget {
+    display: block;
+  }
+
   .instagram-section {
     padding: 80px 20px;
     background-color: var(--color-bg-light);
@@ -352,151 +356,159 @@ const posts = [
   }
 </style>
 
-<script is:inline>
-  function initInstagramCarousel() {
-    const track = document.querySelector('#instagram-carousel .carousel-track');
-    const prevBtn = document.querySelector('#instagram-carousel .carousel-arrow.prev');
-    const nextBtn = document.querySelector('#instagram-carousel .carousel-arrow.next');
-    const dots = document.querySelectorAll('.instagram-section .dot');
-    
-    if (!track) return;
-
-    let cachedSlideWidth = 0;
-    let cachedClientWidth = 0;
-
-    const updateDimensions = () => {
-      const slide = track.querySelector('.carousel-slide');
-      // LEITURA apenas
-      cachedSlideWidth = slide ? slide.offsetWidth + 30 : 0; 
-      cachedClientWidth = track.clientWidth;
-      handleScrollUpdates();
-    };
-
-    window.addEventListener('resize', () => {
-      window.requestAnimationFrame(updateDimensions);
-    }, { passive: true });
-
-    if (prevBtn) {
-      prevBtn.onclick = () => {
-        track.scrollBy({ left: -cachedSlideWidth, behavior: 'smooth' });
-      };
+<script>
+  class InstagramCarousel extends HTMLElement {
+    constructor() {
+      super();
+      this.isDown = false;
+      this.hasDragged = false;
+      this.startX = 0;
+      this.scrollLeft = 0;
+      this.cachedSlideWidth = 0;
+      this.cachedClientWidth = 0;
+      this.isTicking = false;
+      
+      this.updateDimensions = this.updateDimensions.bind(this);
+      this.handleScrollUpdates = this.handleScrollUpdates.bind(this);
     }
 
-    if (nextBtn) {
-      nextBtn.onclick = () => {
-        track.scrollBy({ left: cachedSlideWidth, behavior: 'smooth' });
-      };
+    connectedCallback() {
+      this.track = this.querySelector('.carousel-track');
+      this.prevBtn = this.querySelector('.carousel-arrow.prev');
+      this.nextBtn = this.querySelector('.carousel-arrow.next');
+      this.dots = this.querySelectorAll('.dot');
+      this.links = this.querySelectorAll('.carousel-slide');
+
+      if (!this.track) return;
+
+      this.setupEventListeners();
+      this.setupIntersectionObserver();
+      
+      requestAnimationFrame(this.updateDimensions);
     }
 
-    dots.forEach((dot) => {
-      dot.addEventListener('click', (e) => {
-        const targetElement = e.target;
-        const targetIndex = parseInt(targetElement.getAttribute('data-target') || '0');
-        track.scrollTo({ left: targetIndex * cachedSlideWidth, behavior: 'smooth' });
-      });
-    });
+    disconnectedCallback() {
+      window.removeEventListener('resize', this.updateDimensions);
+      if (this.observer) this.observer.disconnect();
+    }
 
-    let isTicking = false;
+    setupEventListeners() {
+      window.addEventListener('resize', () => {
+        window.requestAnimationFrame(this.updateDimensions);
+      }, { passive: true });
 
-    const handleScrollUpdates = () => {
-      // 1. Fase de LEITURA
-      const scrollPosition = track.scrollLeft;
-      
-      if (cachedSlideWidth === 0) {
-        isTicking = false;
-        return; 
+      if (this.prevBtn) {
+        this.prevBtn.addEventListener('click', () => {
+          this.track.scrollBy({ left: -this.cachedSlideWidth, behavior: 'smooth' });
+        });
       }
 
-      const slidesPerView = Math.round(cachedClientWidth / cachedSlideWidth);
-      const maxIndex = dots.length - slidesPerView;
-      let currentIndex = Math.round(scrollPosition / cachedSlideWidth);
-      
-      if (currentIndex > maxIndex) {
-          currentIndex = maxIndex;
+      if (this.nextBtn) {
+        this.nextBtn.addEventListener('click', () => {
+          this.track.scrollBy({ left: this.cachedSlideWidth, behavior: 'smooth' });
+        });
       }
 
-      // 🟢 NOVO: Fase de ESCRITA separada
-      requestAnimationFrame(() => {
-        dots.forEach((dot, index) => {
-          if (index === currentIndex) {
-            dot.classList.add('active');
-          } else {
-            dot.classList.remove('active');
-          }
+      this.dots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          const targetIndex = parseInt(e.target.getAttribute('data-target') || '0');
+          this.track.scrollTo({ left: targetIndex * this.cachedSlideWidth, behavior: 'smooth' });
         });
       });
 
-      isTicking = false;
-    };
-
-    track.addEventListener('scroll', () => {
-      if (!isTicking) {
-        window.requestAnimationFrame(handleScrollUpdates);
-        isTicking = true;
-      }
-    }, { passive: true });
-
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-    let trackOffsetLeft;
-
-    track.addEventListener('mousedown', (e) => {
-      isDown = true;
-      track.style.scrollSnapType = 'none'; 
-      trackOffsetLeft = track.offsetLeft; 
-      startX = e.pageX - trackOffsetLeft;
-      scrollLeft = track.scrollLeft;
-      track.style.cursor = 'grabbing';
-      e.preventDefault(); 
-    });
-
-    track.addEventListener('mouseleave', () => {
-      if(!isDown) return;
-      isDown = false;
-      track.style.scrollSnapType = 'x mandatory';
-      track.style.cursor = 'auto';
-    });
-
-    track.addEventListener('mouseup', () => {
-      if(!isDown) return;
-      isDown = false;
-      track.style.scrollSnapType = 'x mandatory';
-      track.style.cursor = 'auto';
-      track.scrollBy({ left: 1, behavior: 'smooth' });
-    });
-
-    track.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - trackOffsetLeft;
-      const walk = (x - startX) * 1.5; 
-      track.scrollLeft = scrollLeft - walk; 
-    });
-
-    let animationExecuted = false; 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (animationExecuted) return; 
-        if (entry.isIntersecting) {
-          animationExecuted = true; 
-          entry.target.classList.add('animate-hint');
-          setTimeout(() => { entry.target.classList.remove('animate-hint'); }, 2500); 
-          observer.disconnect(); 
+      this.track.addEventListener('scroll', () => {
+        if (!this.isTicking) {
+          window.requestAnimationFrame(this.handleScrollUpdates);
+          this.isTicking = true;
         }
-      });
-    }, { threshold: 0.6 });
+      }, { passive: true });
 
-    observer.observe(track);
-    
-    // 🟢 NOVO: Aguarda o layout estar pronto antes da primeira medição
-    requestAnimationFrame(() => {
-      updateDimensions();
-    });
+      this.track.addEventListener('mousedown', (e) => {
+        this.isDown = true;
+        this.hasDragged = false; 
+        this.track.style.scrollSnapType = 'none'; 
+        this.startX = e.pageX - this.track.offsetLeft;
+        this.scrollLeft = this.track.scrollLeft;
+        this.track.style.cursor = 'grabbing';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if(!this.isDown) return;
+        this.isDown = false;
+        this.track.style.scrollSnapType = 'x mandatory';
+        this.track.style.cursor = 'auto';
+      });
+
+      this.track.addEventListener('mousemove', (e) => {
+        if (!this.isDown) return;
+        e.preventDefault();
+        
+        const x = e.pageX - this.track.offsetLeft;
+        const walk = (x - this.startX) * 1.5; 
+        
+        if (Math.abs(walk) > 5) {
+          this.hasDragged = true;
+        }
+        
+        this.track.scrollLeft = this.scrollLeft - walk; 
+      });
+
+      this.links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          if (this.hasDragged) {
+            e.preventDefault(); 
+            e.stopPropagation();
+          }
+        });
+      });
+    }
+
+    updateDimensions() {
+      const slide = this.track.querySelector('.carousel-slide');
+      this.cachedSlideWidth = slide ? slide.offsetWidth + 30 : 0; 
+      this.cachedClientWidth = this.track.clientWidth;
+      this.handleScrollUpdates();
+    }
+
+    handleScrollUpdates() {
+      if (this.cachedSlideWidth === 0) {
+        this.isTicking = false;
+        return; 
+      }
+
+      const scrollPosition = this.track.scrollLeft;
+      const slidesPerView = Math.round(this.cachedClientWidth / this.cachedSlideWidth);
+      const maxIndex = this.dots.length - slidesPerView;
+      let currentIndex = Math.round(scrollPosition / this.cachedSlideWidth);
+      
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+      requestAnimationFrame(() => {
+        this.dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      });
+
+      this.isTicking = false;
+    }
+
+    setupIntersectionObserver() {
+      let animationExecuted = false; 
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (animationExecuted) return; 
+          if (entry.isIntersecting) {
+            animationExecuted = true; 
+            this.track.classList.add('animate-hint');
+            setTimeout(() => { this.track.classList.remove('animate-hint'); }, 2500); 
+            this.observer.disconnect(); 
+          }
+        });
+      }, { threshold: 0.6 });
+
+      this.observer.observe(this.track);
+    }
   }
 
-  initInstagramCarousel();
-  document.addEventListener('astro:page-load', () => {
-    setTimeout(initInstagramCarousel, 100); 
-  });
+  customElements.define('instagram-carousel-widget', InstagramCarousel);
 </script>
