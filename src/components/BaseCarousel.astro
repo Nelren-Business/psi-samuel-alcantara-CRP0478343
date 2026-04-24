@@ -1,0 +1,245 @@
+---
+// src/components/BaseCarousel.astro
+export interface Props {
+  itemCount: number;
+  gap?: string; // Permite customizar o espaçamento via CSS variable
+}
+
+const { itemCount, gap = "0px" } = Astro.props;
+const dots = Array.from({ length: itemCount });
+---
+
+<base-carousel style={`--carousel-gap: ${gap};`}>
+  <slot name="header" />
+
+  <div class="carousel-wrapper">
+    <button class="carousel-btn prev" aria-label="Slide anterior" disabled>
+      <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path>
+      </svg>
+    </button>
+
+    <div class="carousel-track">
+      <slot /> </div>
+
+    <button class="carousel-btn next" aria-label="Próximo slide">
+      <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm113.9 231L234.4 103.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L285.1 256 183.5 357.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L369.9 273c9.4-9.4 9.4-24.6 0-34z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="carousel-pagination">
+    {dots.map((_, index) => (
+      <button class={`dot ${index === 0 ? 'active' : ''}`} data-target={index} aria-label={`Ir para a página ${index + 1}`}></button>
+    ))}
+  </div>
+
+  <slot name="footer" />
+</base-carousel>
+
+<style>
+  base-carousel { display: block; width: 100%; position: relative; }
+  .carousel-wrapper { position: relative; width: 100%; display: flex; align-items: center; overflow: hidden; margin-bottom: 20px; }
+  
+  .carousel-track { 
+    display: flex; 
+    gap: var(--carousel-gap); 
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory; 
+    scroll-behavior: smooth; 
+    -webkit-overflow-scrolling: touch; 
+    scrollbar-width: none; 
+    width: 100%; 
+    padding-bottom: 10px;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+
+  /* Estilização centralizada dos botões */
+  .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; z-index: 10; padding: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+  .carousel-btn:hover:not(:disabled) { opacity: 0.7; }
+  .carousel-btn:disabled { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+  .carousel-btn svg { width: 40px; height: 40px; fill: #FFFFFF; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.4)); }
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  /* Paginação */
+  .carousel-pagination { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background-color: var(--color-primary); opacity: 0.3; border: none; cursor: pointer; padding: 0; transition: opacity 0.3s ease, transform 0.3s ease; }
+  .dot.active { opacity: 1; transform: scale(1.2); }
+
+  @media (min-width: 1025px) { .dot:nth-child(n+5) { display: none; } }
+  @media (min-width: 768px) and (max-width: 1024px) { .dot:nth-child(n+6) { display: none; } }
+  @media (max-width: 767px) { .carousel-btn svg { width: 25px; height: 25px; } .prev { left: 5px; } .next { right: 5px; } }
+
+  /* Animação unificada */
+  @keyframes elementorHint { 0% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-25%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+  :global(.animate-hint > *) { animation: elementorHint 2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+</style>
+
+<script>
+  class BaseCarousel extends HTMLElement {
+    // Definimos as propriedades rigidamente tipadas como antes
+    track: HTMLElement | null = null;
+    prevBtn: HTMLButtonElement | null = null;
+    nextBtn: HTMLButtonElement | null = null;
+    dots: NodeListOf<HTMLElement> | null = null;
+    observer: IntersectionObserver | null = null;
+
+    isDown = false;
+    hasDragged = false;
+    startX = 0;
+    scrollLeft = 0;
+    trackOffsetLeft = 0;
+    cachedSlideWidth = 0;
+    cachedClientWidth = 0;
+    cachedScrollWidth = 0;
+    isTicking = false;
+
+    constructor() {
+      super();
+      this.updateDimensions = this.updateDimensions.bind(this);
+      this.handleScrollUpdates = this.handleScrollUpdates.bind(this);
+      this.endDrag = this.endDrag.bind(this);
+    }
+
+    connectedCallback() {
+      this.track = this.querySelector('.carousel-track');
+      this.prevBtn = this.querySelector('.carousel-btn.prev');
+      this.nextBtn = this.querySelector('.carousel-btn.next');
+      this.dots = this.querySelectorAll('.dot');
+
+      if (!this.track) return;
+
+      this.setupEventListeners();
+      this.setupIntersectionObserver();
+      requestAnimationFrame(this.updateDimensions);
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('resize', this.updateDimensions);
+      if (this.observer && this.track) this.observer.disconnect();
+    }
+
+    setupEventListeners() {
+      window.addEventListener('resize', () => window.requestAnimationFrame(this.updateDimensions), { passive: true });
+
+      this.track?.addEventListener('scroll', () => {
+        if (!this.isTicking) {
+          window.requestAnimationFrame(this.handleScrollUpdates);
+          this.isTicking = true;
+        }
+      }, { passive: true });
+
+      this.prevBtn?.addEventListener('click', () => this.track?.scrollBy({ left: -this.cachedSlideWidth, behavior: 'smooth' }));
+      this.nextBtn?.addEventListener('click', () => this.track?.scrollBy({ left: this.cachedSlideWidth, behavior: 'smooth' }));
+
+      this.dots?.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          const targetIndex = parseInt((e.target as HTMLElement).getAttribute('data-target') || '0');
+          this.track?.scrollTo({ left: targetIndex * this.cachedSlideWidth, behavior: 'smooth' });
+        });
+      });
+
+      // Lógica de Drag com proteção de cliques (fundido de ambos)
+      this.track?.addEventListener('mousedown', (e) => {
+        this.isDown = true;
+        this.hasDragged = false;
+        this.trackOffsetLeft = this.track!.offsetLeft;
+        this.startX = e.pageX - this.trackOffsetLeft;
+        this.scrollLeft = this.track!.scrollLeft;
+        
+        requestAnimationFrame(() => {
+          this.track!.style.scrollSnapType = 'none'; 
+          this.track!.style.cursor = 'grabbing';
+        });
+      });
+
+      window.addEventListener('mouseup', this.endDrag);
+      this.track?.addEventListener('mouseleave', this.endDrag);
+
+      this.track?.addEventListener('mousemove', (e) => {
+        if (!this.isDown || !this.track) return;
+        e.preventDefault();
+        
+        const x = e.pageX - this.trackOffsetLeft; 
+        const walk = (x - this.startX) * 1.5; 
+        
+        if (Math.abs(walk) > 5) this.hasDragged = true;
+        this.track.scrollLeft = this.scrollLeft - walk; 
+      });
+
+      // Previne clique em links/imagens caso tenha havido drag
+      this.track?.addEventListener('click', (e) => {
+        if (this.hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, { capture: true });
+    }
+
+    endDrag() {
+      if (!this.isDown || !this.track) return;
+      this.isDown = false;
+      this.track.style.scrollSnapType = 'x mandatory';
+      this.track.style.cursor = 'auto';
+      // Pequeno scroll para ativar o snap ao final do drag
+      setTimeout(() => this.track?.scrollBy({ left: 1, behavior: 'smooth' }), 10);
+    }
+
+    updateDimensions() {
+      if (!this.track) return;
+      // Pegamos o primeiro filho injetado no slot
+      const slide = this.track.firstElementChild as HTMLElement;
+      // Pega o gap definido nas variáveis CSS ou assume 0
+      const gapValue = parseInt(getComputedStyle(this.track).gap) || 0;
+      this.cachedSlideWidth = slide ? slide.offsetWidth + gapValue : 0;
+      this.cachedClientWidth = this.track.clientWidth;
+      this.cachedScrollWidth = this.track.scrollWidth;
+      this.handleScrollUpdates();
+    }
+
+    handleScrollUpdates() {
+      if (this.cachedSlideWidth === 0 || !this.track) {
+        this.isTicking = false;
+        return;
+      }
+
+      const scrollPosition = this.track.scrollLeft;
+      const maxScroll = this.cachedScrollWidth - this.cachedClientWidth;
+      const isAtStart = scrollPosition <= 2;
+      const isAtEnd = scrollPosition >= maxScroll - 2;
+      const slidesPerView = Math.round(this.cachedClientWidth / this.cachedSlideWidth) || 1;
+      const maxIndex = (this.dots?.length || 0) - slidesPerView;
+      let currentIndex = Math.round(scrollPosition / this.cachedSlideWidth);
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+      requestAnimationFrame(() => {
+        if (this.prevBtn) isAtStart ? this.prevBtn.setAttribute('disabled', 'true') : this.prevBtn.removeAttribute('disabled');
+        if (this.nextBtn) isAtEnd ? this.nextBtn.setAttribute('disabled', 'true') : this.nextBtn.removeAttribute('disabled');
+        this.dots?.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
+      });
+
+      this.isTicking = false;
+    }
+
+    setupIntersectionObserver() {
+      let animationExecuted = false; 
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (animationExecuted) return; 
+          if (entry.isIntersecting && this.track) {
+            animationExecuted = true; 
+            this.track.classList.add('animate-hint');
+            setTimeout(() => this.track?.classList.remove('animate-hint'), 2500); 
+            this.observer?.disconnect(); 
+          }
+        });
+      }, { threshold: 0.6 });
+
+      if (this.track) this.observer.observe(this.track);
+    }
+  }
+
+  customElements.define('base-carousel', BaseCarousel);
+</script>
