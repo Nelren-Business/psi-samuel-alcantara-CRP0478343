@@ -118,6 +118,7 @@ const slides = [
     isDown = false;
     startX = 0;
     scrollLeft = 0;
+    trackOffsetLeft = 0; // 🟢 NOVO: Variável de cache para o offset
     cachedSlideWidth = 0;
     cachedClientWidth = 0;
     cachedScrollWidth = 0;
@@ -179,13 +180,20 @@ const slides = [
         });
       });
 
-      // Lógica de Drag
+      // 🟢 CORREÇÃO DE PERFORMANCE: Lógica de Drag refatorada
       this.track?.addEventListener('mousedown', (e) => {
         this.isDown = true;
-        this.track!.style.scrollSnapType = 'none'; 
-        this.startX = e.pageX - this.track!.offsetLeft;
+        
+        // 1. FASE DE LEITURA (Cache)
+        this.trackOffsetLeft = this.track!.offsetLeft;
+        this.startX = e.pageX - this.trackOffsetLeft;
         this.scrollLeft = this.track!.scrollLeft;
-        this.track!.style.cursor = 'grabbing';
+        
+        // 2. FASE DE ESCRITA (Isolada)
+        requestAnimationFrame(() => {
+          this.track!.style.scrollSnapType = 'none'; 
+          this.track!.style.cursor = 'grabbing';
+        });
       });
 
       this.track?.addEventListener('mouseleave', () => this.endDrag());
@@ -197,8 +205,11 @@ const slides = [
       this.track?.addEventListener('mousemove', (e) => {
         if (!this.isDown || !this.track) return;
         e.preventDefault();
-        const x = e.pageX - this.track.offsetLeft; 
+        
+        // 🟢 ZERO LEITURAS DE DOM: Usando o valor em cache
+        const x = e.pageX - this.trackOffsetLeft; 
         const walk = (x - this.startX) * 1.5; 
+        
         this.track.scrollLeft = this.scrollLeft - walk; 
       });
     }

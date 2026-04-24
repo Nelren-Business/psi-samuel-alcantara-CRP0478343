@@ -364,6 +364,7 @@ const posts = [
       this.hasDragged = false;
       this.startX = 0;
       this.scrollLeft = 0;
+      this.trackOffsetLeft = 0; // 🟢 NOVO: Variável de cache para o offset
       this.cachedSlideWidth = 0;
       this.cachedClientWidth = 0;
       this.isTicking = false;
@@ -423,13 +424,21 @@ const posts = [
         }
       }, { passive: true });
 
+      // 🟢 CORREÇÃO DE PERFORMANCE: Lógica de Drag refatorada
       this.track.addEventListener('mousedown', (e) => {
         this.isDown = true;
         this.hasDragged = false; 
-        this.track.style.scrollSnapType = 'none'; 
-        this.startX = e.pageX - this.track.offsetLeft;
+        
+        // 1. FASE DE LEITURA (Cache)
+        this.trackOffsetLeft = this.track.offsetLeft;
+        this.startX = e.pageX - this.trackOffsetLeft;
         this.scrollLeft = this.track.scrollLeft;
-        this.track.style.cursor = 'grabbing';
+        
+        // 2. FASE DE ESCRITA (Isolada)
+        requestAnimationFrame(() => {
+          this.track.style.scrollSnapType = 'none'; 
+          this.track.style.cursor = 'grabbing';
+        });
       });
 
       window.addEventListener('mouseup', () => {
@@ -443,7 +452,8 @@ const posts = [
         if (!this.isDown) return;
         e.preventDefault();
         
-        const x = e.pageX - this.track.offsetLeft;
+        // 🟢 ZERO LEITURAS DE DOM: Usando o valor em cache
+        const x = e.pageX - this.trackOffsetLeft;
         const walk = (x - this.startX) * 1.5; 
         
         if (Math.abs(walk) > 5) {
