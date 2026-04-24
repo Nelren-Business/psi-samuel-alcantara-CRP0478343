@@ -94,7 +94,7 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
           alt="Foto Samuel" 
           class="photo-img"
           widths={[400, 800, 1200, 1600]}
-          sizes="(max-width: 767px) 240vw, (max-width: 1024px) 140vw, 1500px"
+          sizes="(max-width: 767px) 60vh, (max-width: 1024px) 60vh, 1500px"
           loading="lazy" 
           decoding="async"
         />
@@ -107,22 +107,20 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
   /* Base e Tipografia Global da Seção */
   .about-section {
     position: relative;
-    padding: 300px 20px 40px 20px;
     background: transparent;
     overflow: hidden;
+    margin-bottom:80px;
   }
 
   .bg-terapia {
     position: absolute;
-    top: 150px;
-    left: 0;
     width: 10%;
     z-index: 0;
     pointer-events: none;
   }
 
   .container {
-    max-width: 1140px;
+    max-width: 1920px;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -134,9 +132,13 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
 
   /* --- Coluna Esquerda (Textos) --- */
   .text-column {
-    width: calc(100% - 500px);
+    width: 50%;
     max-width: 628px;
+    margin-left:10%;
     padding-right: 60px;
+    padding-left: 30px;
+    padding-top: 10%;
+    padding-bottom: 10%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -252,30 +254,33 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
 
   /* --- Coluna Direita (Imagem como Fundo) --- */
   .image-column {
-    width: 500px;
+    width: 48%;
+    height: 140vh;
+    margin-top: -8%;
     position: relative;
+    object-fit: cover;
+
   }
 
   .photo-wrapper {
-    width: 300%;
-    aspect-ratio: 1831 / 1450; 
-    margin-top: -80%; 
-    margin-left: -10%;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1831 / 1450;
     position: relative;
+    object-fit: cover;
   }
 
   .photo-img {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: left;
   }
 
   /* --- Responsividade Desktop Menor / Tablet --- */
   @media (max-width: 1024px) {
+
     .container {
       justify-content: center;
       align-items: center;
@@ -291,11 +296,11 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
     .image-column {
       width: 100%;
       order: -1;
-      margin-bottom: 40px;
     }
 
     .photo-wrapper {
       width: 140%;
+      aspect-ratio: 1831 / 1450; 
       margin-top: -10%;
       margin-left: -20%;
     }
@@ -307,6 +312,12 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
 
   /* --- Responsividade Mobile --- */
   @media (max-width: 767px) {
+    .text-column{
+      margin-left: 0;
+      padding-left: 0;
+      padding-top: 0;
+    }
+
     .about-section {
       padding: 0 0 0 0;
       margin-bottom: 100px;
@@ -328,7 +339,6 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
 
     .photo-wrapper {
       width: 240%;
-      margin-top: -80px;
       margin-left: 0; 
     }
 
@@ -351,7 +361,7 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
     }
 
     .image-column {
-      margin-bottom: 20px;
+      margin-bottom: 0px;
     }
     
     .bg-terapia {

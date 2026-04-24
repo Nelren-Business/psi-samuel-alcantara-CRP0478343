@@ -10,7 +10,6 @@ import { createWhatsAppUrl } from '../../utils/whatsapp';
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de tirar algumas dúvidas!");
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
-// Pré-otimizando as imagens para o fallback das sources
 const optimizedMobileBg = await getImage({ src: BgHeroMobile, format: 'avif' });
 const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' });
 ---
@@ -72,7 +71,6 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
 </section>
 
 <style>
-  /* Todo o CSS estrutural foi mantido idêntico */
   .hero-section {
     position: relative;
     display: flex;
