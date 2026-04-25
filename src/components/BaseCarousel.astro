@@ -82,12 +82,12 @@ const dots = Array.from({ length: itemCount });
     constructor() {
       super();
       
-      // Propriedades internas
       this.track = null;
       this.prevBtn = null;
       this.nextBtn = null;
       this.dots = null;
       this.observer = null;
+      this.resizeObserver = null; // Nova instância de observador
 
       this.isDown = false;
       this.hasDragged = false;
@@ -101,7 +101,6 @@ const dots = Array.from({ length: itemCount });
       this.isTicking = false;
       this.isDraggingTick = false;
 
-      // Bindings para preservar o contexto do 'this'
       this.updateDimensions = this.updateDimensions.bind(this);
       this.handleScrollUpdates = this.handleScrollUpdates.bind(this);
       this.endDrag = this.endDrag.bind(this);
@@ -117,17 +116,31 @@ const dots = Array.from({ length: itemCount });
 
       this.setupEventListeners();
       this.setupIntersectionObserver();
-      requestAnimationFrame(this.updateDimensions);
+      this.setupResizeObserver(); // Inicialização limpa de layout
     }
 
     disconnectedCallback() {
-      window.removeEventListener('resize', this.updateDimensions);
       if (this.observer && this.track) this.observer.disconnect();
+      if (this.resizeObserver) this.resizeObserver.disconnect();
+    }
+
+    setupResizeObserver() {
+      // O ResizeObserver roda naturalmente e assincronamente após o layout ser calculado.
+      // Isso substitui a necessidade do window.addEventListener('resize') e resolve o reflow inicial.
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateDimensions();
+      });
+
+      this.resizeObserver.observe(this.track);
+      
+      // Observamos o primeiro slide também para reagir caso as imagens carreguem depois
+      if (this.track.firstElementChild) {
+        this.resizeObserver.observe(this.track.firstElementChild);
+      }
     }
 
     setupEventListeners() {
-      window.addEventListener('resize', () => window.requestAnimationFrame(this.updateDimensions), { passive: true });
-
+      // O Evento nativo de scroll mantém a lógica de thrortle perfeitamente.
       this.track.addEventListener('scroll', () => {
         if (!this.isTicking) {
           window.requestAnimationFrame(this.handleScrollUpdates);
@@ -152,17 +165,15 @@ const dots = Array.from({ length: itemCount });
         });
       }
 
-      // Drag Logic
+      // Lógica de Drag
       this.track.addEventListener('mousedown', (e) => {
         this.isDown = true;
         this.hasDragged = false;
         
-        // FASE READ
         this.trackOffsetLeft = this.track.offsetLeft;
         this.scrollLeft = this.track.scrollLeft;
         this.startX = e.pageX - this.trackOffsetLeft;
         
-        // FASE WRITE
         requestAnimationFrame(() => {
           this.track.style.scrollSnapType = 'none'; 
           this.track.style.cursor = 'grabbing';
@@ -217,7 +228,13 @@ const dots = Array.from({ length: itemCount });
       if (!this.track) return;
       
       const slide = this.track.firstElementChild;
-      const gapValue = parseInt(getComputedStyle(this.track).gap) || 0;
+      
+      // HACK: Em vez de getComputedStyle (pesado), lemos a variável CSS direto do DOM
+      const gapString = this.style.getPropertyValue('--carousel-gap') || '0';
+      const gapValue = parseInt(gapString) || 0;
+      
+      // Como o ResizeObserver aciona esta função, o layout já está pronto.
+      // Ler offsetWidth aqui é performático e livre de "Layout Thrashing".
       this.cachedSlideWidth = slide ? slide.offsetWidth + gapValue : 0;
       this.cachedClientWidth = this.track.clientWidth;
       this.cachedScrollWidth = this.track.scrollWidth;
@@ -231,7 +248,6 @@ const dots = Array.from({ length: itemCount });
         return;
       }
 
-      // READ Phase
       const scrollPosition = this.track.scrollLeft;
       const maxScroll = this.cachedScrollWidth - this.cachedClientWidth;
       const isAtStart = scrollPosition <= 2;
@@ -241,7 +257,6 @@ const dots = Array.from({ length: itemCount });
       let currentIndex = Math.round(scrollPosition / this.cachedSlideWidth);
       if (currentIndex > maxIndex) currentIndex = maxIndex;
 
-      // WRITE Phase
       requestAnimationFrame(() => {
         if (this.prevBtn) isAtStart ? this.prevBtn.setAttribute('disabled', 'true') : this.prevBtn.removeAttribute('disabled');
         if (this.nextBtn) isAtEnd ? this.nextBtn.setAttribute('disabled', 'true') : this.nextBtn.removeAttribute('disabled');
@@ -280,7 +295,6 @@ const dots = Array.from({ length: itemCount });
     }
   }
 
-  // Verifica se o elemento já não foi definido antes de registrar
   if (!customElements.get('base-carousel')) {
     customElements.define('base-carousel', BaseCarousel);
   }
