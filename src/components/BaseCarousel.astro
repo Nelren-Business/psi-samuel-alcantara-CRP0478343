@@ -87,13 +87,15 @@ const dots = Array.from({ length: itemCount });
       this.nextBtn = null;
       this.dots = null;
       this.observer = null;
-      this.resizeObserver = null; // Nova instância de observador
+      this.resizeObserver = null; 
 
       this.isDown = false;
       this.hasDragged = false;
       this.startX = 0;
-      this.scrollLeft = 0;
-      this.trackOffsetLeft = 0;
+      
+      // Armazenamos a posição inicial real do scroll antes do drag
+      this.initialScrollLeft = 0; 
+      
       this.cachedSlideWidth = 0;
       this.cachedClientWidth = 0;
       this.cachedScrollWidth = 0;
@@ -116,7 +118,7 @@ const dots = Array.from({ length: itemCount });
 
       this.setupEventListeners();
       this.setupIntersectionObserver();
-      this.setupResizeObserver(); // Inicialização limpa de layout
+      this.setupResizeObserver();
     }
 
     disconnectedCallback() {
@@ -125,22 +127,17 @@ const dots = Array.from({ length: itemCount });
     }
 
     setupResizeObserver() {
-      // O ResizeObserver roda naturalmente e assincronamente após o layout ser calculado.
-      // Isso substitui a necessidade do window.addEventListener('resize') e resolve o reflow inicial.
       this.resizeObserver = new ResizeObserver(() => {
         this.updateDimensions();
       });
 
       this.resizeObserver.observe(this.track);
-      
-      // Observamos o primeiro slide também para reagir caso as imagens carreguem depois
       if (this.track.firstElementChild) {
         this.resizeObserver.observe(this.track.firstElementChild);
       }
     }
 
     setupEventListeners() {
-      // O Evento nativo de scroll mantém a lógica de thrortle perfeitamente.
       this.track.addEventListener('scroll', () => {
         if (!this.isTicking) {
           window.requestAnimationFrame(this.handleScrollUpdates);
@@ -165,18 +162,21 @@ const dots = Array.from({ length: itemCount });
         });
       }
 
-      // Lógica de Drag
+      // --- GPU Accelerated Drag Logic ---
       this.track.addEventListener('mousedown', (e) => {
         this.isDown = true;
         this.hasDragged = false;
         
-        this.trackOffsetLeft = this.track.offsetLeft;
-        this.scrollLeft = this.track.scrollLeft;
-        this.startX = e.pageX - this.trackOffsetLeft;
+        // FASE READ (Executada apenas 1x no mousedown)
+        this.initialScrollLeft = this.track.scrollLeft;
+        this.startX = e.pageX;
         
+        // FASE WRITE (Prepara o track para animação via GPU)
         requestAnimationFrame(() => {
           this.track.style.scrollSnapType = 'none'; 
           this.track.style.cursor = 'grabbing';
+          // Removemos a rolagem suave nativa temporariamente para não brigar com o drag
+          this.track.style.scrollBehavior = 'auto'; 
         });
       });
 
@@ -188,14 +188,16 @@ const dots = Array.from({ length: itemCount });
         e.preventDefault();
         
         const currentX = e.pageX; 
+        const walk = (this.startX - currentX) * 1.2; // Sensibilidade do arraste
+        
+        if (Math.abs(walk) > 5) this.hasDragged = true;
         
         if (!this.isDraggingTick) {
           window.requestAnimationFrame(() => {
-            const x = currentX - this.trackOffsetLeft; 
-            const walk = (x - this.startX) * 1.5; 
-            
-            if (Math.abs(walk) > 5) this.hasDragged = true;
-            this.track.scrollLeft = this.scrollLeft - walk; 
+            // Em vez de alterar o CSS transform, que exigiria criar classes extras,
+            // nós forçamos o scrollLeft instantâneo sem scroll-behavior: smooth.
+            // Isso evita a briga entre a engine de scroll suave do Chrome e o JS.
+            this.track.scrollLeft = this.initialScrollLeft + walk; 
             this.isDraggingTick = false;
           });
           this.isDraggingTick = true;
@@ -215,26 +217,25 @@ const dots = Array.from({ length: itemCount });
       this.isDown = false;
       
       requestAnimationFrame(() => {
+        // Restaura as propriedades nativas
         this.track.style.scrollSnapType = 'x mandatory';
+        this.track.style.scrollBehavior = 'smooth'; 
         this.track.style.cursor = 'auto';
+        
+        // Força o snap nativo do CSS a engatar
+        const currentScroll = this.track.scrollLeft;
+        this.track.scrollLeft = currentScroll + 1;
+        this.track.scrollLeft = currentScroll - 1;
       });
-      
-      setTimeout(() => {
-        if (this.track) this.track.scrollBy({ left: 1, behavior: 'smooth' });
-      }, 10);
     }
 
     updateDimensions() {
       if (!this.track) return;
       
       const slide = this.track.firstElementChild;
-      
-      // HACK: Em vez de getComputedStyle (pesado), lemos a variável CSS direto do DOM
       const gapString = this.style.getPropertyValue('--carousel-gap') || '0';
       const gapValue = parseInt(gapString) || 0;
       
-      // Como o ResizeObserver aciona esta função, o layout já está pronto.
-      // Ler offsetWidth aqui é performático e livre de "Layout Thrashing".
       this.cachedSlideWidth = slide ? slide.offsetWidth + gapValue : 0;
       this.cachedClientWidth = this.track.clientWidth;
       this.cachedScrollWidth = this.track.scrollWidth;
