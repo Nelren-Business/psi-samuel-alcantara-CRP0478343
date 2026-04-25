@@ -1,16 +1,18 @@
 ---
 import '../styles/global.css';
 
-// 1. Mantemos as importações normais do CSS do Fontsource
 import '@fontsource/dm-serif-text';
 import '@fontsource/open-sans';
 import favIcon from '../assets/favicon.svg';
 
-// 2. O TRUQUE: Importamos os arquivos físicos das fontes como URLs!
 import fontDmSerif from '@fontsource/dm-serif-text/files/dm-serif-text-latin-400-normal.woff2?url';
 import fontOpenSans from '@fontsource/open-sans/files/open-sans-latin-400-normal.woff2?url';
 
+// Importando o novo componente
+import GoogleTagManager from '../components/GoogleTagManager.astro';
+
 const { title, description } = Astro.props;
+const gtmId = import.meta.env.PUBLIC_GTM_ID;
 ---
 <!doctype html>
 <html lang="pt-br">
@@ -20,13 +22,7 @@ const { title, description } = Astro.props;
         <link rel="preload" href={fontDmSerif} as="font" type="font/woff2" crossorigin="anonymous">
         <link rel="preload" href={fontOpenSans} as="font" type="font/woff2" crossorigin="anonymous">
 
-        <script is:inline>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PCHBKFSP');
-        </script>
+        <GoogleTagManager />
         
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,8 +30,15 @@ const { title, description } = Astro.props;
         <title>{title}</title>
     </head>
     <body>       
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCHBKFSP"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        {gtmId && (
+          <noscript>
+            <iframe 
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0" width="0" style="display:none;visibility:hidden">
+            </iframe>
+          </noscript>
+        )}
+        
         <slot />
     </body>
 </html>

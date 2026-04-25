@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/partytown": "^2.1.7",
     "@fontsource/dm-serif-text": "^5.2.8",
     "@fontsource/open-sans": "^5.2.7",
     "@fontsource/plus-jakarta-sans": "^5.2.8",

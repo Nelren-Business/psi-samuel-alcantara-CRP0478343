@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
+import partytown from '@astrojs/partytown';
+
 export default defineConfig({
   site: 'https://samuelalcantara.com.br/',
   output: 'static',
@@ -15,4 +17,11 @@ export default defineConfig({
     },
   },
 
+  integrations: [
+    partytown({
+      config: {
+        forward: ['dataLayer.push'],
+      },
+    }),
+  ],
 });
