@@ -1,14 +1,16 @@
 ---
 import '../styles/global.css';
 
-import '@fontsource/dm-serif-text';
-import '@fontsource/open-sans';
+// 1. ARRANCAMOS os imports de CSS do fontsource
+// import '@fontsource/dm-serif-text'; -> DELETADO
+// import '@fontsource/open-sans';     -> DELETADO
+
 import favIcon from '../assets/favicon.svg';
 
+// 2. Mantemos apenas os URLs dos arquivos físicos gerados pelo Vite
 import fontDmSerif from '@fontsource/dm-serif-text/files/dm-serif-text-latin-400-normal.woff2?url';
 import fontOpenSans from '@fontsource/open-sans/files/open-sans-latin-400-normal.woff2?url';
 
-// Importando o novo componente
 import GoogleTagManager from '../components/GoogleTagManager.astro';
 
 const { title, description } = Astro.props;
@@ -19,6 +21,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
     <head>
         <meta charset="UTF-8" />
         
+        {/* Preload fundamental para o FCP (First Contentful Paint) */}
         <link rel="preload" href={fontDmSerif} as="font" type="font/woff2" crossorigin="anonymous">
         <link rel="preload" href={fontOpenSans} as="font" type="font/woff2" crossorigin="anonymous">
 
@@ -29,7 +32,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
         <link rel="icon" type="image/svg+xml" href={favIcon.src} />
         <title>{title}</title>
     </head>
-    <body>       
+    <body>        
         {gtmId && (
           <noscript>
             <iframe 
@@ -42,3 +45,32 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
         <slot />
     </body>
 </html>
+
+{/* A MÁGICA REAL: Escrevemos o CSS como uma string literal, injetando a URL direto, sem usar 'var()' */}
+<style is:global set:html={`
+  /* --- FONTE DE TÍTULO --- */
+  @font-face {
+    font-family: 'DM Serif Text';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('${fontDmSerif}') format('woff2');
+  }
+
+  /* Fallback matemático para impedir o Layout Shift enquanto a DM Serif não carrega */
+  @font-face {
+    font-family: 'DM Serif Fallback';
+    src: local('Times New Roman'), local('Georgia'), local('serif');
+    size-adjust: 110%; /* Ajusta a fonte do sistema para ocupar o mesmo espaço */
+    ascent-override: 95%;
+  }
+
+  /* --- FONTE DE TEXTO --- */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('${fontOpenSans}') format('woff2');
+  }
+`} />

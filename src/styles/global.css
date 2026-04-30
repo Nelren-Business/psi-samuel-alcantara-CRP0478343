@@ -25,7 +25,7 @@ html {
   --color-text: #333333;
   
   /* Família de Fontes */
-  --font-heading: 'DM Serif Text', serif;
+  --font-heading: 'DM Serif Text', 'DM Serif Fallback', serif;
   --font-text: 'Open Sans', sans-serif;
 
   /* Escala Tipográfica (1rem = ~16px) */
