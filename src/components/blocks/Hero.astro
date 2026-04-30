@@ -27,8 +27,7 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
       class="hero-bg"
       fetchpriority="high"
       loading="eager"
-      decoding="async" 
-      /* Mudança 2: Previne layout shifts e ajuda no cálculo de renderização */
+      decoding="sync" /* Alterado para sync no Hero para evitar piscar o fundo */
       width={BgHeroDesktop.width}
       height={BgHeroDesktop.height}
     />
@@ -40,8 +39,11 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     alt="Ilustração Terapia"
     loading="eager" 
     fetchpriority="high"
-    decoding="async"
+    decoding="sync"
     aria-hidden="true"
+    /* FIX DE REFLOW: O navegador agora sabe o espaço a reservar */
+    width={TerapiaSVG.width}
+    height={TerapiaSVG.height}
   />
 
   <div class="hero-content">
@@ -99,6 +101,8 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     top: 0;
     left: 0;
     width: 15%;
+    /* Mantém o aspect ratio amarrado à largura do CSS */
+    height: auto; 
     pointer-events: none;
     z-index: 1;
   }
@@ -113,9 +117,20 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     width: 100%;
   }
 
+  /* Blindagem extra contra FOUT/FOIT no hgroup */
+  hgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   h1 {
     max-width: 580px;
     margin: 0;
+    /* FIX DE REFLOW: Força o line-height diretamente no escopo */
+    line-height: var(--leading-snug, 1.2);
+    /* Dica Pro: text-wrap balance resolve hifenações órfãs que causam quebra de linha extra */
+    text-wrap: balance; 
   }
 
   .description-wrapper {
@@ -165,7 +180,6 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
     .hero-content {
       text-align: center;
       align-items: center;
-      text-wrap: balance;
     }
 
     h1 {
