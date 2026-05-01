@@ -12,6 +12,8 @@ import Slide4 from '../../assets/4-819x1024.jpg';
 import Slide5 from '../../assets/5-819x1024.jpg';
 import Slide6 from '../../assets/6-819x1024.jpg';
 
+import PranchetaFinal from '../../assets/Prancheta-Final.png';
+
 const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
 const posts = [
@@ -23,6 +25,17 @@ const posts = [
   { img: Slide6, link: "https://www.instagram.com/p/DP8yIo2DXf3/?img_index=1", alt: "Post Instagram 6" }
 ];
 ---
+
+<div>
+  <OptimizedImage 
+    src={PranchetaFinal} 
+    alt="" 
+    class="bg-section-process" 
+    loading="lazy" 
+    decoding="async" 
+    aria-hidden="true" 
+  />
+</div>
 
 <section class="instagram-section">
   <div class="container">
@@ -78,7 +91,7 @@ const posts = [
 
 <style>
   .instagram-section {
-    padding: 80px 20px;
+    padding: 120px 20px 40px 20px;
     background-color: var(--color-bg-light);
     overflow: hidden;
   }
