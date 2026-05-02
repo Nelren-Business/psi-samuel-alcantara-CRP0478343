@@ -1,10 +1,4 @@
 ---
-// src/components/FAQ.astro
-import OptimizedImage from '../OptimizedImage.astro'; // Trazendo nossa Fonte Única de Verdade
-import Vector22 from '../../assets/Vector-2-2.png';
-import Vector111 from '../../assets/Vector-1-1-1.svg';
-
-// Nossos Componentes e Módulos Globais
 import ButtonSolid from '../ButtonSolid.astro';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
 
@@ -44,7 +38,6 @@ const faqs = [
     question: "Como funciona a metodologia das sessões?",
     answer: "Trabalho com a TCC e terapias contextuais, uma abordagem prática e focada em resultados atuais. O objetivo é ajudar você a identificar e mudar padrões de pensamento e comportamento que geram sofrimento. Diferente de modelos apenas reflexivos, aqui você aprende ferramentas aplicáveis no dia a dia para lidar com ansiedade e outros desafios. Cada decisão clínica é baseada no que há de mais moderno na ciência, adaptado especificamente às suas necessidades e ritmo."
   }
-  
 ];
 ---
 
@@ -52,26 +45,10 @@ const faqs = [
   <div class="container">
     
     <div class="faq-header">
-      <OptimizedImage 
-        src={Vector22} 
-        alt="" 
-        class="bg-faq-header" 
-        loading="lazy" 
-        decoding="async"
-        aria-hidden="true" 
-      />
       <h2 class="title">
         <span class="destaque">
-          <img 
-            src={Vector111.src} 
-            alt="" 
-            class="bg-destaque" 
-            loading="lazy" 
-            decoding="async"
-            aria-hidden="true" 
-          />
-          FAQ
-        </span> - Perguntas Frequentes
+          Perguntas Frequentes
+        </span>
       </h2>
     </div>
 
@@ -104,7 +81,6 @@ const faqs = [
 </section>
 
 <style>
-  /* CSS intocado - Perfeitamente estruturado */
   .faq-section {
     background-color: var(--color-primary); 
     padding: 60px 20px 100px;
@@ -124,20 +100,8 @@ const faqs = [
   .faq-header {
     position: relative;
     text-align: center;
-    padding: 50px 50px 80px 50px;
+    padding: 50px 50px 0px 50px;
     z-index: 1;
-  }
-
-  .bg-faq-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center center;
-    z-index: -1;
-    pointer-events: none;
   }
 
   .title {
@@ -148,20 +112,33 @@ const faqs = [
 
   .destaque {
     position: relative; 
-    display: inline-block; 
+    display: inline-block;
     padding: 10px 30px;
     font-style: normal;
     z-index: 1;
   }
 
-  .bg-destaque {
+  .destaque::before {
+    content: "";
+    display: block;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 60%;
+    left: 50%;
+    
+    /* 
+      Aqui está a mágica: 
+      translate(-50%, -50%) mantém o elemento centralizado.
+      scale(X, Y) aumenta o SVG proporcionalmente vazando os limites do texto.
+      Ex: 1.1 é 110% na largura (eixo X) e 1.4 é 140% na altura (eixo Y).
+    */
+    transform: translate(-50%, -50%) scale(1.1, 1.4); 
+    
+    width: 100%; 
     height: 100%;
-    object-fit: contain;
-    object-position: center;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201229%20202%22%20preserveAspectRatio%3D%22none%22%3E%3Cg%20transform%3D%22translate%280%2C202%29%20scale%280.1%2C-0.1%29%22%20fill%3D%22%23D94881%22%20stroke%3D%22none%22%3E%3Cpath%20d%3D%22M1420%201945%20c-514%20-35%20-957%20-65%20-984%20-67%20l-48%20-3%20-169%20-425%20c-93%20-234%20-168%20-430%20-167%20-436%202%20-6%20158%20-149%20348%20-317%20l345%20-306%20640%200%20640%20-1%20695%20-131%20694%20-132%20536%2062%20c490%2056%20625%2067%201597%20132%20l1062%2071%20647%20-70%20646%20-70%20627%2070%20627%2069%20506%20-69%20507%20-70%20448%2069%20c246%2038%20644%2091%20883%20119%20239%2027%20446%2053%20459%2057%2021%207%2036%2050%20148%20403%2068%20217%20125%20409%20126%20425%202%2025%20-39%2085%20-243%20357%20l-245%20327%20-630%200%20-630%200%20-866%20-127%20-867%20-128%20-668%2062%20-669%2063%20-1545%2065%20-1545%2066%20-985%20-1%20-985%20-1%20-935%20-63z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-size: 100% 100%; /* Força a imagem a preencher nosso novo canvas escalonado */
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -1;
     pointer-events: none;
   }
@@ -198,7 +175,6 @@ const faqs = [
 
   .faq-question {
     font-size: 24px;
-    font-style: italic;
     letter-spacing: 0.3px;
     color: #F9F2EC;
     margin: 0; 
@@ -272,10 +248,8 @@ const faqs = [
     .title, .footer-title { font-size: 45px; }
     
     .faq-header { padding: 0 30px 15px; }
-    .bg-faq-header { object-position: bottom center; }
 
     .destaque { padding: 5px 15px; }
-    .bg-destaque { object-fit: cover; }
     
     .faq-summary { padding: 13px 20px 15px; }
     .faq-question { font-size: 1.1em; }
@@ -292,10 +266,8 @@ const faqs = [
     
     .faq-header {
       text-align: center;
-      padding: 20px 0px 30px 0px;
+      padding: 10px 0px 0px 0px;
     }
-
-    .bg-faq-header { object-position: right; }
 
     .title {
       font-size: 24px;

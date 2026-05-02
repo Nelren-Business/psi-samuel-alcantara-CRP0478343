@@ -1,8 +1,9 @@
 ---
 import { getImage } from 'astro:assets'; 
-import TerapiaSVG from '../../assets/Terapia.svg';
-import BgHeroDesktop from '../../assets/bg-hero-01.webp';
-import BgHeroMobile from '../../assets/bg-mobile-01.webp';
+import TerapiaSVG from '../../assets/Hero/terapia-hero.svg';
+import BgHeroDesktop from '../../assets/Hero/background-hero-samuel-desktop.webp';
+import BgHeroMobile from '../../assets/Hero/background-hero-samuel-mobile.webp';
+
 import IconWhatsapp from '../IconWhatsapp.astro';
 import ButtonSolid from '../ButtonSolid.astro';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
@@ -27,7 +28,7 @@ const optimizedDesktopBg = await getImage({ src: BgHeroDesktop, format: 'avif' }
       class="hero-bg"
       fetchpriority="high"
       loading="eager"
-      decoding="sync" /* Alterado para sync no Hero para evitar piscar o fundo */
+      decoding="sync"
       width={BgHeroDesktop.width}
       height={BgHeroDesktop.height}
     />
