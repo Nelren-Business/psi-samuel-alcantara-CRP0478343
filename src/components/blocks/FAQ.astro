@@ -61,14 +61,16 @@ const faqs = [
       </h2>
     </div>
 
+    <!-- INÍCIO DA ÁREA MODIFICADA (Apenas o Accordion) -->
     <div class="faq-accordion">
       {faqs.map((faq) => (
         <details class="faq-item" name="faq-group" open={faq.open}>
           <summary class="faq-summary">
             <h3 class="faq-question">{faq.question}</h3>
             <span class="faq-icon">
-              <svg aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                <path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"></path>
+              <!-- Ícone moderno que alterna entre '+' e 'x' -->
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </summary>
@@ -78,6 +80,7 @@ const faqs = [
         </details>
       ))}
     </div>
+    <!-- FIM DA ÁREA MODIFICADA -->
 
     <div class="faq-footer">
       <h2 class="footer-title">
@@ -90,6 +93,7 @@ const faqs = [
 </section>
 
 <style>
+  /* ESTILOS ORIGINAIS MANTIDOS */
   .faq-section {
     background-color: var(--color-primary); 
     padding: 60px 20px 100px;
@@ -129,13 +133,8 @@ const faqs = [
 
   .destaque-bg {
     position: absolute;
-    top: 60%; /* Ajuste fino de eixo Y para o traço ficar exatamente atrás do texto */
+    top: 60%;
     left: 50%;
-    /* 
-      O truque está aqui:
-      scale(1.4, 1) = 140% no eixo X (mais largo) e 100% no eixo Y (altura original)
-      Se precisar cobrir ainda mais nas laterais, suba o 1.4 para 1.5 ou 1.6.
-    */
     transform: translate(-50%, -50%) scale(1.1, 1.1); 
     width: 100%; 
     height: 150%;
@@ -144,30 +143,41 @@ const faqs = [
     object-fit: fill; 
   }
 
-  /* Accordion */
+  /* --- INÍCIO DOS ESTILOS MODIFICADOS (Apenas Accordion) --- */
   .faq-accordion {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
   }
 
   .faq-item {
-    background-color: #0A3C80; 
-    border: 1px solid rgba(149, 192, 208, 0.26);
-    transition: background-color 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.04); 
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
   }
 
-  .faq-item:hover, .faq-item[open] {
-    background-color: var(--color-accent); 
+  .faq-item:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    border-color: rgba(218, 72, 129, 0.4); 
+    transform: translateY(-2px);
+  }
+
+  .faq-item[open] {
+    background-color: rgba(217, 72, 129, 1);
+    border-color: #DA4881; 
+    box-shadow: 0 8px 32px rgba(12, 68, 145, 0.2);
   }
 
   .faq-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 25px 20px;
+    padding: 24px 32px;
     cursor: pointer;
     list-style: none; 
+    user-select: none;
   }
 
   .faq-summary::-webkit-details-marker {
@@ -179,31 +189,62 @@ const faqs = [
     letter-spacing: 0.3px;
     color: #F9F2EC;
     margin: 0; 
+    padding-right: 20px;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(218, 72, 129, 0.1);
+    color: #DA4881; 
+    transition: all 0.3s ease;
   }
 
   .faq-icon svg {
     width: 20px;
     height: 20px;
-    fill: #F9F2EC;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .faq-item[open] .faq-icon {
+    background: #DA4881;
+    color: #fff;
   }
 
   .faq-item[open] .faq-icon svg {
-    transform: rotate(180deg);
+    transform: rotate(135deg); 
   }
 
   .faq-content {
-    background-color: var(--color-accent);
-    border-top: 20px solid var(--color-primary);
-    padding: 20px 25px 20px;
+    padding: 0 32px 32px 32px;
+    animation: fadeInDown 0.4s ease forwards;
   }
 
   .faq-content p {
     color: #E2E8FC; 
+    font-size: 16px;
+    line-height: 1.6;
     margin: 0; 
   }
 
-  /* Rodapé / Chamada para Ação */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* --- FIM DOS ESTILOS MODIFICADOS --- */
+
+  /* ESTILOS ORIGINAIS DO RODAPÉ E MEDIA QUERIES MANTIDOS */
   .faq-footer {
     display: flex;
     flex-wrap: wrap;
@@ -219,32 +260,31 @@ const faqs = [
     margin: 0;
   }
 
-  /* Destaque "Ainda tem dúvidas?" */
+  /* --- INÍCIO DO ESTILO MODIFICADO (.dest2) --- */
   .dest2 {
-    background: #105FCB; 
-    padding: 0px 8px;
     position: relative;
     z-index: 2;
     display: inline-block;
-    border-left: 1px solid #95C0D0;
-    border-right: 1px solid #95C0D0;
-    font-style: italic;
+    padding: 0 0px;
   }
 
-  .dest2::before, .dest2::after {
-    position: absolute;
+  /* Efeito de marca-texto dinâmico com a cor rosa pastel da identidade */
+  .dest2::after {
     content: "";
-    background: #95C0D0;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    z-index: 2;
+    position: absolute;
+    bottom: 8px; /* Altura onde a linha cruza a base do texto */
+    left: -1%;
+    width: 102%;
+    height: 12px;
+    background-color: #DA4881; 
+    opacity: 0.9; /* Translúcido para não pesar a leitura */
+    z-index: -1;
+    border-radius: 4px;
+    transform: skewX(-12deg); /* Movimento moderno */
+    transition: all 0.3s ease;
   }
+  /* --- FIM DO ESTILO MODIFICADO --- */
 
-  .dest2::before { top: -3px; left: -4px; }
-  .dest2::after { bottom: -3px; right: -4px; }
-
-  /* Responsivo para Tablet e Mobile */
   @media (max-width: 1024px) {
     .title, .footer-title { font-size: 45px; }
     
@@ -252,7 +292,7 @@ const faqs = [
 
     .destaque { padding: 5px 15px; }
     
-    .faq-summary { padding: 13px 20px 15px; }
+    .faq-summary { padding: 16px 24px; } 
     .faq-question { font-size: 1.1em; }
 
     .faq-footer {
@@ -283,6 +323,14 @@ const faqs = [
       line-height: 1.3em;
     }
 
-    .faq-content { padding: 20px; }
+    .faq-summary { padding: 16px 20px; } 
+    .faq-content { padding: 0 20px 20px 20px; } 
     .faq-content p { font-size: 14px; }
+    
+    /* Ajuste fino do marcador para mobile */
+    .dest2::after {
+      height: 8px;
+      bottom: 2px;
+    }
   }
+</style>
