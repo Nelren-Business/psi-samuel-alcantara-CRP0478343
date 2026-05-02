@@ -1,6 +1,8 @@
 ---
 import ButtonSolid from '../ButtonSolid.astro';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
+// Nova importação do SVG
+import BackgroundTittle from '../../assets/FAQ/vetor-faq.svg';
 
 const whatsappLink = createWhatsAppUrl("Olá, vim do site e gostaria de agendar uma consulta!");
 
@@ -47,6 +49,13 @@ const faqs = [
     <div class="faq-header">
       <h2 class="title">
         <span class="destaque">
+          <!-- Tag img inserida com a classe de background -->
+          <img 
+            src={BackgroundTittle.src} 
+            alt="" 
+            aria-hidden="true" 
+            class="destaque-bg" 
+          />
           Perguntas Frequentes
         </span>
       </h2>
@@ -118,29 +127,21 @@ const faqs = [
     z-index: 1;
   }
 
-  .destaque::before {
-    content: "";
-    display: block;
+  .destaque-bg {
     position: absolute;
-    top: 60%;
+    top: 60%; /* Ajuste fino de eixo Y para o traço ficar exatamente atrás do texto */
     left: 50%;
-    
     /* 
-      Aqui está a mágica: 
-      translate(-50%, -50%) mantém o elemento centralizado.
-      scale(X, Y) aumenta o SVG proporcionalmente vazando os limites do texto.
-      Ex: 1.1 é 110% na largura (eixo X) e 1.4 é 140% na altura (eixo Y).
+      O truque está aqui:
+      scale(1.4, 1) = 140% no eixo X (mais largo) e 100% no eixo Y (altura original)
+      Se precisar cobrir ainda mais nas laterais, suba o 1.4 para 1.5 ou 1.6.
     */
-    transform: translate(-50%, -50%) scale(1.1, 1.4); 
-    
+    transform: translate(-50%, -50%) scale(1.1, 1.1); 
     width: 100%; 
-    height: 100%;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201229%20202%22%20preserveAspectRatio%3D%22none%22%3E%3Cg%20transform%3D%22translate%280%2C202%29%20scale%280.1%2C-0.1%29%22%20fill%3D%22%23D94881%22%20stroke%3D%22none%22%3E%3Cpath%20d%3D%22M1420%201945%20c-514%20-35%20-957%20-65%20-984%20-67%20l-48%20-3%20-169%20-425%20c-93%20-234%20-168%20-430%20-167%20-436%202%20-6%20158%20-149%20348%20-317%20l345%20-306%20640%200%20640%20-1%20695%20-131%20694%20-132%20536%2062%20c490%2056%20625%2067%201597%20132%20l1062%2071%20647%20-70%20646%20-70%20627%2070%20627%2069%20506%20-69%20507%20-70%20448%2069%20c246%2038%20644%2091%20883%20119%20239%2027%20446%2053%20459%2057%2021%207%2036%2050%20148%20403%2068%20217%20125%20409%20126%20425%202%2025%20-39%2085%20-243%20357%20l-245%20327%20-630%200%20-630%200%20-866%20-127%20-867%20-128%20-668%2062%20-669%2063%20-1545%2065%20-1545%2066%20-985%20-1%20-985%20-1%20-935%20-63z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-    background-size: 100% 100%; /* Força a imagem a preencher nosso novo canvas escalonado */
-    background-position: center;
-    background-repeat: no-repeat;
+    height: 150%;
     z-index: -1;
     pointer-events: none;
+    object-fit: fill; 
   }
 
   /* Accordion */
@@ -285,4 +286,3 @@ const faqs = [
     .faq-content { padding: 20px; }
     .faq-content p { font-size: 14px; }
   }
-</style>
