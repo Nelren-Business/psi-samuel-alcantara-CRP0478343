@@ -3,7 +3,7 @@
 import OptimizedImage from '../OptimizedImage.astro';
 import TerapiaBG from '../../assets/AboutUs/terapia-aboutus.svg';
 import PaperBg from '../../assets/vetor-aboutus-personaltext.png';
-import ButtonBg from '../../assets/AboutUs/botao-aboutus.png';
+import ButtonBg from '../../assets/AboutUs/botao-aboutus.svg'; // 1. Extensão atualizada para SVG
 import PhotoBg from '../../assets/AboutUs/background-aboutus-samuel-desktop.webp';
 import { createWhatsAppUrl } from '../../utils/whatsapp';
 
@@ -57,12 +57,11 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
         target="_blank" 
         rel="noopener noreferrer"
       >
-        <OptimizedImage 
-          src={ButtonBg} 
+        <!-- 2. Alterado para tag img padrão. SVGs escalam infinitamente sem perda de qualidade. -->
+        <img 
+          src={ButtonBg.src} 
           alt="" 
           class="bg-button-img" 
-          widths={[300, 600]}
-          sizes="300px"
           aria-hidden="true"
           loading="lazy"
           decoding="async"
@@ -212,7 +211,7 @@ const whatsappLinkAgendar = createWhatsAppUrl("Olá, vim do site e gostaria de a
     padding: 20px 30px;
     text-decoration: none;
     margin-top: -50px; /* Nota de arquitetura: Cuidado com margens negativas severas */
-    margin-left: 15px;
+    margin-left: 5px;
     position: relative;
     z-index: 3;
     transition: filter 0.3s ease;

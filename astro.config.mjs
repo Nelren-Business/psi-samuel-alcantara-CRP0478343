@@ -1,6 +1,8 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
+import sitemap from '@astrojs/sitemap';
+
 export default defineConfig({
   site: 'https://samuelalcantara.com.br/',
   output: 'static',
@@ -15,6 +17,5 @@ export default defineConfig({
     },
   },
 
-  integrations: [
-  ],
+  integrations: [sitemap()],
 });
